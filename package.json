@@ -1,8 +1,9 @@
 {
-  "name": "api-requests-portal",
+  "name": "@mihanizm56/fetch-api",
   "version": "1.0.0",
   "description": "api servise",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test:watch": "jest --watch",
     "test": "set CI=true && jest",
@@ -16,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/mihanizm56/api-service.git"
   },
-  "author": "mihan`izm56",
+  "author": "mihanizm56",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mihanizm56/api-service/issues"
@@ -46,7 +47,6 @@
     "jest": "25.1.0",
     "npm-audit-resolver": "2.1.0",
     "prettier": "1.18.2",
-    "source-map-explorer": "2.1.2",
     "ts-jest": "25.2.1"
   },
   "config": {

@@ -4,7 +4,7 @@ import {
   ERROR_EMPTY_FILE,
 } from '@/errors/_constants';
 
-interface IFileValidator {
+export interface IFileValidator {
   file: any;
 
   getValidateFileType: (validType: string) => boolean;

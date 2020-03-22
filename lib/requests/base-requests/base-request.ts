@@ -1,41 +1,24 @@
 import {
+  RequestRacerParams,
+  ParseResponseParams,
   IRequestParams,
   IBaseResponse,
-  parseTypesMap,
-} from '../../_types/types';
+  FormattedEndpointParams,
+} from '@/index.d.ts';
+import { parseTypesMap } from '@/_constants/shared';
 import { REQUEST_ERROR, TIMEOUT_ERROR } from '../../errors/_constants';
 import { StatusValidator } from '../../validators/response-status-validator';
 import { FormatDataTypeValidator } from '../../validators/response-type-validator';
 import { errorConstructor } from '../../errors/error-constructor';
 import { TIMEOUT_VALUE } from '../../_constants/timeout';
-
 import { jsonParser } from '../../_utils/parsers/json-parser';
 import { blobParser } from '../../_utils/parsers/blob-parser';
-import {
-  objectToQueryString,
-  QueryParamsType,
-} from '../../_utils/object-to-query-string';
-
-type requestRacerParams = {
-  request: Promise<IBaseResponse>;
-  fetchController: any;
-};
-
-type ParseResponseParams = {
-  response: IBaseResponse;
-  parseType?: keyof typeof parseTypesMap;
-  isResponseOk: boolean;
-};
-
-type FormattedEndpointParams = {
-  endpoint: string;
-  queryParams?: QueryParamsType;
-};
+import { objectToQueryString } from '../../_utils/object-to-query-string';
 
 interface IBaseRequests {
   makeFetch: (values: IRequestParams) => Promise<IBaseResponse>;
 
-  requestRacer: (params: requestRacerParams) => Promise<any>;
+  requestRacer: (params: RequestRacerParams) => Promise<any>;
 
   parseResponseData: (data: ParseResponseParams) => any;
 }
@@ -133,7 +116,7 @@ export class BaseRequest implements IBaseRequests {
   requestRacer = ({
     request,
     fetchController,
-  }: requestRacerParams): Promise<any> => {
+  }: RequestRacerParams): Promise<any> => {
     const defaultError = errorConstructor(TIMEOUT_ERROR);
 
     const timeoutException = new Promise(resolve =>
