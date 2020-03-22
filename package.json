@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     "lint": "npx eslint . --ext .ts --fix",
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
-    "publish": "npm publish --access=public"
+    "pub": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
