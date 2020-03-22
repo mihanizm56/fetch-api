@@ -1,0 +1,11 @@
+{
+  "decisions": {
+    "1179|commitizen>minimist": {
+      "decision": "ignore",
+      "madeAt": 1584836669624,
+      "expiresAt": 1587428661729
+    }
+  },
+  "rules": {},
+  "version": 1
+}

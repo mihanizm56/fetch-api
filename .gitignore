@@ -1,0 +1,15 @@
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# dist
+/dist
+
+# envs
+/.env
+
+# Misc
+.DS_Store
