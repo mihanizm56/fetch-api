@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -50,9 +50,9 @@
     "npm-audit-resolver": "2.1.0",
     "prettier": "1.18.2",
     "ts-jest": "25.2.1",
-    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths": "3.9.0",
     "tscpaths": "0.0.9",
-    "typescript-transform-paths": "^1.1.14"
+    "typescript-transform-paths": "1.1.14"
   },
   "config": {
     "commitizen": {
