@@ -18,7 +18,7 @@
  - parseType('json' | 'blob'): the type to parse the response (json by default)
  - queryParams(object): the object with the query parameters (they will be serialized automatically)
  - headers(object): the object with the headers
- - errorsMap(object): the object with the errors keys and translated values
+ - errorsMap(object): the object with the errors keys and translated values (        TIMEOUT_ERROR and REQUEST_DEFAULT_ERROR fields are required)
 
 #### RestRequest output options:
 - error (boolean) - the flag of the response status
