@@ -28,6 +28,12 @@
 
 ## Examples of usage
 
+#### installation
+
+```javascript
+   npm install @mihanizm56/fetch-api
+```
+
 #### get request
 ```javascript
 import { RestRequest, IBaseResponse } from '@mihanizm56/fetch-api';
