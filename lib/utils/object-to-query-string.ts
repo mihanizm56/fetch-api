@@ -1,4 +1,4 @@
-import { QueryParamsType } from '@/index.d.ts';
+import { QueryParamsType } from '@/types/types';
 
 export const objectToQueryString = (queryParams?: QueryParamsType): string =>
   queryParams

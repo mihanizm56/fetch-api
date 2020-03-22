@@ -1,5 +1,5 @@
-import { IRequestParams } from '@/index.d.ts';
-import { parseTypesMap } from '@/_constants/shared';
+import { IRequestParams } from '@/types/types';
+import { parseTypesMap } from '@/constants/shared';
 import { BaseRequest } from './base-request';
 
 export class RestRequest extends BaseRequest {

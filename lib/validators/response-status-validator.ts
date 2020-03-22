@@ -1,4 +1,4 @@
-import { whitelistStatuses } from '../_constants/statuses';
+import { whitelistStatuses } from '../constants/statuses';
 
 interface IStatusValidator {
   getStatusIsFromWhiteList: (status: number) => boolean;

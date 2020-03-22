@@ -1,4 +1,4 @@
-import { IBaseResponse } from '@/index.d.ts';
+import { IBaseResponse } from '@/types/types';
 
 interface IResponseFormatValidator {
   response: IBaseResponse;

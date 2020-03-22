@@ -1,5 +1,5 @@
-import { ErrorTextParams } from '@/index.d.ts';
-import { DEFAULT_ERROR_MESSAGE } from './_constants';
+import { ErrorTextParams } from '@/types/types';
+import { DEFAULT_ERROR_MESSAGE } from './constants';
 
 export const getFormattedResponseErrorText = ({
   errorText,

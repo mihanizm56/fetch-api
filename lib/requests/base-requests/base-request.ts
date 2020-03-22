@@ -4,16 +4,16 @@ import {
   IRequestParams,
   IBaseResponse,
   FormattedEndpointParams,
-} from '@/index.d.ts';
-import { parseTypesMap } from '@/_constants/shared';
-import { DEFAULT_ERROR_MESSAGE } from '../../errors/_constants';
+} from '@/types/types';
+import { parseTypesMap } from '@/constants/shared';
+import { DEFAULT_ERROR_MESSAGE } from '../../errors/constants';
 import { StatusValidator } from '../../validators/response-status-validator';
 import { FormatDataTypeValidator } from '../../validators/response-type-validator';
 import { errorConstructor } from '../../errors/error-constructor';
-import { TIMEOUT_VALUE } from '../../_constants/timeout';
-import { jsonParser } from '../../_utils/parsers/json-parser';
-import { blobParser } from '../../_utils/parsers/blob-parser';
-import { objectToQueryString } from '../../_utils/object-to-query-string';
+import { TIMEOUT_VALUE } from '../../constants/timeout';
+import { jsonParser } from '../../utils/parsers/json-parser';
+import { blobParser } from '../../utils/parsers/blob-parser';
+import { objectToQueryString } from '../../utils/object-to-query-string';
 
 interface IBaseRequests {
   makeFetch: (values: IRequestParams) => Promise<IBaseResponse>;
