@@ -11,7 +11,8 @@
     "compile": "tsc",
     "lint": "npx eslint . --ext .ts --fix",
     "commit": "git add . && git commit --no-edit",
-    "packages-vulnerability-check": "check-audit"
+    "packages-vulnerability-check": "check-audit",
+    "publish":"npm publish --access=public"
   },
   "repository": {
     "type": "git",
