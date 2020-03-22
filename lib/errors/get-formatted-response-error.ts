@@ -1,10 +1,11 @@
-import { ErrorTextType } from '@/index.d.ts';
-import { errorsTranslationsMap, DEFAULT_ERROR_MESSAGE } from './_constants';
+import { ErrorTextParams } from '@/index.d.ts';
+import { DEFAULT_ERROR_MESSAGE } from './_constants';
 
-export const getFormattedResponseErrorText = (
-  errorText: ErrorTextType,
-): string => {
-  const formattedError = errorsTranslationsMap[errorText];
+export const getFormattedResponseErrorText = ({
+  errorText,
+  errorsMap,
+}: ErrorTextParams) => {
+  const formattedError = errorsMap[errorText];
 
   return formattedError || DEFAULT_ERROR_MESSAGE;
 };

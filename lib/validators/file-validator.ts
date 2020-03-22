@@ -2,7 +2,7 @@ import {
   ERROR_SIZE_FILE_BIG,
   ERROR_TYPE_FILE,
   ERROR_EMPTY_FILE,
-} from '@/errors/_constants';
+} from './_constants';
 
 export interface IFileValidator {
   file: any;

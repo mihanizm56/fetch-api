@@ -1,8 +1,10 @@
 import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
-import { IBaseResponse, ErrorTextType } from '@/index.d.ts';
+import { IBaseResponse, ErrorTextParams } from '@/index.d.ts';
 
-export const errorConstructor = (errorText: ErrorTextType): IBaseResponse => ({
+export const errorConstructor = (
+  errorOptions: ErrorTextParams,
+): IBaseResponse => ({
   error: true,
-  errorText: getFormattedResponseErrorText(errorText),
+  errorText: getFormattedResponseErrorText(errorOptions),
   data: {},
 });

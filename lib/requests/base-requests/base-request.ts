@@ -6,7 +6,7 @@ import {
   FormattedEndpointParams,
 } from '@/index.d.ts';
 import { parseTypesMap } from '@/_constants/shared';
-import { REQUEST_ERROR, TIMEOUT_ERROR } from '../../errors/_constants';
+import { DEFAULT_ERROR_MESSAGE } from '../../errors/_constants';
 import { StatusValidator } from '../../validators/response-status-validator';
 import { FormatDataTypeValidator } from '../../validators/response-type-validator';
 import { errorConstructor } from '../../errors/error-constructor';
@@ -61,6 +61,7 @@ export class BaseRequest implements IBaseRequests {
     endpoint,
     parseType,
     queryParams,
+    errorsMap,
     ...fetchParams
   }: IRequestParams) => {
     const formattedEndpoint = this.getFormattedEndpoint({
@@ -102,22 +103,31 @@ export class BaseRequest implements IBaseRequests {
           console.error('error in response format validation');
         }
 
-        throw new Error(REQUEST_ERROR);
+        throw new Error(
+          errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE,
+        );
       })
       .catch(error => {
         console.error('get error in fetch', error.message);
 
-        return errorConstructor(REQUEST_ERROR);
+        return errorConstructor({
+          errorsMap,
+          errorText: errorsMap.REQUEST_DEFAULT_ERROR,
+        });
       });
 
-    return this.requestRacer({ request, fetchController });
+    return this.requestRacer({ request, fetchController, errorsMap });
   };
 
   requestRacer = ({
     request,
     fetchController,
+    errorsMap,
   }: RequestRacerParams): Promise<any> => {
-    const defaultError = errorConstructor(TIMEOUT_ERROR);
+    const defaultError = errorConstructor({
+      errorText: errorsMap.TIMEOUT_ERROR,
+      errorsMap,
+    });
 
     const timeoutException = new Promise(resolve =>
       setTimeout(() => {

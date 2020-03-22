@@ -12,7 +12,7 @@
     "lint": "npx eslint . --ext .ts --fix",
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
-    "pub": "npm publish --access=public"
+    "save": "npm run commit && git push && npm version patch && git push && npm run pub"
   },
   "repository": {
     "type": "git",
