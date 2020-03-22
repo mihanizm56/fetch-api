@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": [ "lib/*" ],
-    },
-    "strict": false,
+      "@/*": ["lib/*"]
+    }
   }
 }

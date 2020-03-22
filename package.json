@@ -8,11 +8,11 @@
     "test:watch": "jest --watch",
     "test": "set CI=true && jest",
     "test:coverage": "jest --coverage",
-    "compile": "tsc",
+    "compile": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./lib -o ./dist",
     "lint": "npx eslint . --ext .ts --fix",
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
-    "publish":"npm publish --access=public"
+    "publish": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
@@ -48,7 +48,10 @@
     "jest": "25.1.0",
     "npm-audit-resolver": "2.1.0",
     "prettier": "1.18.2",
-    "ts-jest": "25.2.1"
+    "ts-jest": "25.2.1",
+    "tsconfig-paths": "^3.9.0",
+    "tscpaths": "0.0.9",
+    "typescript-transform-paths": "^1.1.14"
   },
   "config": {
     "commitizen": {
