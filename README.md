@@ -75,5 +75,5 @@ export const createReviseRequest = (someData): Promise<IBaseResponse> =>
 
 #### The usage of the request api
 ```javascript
-    const { error, errorText, data } = await createReviseRequest(someData);
+const { error, errorText, data } = await createReviseRequest(someData);
 ```

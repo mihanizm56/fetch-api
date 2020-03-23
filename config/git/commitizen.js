@@ -31,6 +31,7 @@ module.exports = {
 
   // Область. Она характеризует фрагмент кода, которую затронули изменения
   scopes: [
+    { name: 'update-package' },
     { name: 'scripts' },
     { name: 'tests' },
     { name: 'configure-package' },
