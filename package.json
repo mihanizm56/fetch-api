@@ -13,7 +13,8 @@
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
     "save": "npm run commit && git push && npm version patch && git push && npm run pub",
-    "pub": "npm publish --access=public"
+    "pub": "npm publish --access=public",
+    "size": "pkgfiles"
   },
   "repository": {
     "type": "git",
@@ -52,8 +53,14 @@
     "ts-jest": "25.2.1",
     "tsconfig-paths": "3.9.0",
     "tscpaths": "0.0.9",
-    "typescript-transform-paths": "1.1.14"
+    "typescript-transform-paths": "1.1.14",
+    "pkgfiles": "^2.3.2"
   },
+  "files": [
+    "package-lock.json",
+    "dist",
+    "check-more-types.min.js"
+  ],
   "config": {
     "commitizen": {
       "path": "node_modules/cz-customizable"

@@ -2,6 +2,7 @@
   "hooks": {
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g config/git/commitlint.js",
     "pre-commit": "npm run lint && npm run test && npm run packages-vulnerability-check && npm run compile",
+    "pre-push": "npm run size",
     "prepare-commit-msg": "node ./config/git/prepare-commit.js",
   }
 }
