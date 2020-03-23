@@ -31,7 +31,7 @@
 #### installation
 
 ```javascript
-   npm install @mihanizm56/fetch-api
+npm install @mihanizm56/fetch-api
 ```
 
 #### get request
