@@ -62,6 +62,7 @@ export class BaseRequest implements IBaseRequests {
     parseType,
     queryParams,
     errorsMap,
+    responseSchema,
     ...fetchParams
   }: IRequestParams) => {
     const formattedEndpoint = this.getFormattedEndpoint({
@@ -90,17 +91,17 @@ export class BaseRequest implements IBaseRequests {
             isResponseOk,
           });
 
-          const formatDataTypeValidator = new FormatDataTypeValidator(
+          // validate the format of the request
+          const formatDataTypeValidator = new FormatDataTypeValidator({
             respondedData,
-          );
+            responseSchema,
+          });
 
           const isFormatValid: boolean = formatDataTypeValidator.getResponseFormatIsValid();
 
           if (isFormatValid) {
             return respondedData;
           }
-
-          console.error('error in response format validation');
         }
 
         throw new Error(

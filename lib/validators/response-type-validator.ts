@@ -1,16 +1,26 @@
+import { Schema, ValidationResult } from 'joi'; // eslint-disable-line
 import { IBaseResponse } from '@/types/types';
 
 interface IResponseFormatValidator {
   response: IBaseResponse;
 
+  schema: Schema;
+
+  getIsBaseFormatRequestValid: () => boolean;
+
   getResponseFormatIsValid: () => boolean;
+
+  getIsSchemaRequestValid: () => ValidationResult<IBaseResponse>;
 }
 
 export class FormatDataTypeValidator implements IResponseFormatValidator {
   response: IBaseResponse;
 
-  constructor(response: IBaseResponse) {
-    this.response = response;
+  schema: Schema;
+
+  constructor({ respondedData, responseSchema }: any) {
+    this.response = respondedData;
+    this.schema = responseSchema;
   }
 
   public getIsBaseFormatRequestValid = () =>
@@ -19,11 +29,29 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     'additionalErrors' in this.response &&
     'data' in this.response;
 
+  public getIsSchemaRequestValid = () => this.schema.validate(this.response);
+
   public getResponseFormatIsValid = () => {
+    if (!Boolean(this.response)) {
+      console.error('response is empty');
+      return false;
+    }
+
     const isBaseFormatRequestValid = this.getIsBaseFormatRequestValid();
+    const isSchemaRequestValid = this.getIsSchemaRequestValid();
 
-    // todo make joi validations
+    // if the base format is not valid
+    if (!isBaseFormatRequestValid) {
+      console.error('response format is not valid');
+      return false;
+    }
 
-    return isBaseFormatRequestValid;
+    // if the schema format is not valid
+    if (!isSchemaRequestValid) {
+      console.error('response schema is not valid');
+      return false;
+    }
+
+    return true;
   };
 }

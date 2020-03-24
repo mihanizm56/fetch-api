@@ -1,3 +1,4 @@
+import { Schema } from 'joi'; // eslint-disable-line
 import { parseTypesMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
@@ -16,6 +17,7 @@ export interface IRequestParams {
   queryParams?: { [key: string]: string };
   method?: string;
   errorsMap: ErrorsMap;
+  responseSchema: Schema;
 }
 
 export interface IBaseResponse {
