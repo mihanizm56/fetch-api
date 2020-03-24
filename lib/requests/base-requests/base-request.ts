@@ -105,12 +105,12 @@ export class BaseRequest implements IBaseRequests {
           if (isFormatValid) {
             return respondedData;
           }
-        } else {
-          // if not status from the whitelist - throw error
-          throw new Error(
-            errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE,
-          );
         }
+
+        // if not status from the whitelist - throw error with default error
+        throw new Error(
+          errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE,
+        );
       })
       .catch(error => {
         console.error('get error in fetch', error.message);
