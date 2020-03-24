@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mihanizm56/api-service.git"
+    "url": "git+https://github.com/mihanizm56/fetch-api.git"
   },
   "author": "mihanizm56",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mihanizm56/api-service/issues"
+    "url": "https://github.com/mihanizm56/fetch-api/issues"
   },
-  "homepage": "https://github.com/mihanizm56/api-service#readme",
+  "homepage": "https://github.com/mihanizm56/fetch-api#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@types/joi": "^14.3.4",
