@@ -41,6 +41,7 @@ npm install @mihanizm56/fetch-api
 #### get request
 
 ```javascript
+import Joi from "@hapi/joi";
 import { RestRequest, IBaseResponse } from "@mihanizm56/fetch-api";
 
 export const getContractsRequest = (): Promise<IBaseResponse> =>
@@ -50,7 +51,20 @@ export const getContractsRequest = (): Promise<IBaseResponse> =>
       TIMEOUT_ERROR: "Превышено ожидание запроса",
       REQUEST_DEFAULT_ERROR: "Системная ошибка",
       [FORBIDDEN]: "Данное действие недоступно"
-    }
+    },
+    responseSchema: Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().required(),
+      info: Joi.object({
+        count: Joi.number().required(),
+        killers: Joi.array().items(
+          Joi.object({
+            username: Joi.string().required(),
+            count: Joi.number().required()
+          })
+        )
+      })
+    })
   });
 ```
 
@@ -61,26 +75,32 @@ import { RestRequest, IBaseResponse } from '@mihanizm56/fetch-api';
 
 export const createReviseRequest = (someData): Promise<IBaseResponse> =>
   new RestRequest().postRequest({
-     endpoint: 'http://localhost:3000',
-     errorsMap: {
+    endpoint: 'http://localhost:3000',
+    errorsMap: {
         TIMEOUT_ERROR: 'Превышено ожидание запроса',
         REQUEST_DEFAULT_ERROR: 'Системная ошибка',
         [FORBIDDEN]: 'Данное действие недоступно',
-     },
-      body: JSON.stringify(someData),
-      mode: 'cors',
-      parseType:'blob',
-      queryParams:{
-         id:'test_id_123'
-      },
-      headers:{
-           Content-Type:'application/json'
-      }
+    },
+    body: JSON.stringify(someData),
+    mode: 'cors',
+    parseType:'blob',
+    queryParams:{
+        id:'test_id_123'
+    },
+    headers:{
+          Content-Type:'application/json'
+    },
+    responseSchema: Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+    })
   })
 ```
 
 #### The usage of the request api
 
 ```javascript
-const { error, errorText, data } = await createReviseRequest(someData);
+const { error, errorText, data, additionalErrors } = await createReviseRequest(
+  someData
+);
 ```
