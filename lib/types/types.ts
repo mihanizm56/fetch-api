@@ -23,7 +23,8 @@ export interface IRequestParams {
 export interface IBaseResponse {
   error: boolean;
   errorText: string;
-  data: any;
+  data: Record<string, any> | null;
+  additionalErrors: Record<string, any> | Array<any> | null;
 }
 
 export type QueryParamsType = { [key: string]: string | number };
@@ -46,6 +47,6 @@ export type FormattedEndpointParams = {
 };
 
 export type ErrorTextParams = {
-  errorText: string;
+  errorTextKey: string;
   errorsMap: { [key: string]: string };
 };

@@ -7,4 +7,5 @@ export const errorConstructor = (
   error: true,
   errorText: getFormattedResponseErrorText(errorOptions),
   data: {},
+  additionalErrors: null,
 });

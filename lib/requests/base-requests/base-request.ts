@@ -41,11 +41,13 @@ export class BaseRequest implements IBaseRequests {
       case parseTypesMap.blob:
         return blobParser(response);
 
+      // default parse to json
       default:
         return jsonParser(response);
     }
   };
 
+  // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
     queryParams,
@@ -97,23 +99,25 @@ export class BaseRequest implements IBaseRequests {
             responseSchema,
           });
 
+          // get the full validation result
           const isFormatValid: boolean = formatDataTypeValidator.getResponseFormatIsValid();
 
           if (isFormatValid) {
             return respondedData;
           }
+        } else {
+          // if not status from the whitelist - throw error
+          throw new Error(
+            errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE,
+          );
         }
-
-        throw new Error(
-          errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE,
-        );
       })
       .catch(error => {
         console.error('get error in fetch', error.message);
 
         return errorConstructor({
           errorsMap,
-          errorText: errorsMap.REQUEST_DEFAULT_ERROR,
+          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
         });
       });
 
@@ -126,7 +130,7 @@ export class BaseRequest implements IBaseRequests {
     errorsMap,
   }: RequestRacerParams): Promise<any> => {
     const defaultError = errorConstructor({
-      errorText: errorsMap.TIMEOUT_ERROR,
+      errorTextKey: errorsMap.TIMEOUT_ERROR,
       errorsMap,
     });
 
