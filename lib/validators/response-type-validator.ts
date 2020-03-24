@@ -30,7 +30,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     'data' in this.response;
 
   public getIsSchemaRequestValid = () => {
-    const validationResult = this.schema.validate(this.response);
+    const validationResult = this.schema.validate(this.response.data);
 
     console.error('this.schema', this.schema);
     console.error('this.response', this.response);
@@ -50,13 +50,14 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     }
 
     const isBaseFormatRequestValid = this.getIsBaseFormatRequestValid();
-    const isSchemaRequestValid = this.getIsSchemaRequestValid();
 
     // if the base format is not valid
     if (!isBaseFormatRequestValid) {
       console.error('response format is not valid');
       return false;
     }
+
+    const isSchemaRequestValid = this.getIsSchemaRequestValid();
 
     // if the schema format is not valid
     if (!isSchemaRequestValid) {
