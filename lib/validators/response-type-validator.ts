@@ -1,4 +1,4 @@
-import { Schema, ValidationResult } from "joi"; // eslint-disable-line
+import { Schema } from "joi"; // eslint-disable-line
 import { IBaseResponse } from '@/types/types';
 
 interface IResponseFormatValidator {
@@ -31,14 +31,6 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
   public getIsSchemaRequestValid = () => {
     const validationResult = this.schema.validate(this.response.data);
-
-    console.error('this.schema', this.schema);
-    console.error('this.response', this.response);
-    console.error('validationResult', validationResult);
-    console.error(
-      '!Boolean(validationResult.error)',
-      !Boolean(validationResult.error),
-    );
 
     return !Boolean(validationResult.error);
   };
