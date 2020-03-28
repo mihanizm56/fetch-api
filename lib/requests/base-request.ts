@@ -1,19 +1,30 @@
+import nodeFetch from "node-fetch";
 import {
   RequestRacerParams,
   ParseResponseParams,
   IRequestParams,
   IBaseResponse,
-  FormattedEndpointParams,
-} from '@/types/types';
-import { parseTypesMap } from '@/constants/shared';
-import { DEFAULT_ERROR_MESSAGE } from '../../errors/constants';
-import { StatusValidator } from '../../validators/response-status-validator';
-import { FormatDataTypeValidator } from '../../validators/response-type-validator';
-import { errorConstructor } from '../../errors/error-constructor';
-import { TIMEOUT_VALUE } from '../../constants/timeout';
-import { jsonParser } from '../../utils/parsers/json-parser';
-import { blobParser } from '../../utils/parsers/blob-parser';
-import { objectToQueryString } from '../../utils/object-to-query-string';
+  FormattedEndpointParams
+} from "@/types/types";
+import { parseTypesMap } from "@/constants/shared";
+import { DEFAULT_ERROR_MESSAGE } from "../errors/constants";
+import { StatusValidator } from "../validators/response-status-validator";
+import { FormatDataTypeValidator } from "../validators/response-type-validator";
+import { errorConstructor } from "../errors/error-constructor";
+import { TIMEOUT_VALUE } from "../constants/timeout";
+import { jsonParser } from "../utils/parsers/json-parser";
+import { blobParser } from "../utils/parsers/blob-parser";
+import { objectToQueryString } from "../utils/object-to-query-string";
+
+type GetIsomorficFetchReturnsType = {
+  requestFetch: () => Promise<IBaseResponse>;
+  fetchController?: AbortController;
+};
+
+type GetIsomorficFetchParamsType = {
+  endpoint: string;
+  fetchParams: Pick<IRequestParams, "headers" | "body" | "mode" | "method">;
+};
 
 interface IBaseRequests {
   makeFetch: (values: IRequestParams) => Promise<IBaseResponse>;
@@ -21,13 +32,17 @@ interface IBaseRequests {
   requestRacer: (params: RequestRacerParams) => Promise<any>;
 
   parseResponseData: (data: ParseResponseParams) => any;
+
+  getIsomorficFetch: (
+    params: GetIsomorficFetchParamsType
+  ) => GetIsomorficFetchReturnsType;
 }
 
 export class BaseRequest implements IBaseRequests {
   parseResponseData = ({
     response,
     parseType,
-    isResponseOk,
+    isResponseOk
   }: ParseResponseParams) => {
     // if not 200 then always get json format
     if (!isResponseOk) {
@@ -47,10 +62,37 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
+  getIsomorficFetch = ({
+    endpoint,
+    fetchParams
+  }: GetIsomorficFetchParamsType): GetIsomorficFetchReturnsType => {
+    if (typeof window === "undefined") {
+      const requestFetch = (nodeFetch.bind(
+        null,
+        endpoint,
+        fetchParams
+      ) as () => Promise<unknown>) as () => Promise<IBaseResponse>;
+
+      return { requestFetch };
+    }
+
+    const fetchController = new AbortController();
+
+    const requestFetch = (window.fetch.bind(null, endpoint, {
+      ...fetchParams,
+      signal: fetchController.signal
+    }) as () => Promise<unknown>) as () => Promise<IBaseResponse>;
+
+    return {
+      requestFetch,
+      fetchController
+    };
+  };
+
   // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
-    queryParams,
+    queryParams
   }: FormattedEndpointParams): string => {
     if (!Boolean(queryParams)) {
       return endpoint;
@@ -69,19 +111,19 @@ export class BaseRequest implements IBaseRequests {
   }: IRequestParams) => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
-      queryParams,
+      queryParams
     });
 
-    const fetchController = new AbortController();
+    const { requestFetch, fetchController } = this.getIsomorficFetch({
+      endpoint: formattedEndpoint,
+      fetchParams
+    });
 
-    const request = fetch(formattedEndpoint, {
-      ...fetchParams,
-      signal: fetchController.signal,
-    })
+    const request = requestFetch()
       .then(async (response: any) => {
         const statusValidator = new StatusValidator();
         const isValidStatus = statusValidator.getStatusIsFromWhiteList(
-          response.status,
+          response.status
         );
         const isResponseOk = response.ok;
 
@@ -90,13 +132,13 @@ export class BaseRequest implements IBaseRequests {
           const respondedData: any = await this.parseResponseData({
             response,
             parseType,
-            isResponseOk,
+            isResponseOk
           });
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator({
             respondedData,
-            responseSchema,
+            responseSchema
           });
 
           // get the full validation result
@@ -109,15 +151,15 @@ export class BaseRequest implements IBaseRequests {
 
         // if not status from the whitelist - throw error with default error
         throw new Error(
-          errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE,
+          errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE
         );
       })
       .catch(error => {
-        console.error('get error in fetch', error.message);
+        console.error("get error in fetch", error.message);
 
         return errorConstructor({
           errorsMap,
-          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
+          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR
         });
       });
 
@@ -127,18 +169,21 @@ export class BaseRequest implements IBaseRequests {
   requestRacer = ({
     request,
     fetchController,
-    errorsMap,
+    errorsMap
   }: RequestRacerParams): Promise<any> => {
     const defaultError = errorConstructor({
       errorTextKey: errorsMap.TIMEOUT_ERROR,
-      errorsMap,
+      errorsMap
     });
 
     const timeoutException = new Promise(resolve =>
       setTimeout(() => {
-        fetchController.abort();
+        if (Boolean(fetchController)) {
+          fetchController.abort();
+        }
+
         resolve(defaultError);
-      }, TIMEOUT_VALUE),
+      }, TIMEOUT_VALUE)
     ); // eslint-disable-line
 
     return Promise.race([request, timeoutException]);

@@ -7,10 +7,10 @@ export const objectToQueryString = (queryParams?: QueryParamsType): string =>
           const key = encodeURIComponent(queryParamKey);
           const value = encodeURIComponent(queryParams[queryParamKey]);
 
-    acc += `${key}=${value}`; // eslint-disable-line
+          acc += `${key}=${value}`; // eslint-disable-line
 
           if (index !== queryParamsArray.length - 1) {
-      acc += '&'; // eslint-disable-line
+            acc += "&"; // eslint-disable-line
           }
 
           return acc;

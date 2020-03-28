@@ -1,7 +1,6 @@
 node_modules/
 dist/
-react-app-env.d.ts
-e2e/
+lib/index.ts
+lib/requests/base-request.ts
+lib/requests/rest-request.ts
 !**/.*
-
-gulpfile.js

@@ -1,13 +1,13 @@
-export { RestRequest } from '@/requests/base-requests/rest-request';
-export { errorConstructor } from '@/errors/error-constructor';
+export { RestRequest } from "@/requests/rest-request";
+export { errorConstructor } from "@/errors/error-constructor";
 export {
-  getFormattedResponseErrorText,
-} from '@/errors/get-formatted-response-error';
+  getFormattedResponseErrorText
+} from "@/errors/get-formatted-response-error";
 
 export {
   IBaseResponse,
   QueryParamsType,
   IRequestParams,
   ErrorsMap,
-  ModeCorsType,
-} from './types/types';
+  ModeCorsType
+} from "./types/types";

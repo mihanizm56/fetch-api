@@ -1,47 +1,47 @@
-import { IRequestParams } from '@/types/types';
-import { parseTypesMap } from '@/constants/shared';
-import { BaseRequest } from './base-request';
+import { IRequestParams } from "@/types/types";
+import { parseTypesMap } from "@/constants/shared";
+import { BaseRequest } from "./base-request";
 
 export class RestRequest extends BaseRequest {
   public getRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      method: 'GET',
-      parseType: parseTypesMap.json,
+      method: "GET",
+      parseType: parseTypesMap.json
     });
 
   public postRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      method: 'POST',
-      parseType: parseTypesMap.json,
+      method: "POST",
+      parseType: parseTypesMap.json
     });
 
   public putRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      method: 'PUT',
-      parseType: parseTypesMap.json,
+      method: "PUT",
+      parseType: parseTypesMap.json
     });
 
   public patchRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      method: 'PATCH',
-      parseType: parseTypesMap.json,
+      method: "PATCH",
+      parseType: parseTypesMap.json
     });
 
   public deleteRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      method: 'DELETE',
-      parseType: parseTypesMap.json,
+      method: "DELETE",
+      parseType: parseTypesMap.json
     });
 
   public getBlobRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      method: 'GET',
-      parseType: parseTypesMap.blob,
+      method: "GET",
+      parseType: parseTypesMap.blob
     });
 }

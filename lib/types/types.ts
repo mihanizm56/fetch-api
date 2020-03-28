@@ -1,4 +1,4 @@
-import { Schema } from 'joi'; // eslint-disable-line
+import { Schema } from "joi"; // eslint-disable-line
 import { parseTypesMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
@@ -9,13 +9,13 @@ export type ErrorsMap = { [key: string]: string } & {
 };
 
 export interface IRequestParams {
-  endpoint: string;
   headers?: { [key: string]: string };
-  body?: string | FormData;
+  body?: any;
   mode?: ModeCorsType;
+  method?: string;
+  endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
-  method?: string;
   errorsMap: ErrorsMap;
   responseSchema: Schema;
 }
@@ -31,7 +31,7 @@ export type QueryParamsType = { [key: string]: string | number };
 
 export type RequestRacerParams = {
   request: Promise<IBaseResponse>;
-  fetchController: any;
+  fetchController?: any;
   errorsMap: ErrorsMap;
 };
 
