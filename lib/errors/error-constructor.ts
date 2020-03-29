@@ -1,11 +1,29 @@
-import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
-import { IBaseResponse, ErrorTextParams } from '@/types/types';
+import { getFormattedResponseErrorText } from "@/errors/get-formatted-response-error";
+import {
+  IRESTResponse,
+  IJSONRPCResponse,
+  ErrorJSONRPCConstructorParams,
+  ErrorRestConstructorParams
+} from "@/types/types";
 
-export const errorConstructor = (
-  errorOptions: ErrorTextParams,
-): IBaseResponse => ({
+export const errorRestConstructor = (
+  errorOptions: ErrorRestConstructorParams
+): IRESTResponse => ({
   error: true,
   errorText: getFormattedResponseErrorText(errorOptions),
   data: {},
-  additionalErrors: null,
+  additionalErrors: null
+});
+
+export const errorJSONRPCConstructor = ({
+  errorTextKey,
+  errorsMap,
+  id = "0"
+}: ErrorJSONRPCConstructorParams): IJSONRPCResponse => ({
+  jsonrpc: "2.0",
+  error: {
+    code: "500",
+    message: getFormattedResponseErrorText({ errorTextKey, errorsMap })
+  },
+  id
 });

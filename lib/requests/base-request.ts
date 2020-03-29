@@ -3,39 +3,45 @@ import {
   RequestRacerParams,
   ParseResponseParams,
   IRequestParams,
-  IBaseResponse,
-  FormattedEndpointParams
+  IRESTResponse,
+  FormattedEndpointParams,
+  IJSONRPCResponse
 } from "@/types/types";
-import { parseTypesMap } from "@/constants/shared";
+import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { DEFAULT_ERROR_MESSAGE } from "../errors/constants";
 import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
-import { errorConstructor } from "../errors/error-constructor";
+import {
+  errorRestConstructor,
+  errorJSONRPCConstructor
+} from "../errors/error-constructor";
 import { TIMEOUT_VALUE } from "../constants/timeout";
 import { jsonParser } from "../utils/parsers/json-parser";
 import { blobParser } from "../utils/parsers/blob-parser";
 import { objectToQueryString } from "../utils/object-to-query-string";
 
-type GetIsomorficFetchReturnsType = {
-  requestFetch: () => Promise<IBaseResponse>;
+type getIsomorphicFetchReturnsType = {
+  requestFetch: () => Promise<IRESTResponse | IJSONRPCResponse>;
   fetchController?: AbortController;
 };
 
-type GetIsomorficFetchParamsType = {
+type getIsomorphicFetchParamsType = {
   endpoint: string;
   fetchParams: Pick<IRequestParams, "headers" | "body" | "mode" | "method">;
 };
 
 interface IBaseRequests {
-  makeFetch: (values: IRequestParams) => Promise<IBaseResponse>;
+  makeFetch: (
+    values: IRequestParams
+  ) => Promise<IRESTResponse | IJSONRPCResponse>;
 
   requestRacer: (params: RequestRacerParams) => Promise<any>;
 
   parseResponseData: (data: ParseResponseParams) => any;
 
-  getIsomorficFetch: (
-    params: GetIsomorficFetchParamsType
-  ) => GetIsomorficFetchReturnsType;
+  getIsomorphicFetch: (
+    params: getIsomorphicFetchParamsType
+  ) => getIsomorphicFetchReturnsType;
 }
 
 export class BaseRequest implements IBaseRequests {
@@ -62,16 +68,19 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  getIsomorficFetch = ({
+  // get an isomorfic fetch
+  getIsomorphicFetch = ({
     endpoint,
     fetchParams
-  }: GetIsomorficFetchParamsType): GetIsomorficFetchReturnsType => {
+  }: getIsomorphicFetchParamsType): getIsomorphicFetchReturnsType => {
     if (typeof window === "undefined") {
       const requestFetch = (nodeFetch.bind(
         null,
         endpoint,
         fetchParams
-      ) as () => Promise<unknown>) as () => Promise<IBaseResponse>;
+      ) as () => Promise<unknown>) as () => Promise<
+        IRESTResponse | IJSONRPCResponse
+      >;
 
       return { requestFetch };
     }
@@ -81,7 +90,9 @@ export class BaseRequest implements IBaseRequests {
     const requestFetch = (window.fetch.bind(null, endpoint, {
       ...fetchParams,
       signal: fetchController.signal
-    }) as () => Promise<unknown>) as () => Promise<IBaseResponse>;
+    }) as () => Promise<unknown>) as () => Promise<
+      IRESTResponse | IJSONRPCResponse
+    >;
 
     return {
       requestFetch,
@@ -107,6 +118,8 @@ export class BaseRequest implements IBaseRequests {
     queryParams,
     errorsMap,
     responseSchema,
+    requestProtocol,
+    id: idOfRequest,
     ...fetchParams
   }: IRequestParams) => {
     const formattedEndpoint = this.getFormattedEndpoint({
@@ -114,7 +127,7 @@ export class BaseRequest implements IBaseRequests {
       queryParams
     });
 
-    const { requestFetch, fetchController } = this.getIsomorficFetch({
+    const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
       fetchParams
     });
@@ -138,7 +151,8 @@ export class BaseRequest implements IBaseRequests {
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator({
             respondedData,
-            responseSchema
+            responseSchema,
+            requestProtocol
           });
 
           // get the full validation result
@@ -157,28 +171,50 @@ export class BaseRequest implements IBaseRequests {
       .catch(error => {
         console.error("get error in fetch", error.message);
 
-        return errorConstructor({
-          errorsMap,
-          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR
-        });
+        return requestProtocol === requestProtocolsMap.rest
+          ? errorRestConstructor({
+              errorsMap,
+              errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR
+            })
+          : errorJSONRPCConstructor({
+              errorsMap,
+              errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
+              id: idOfRequest
+            });
       });
 
-    return this.requestRacer({ request, fetchController, errorsMap });
+    return this.requestRacer({
+      request,
+      fetchController,
+      errorsMap,
+      requestProtocol,
+      idOfRequest
+    });
   };
 
   requestRacer = ({
     request,
     fetchController,
-    errorsMap
+    errorsMap,
+    requestProtocol,
+    idOfRequest
   }: RequestRacerParams): Promise<any> => {
-    const defaultError = errorConstructor({
-      errorTextKey: errorsMap.TIMEOUT_ERROR,
-      errorsMap
-    });
+    const defaultError =
+      requestProtocol === requestProtocolsMap.rest
+        ? errorRestConstructor({
+            errorsMap,
+            errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR
+          })
+        : errorJSONRPCConstructor({
+            errorsMap,
+            errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
+            id: idOfRequest
+          });
 
     const timeoutException = new Promise(resolve =>
       setTimeout(() => {
-        if (Boolean(fetchController)) {
+        // if the window fetch
+        if (requestProtocol === requestProtocolsMap.rest) {
           fetchController.abort();
         }
 

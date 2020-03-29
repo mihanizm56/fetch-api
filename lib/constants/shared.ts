@@ -1,9 +1,19 @@
 export interface IParseTypesMap {
-  json: 'json';
-  blob: 'blob';
+  json: "json";
+  blob: "blob";
+}
+
+export interface IRequestProtocolsMap {
+  rest: "rest";
+  jsonRpc: "jsonRpc";
 }
 
 export const parseTypesMap: IParseTypesMap = {
-  json: 'json',
-  blob: 'blob',
+  json: "json",
+  blob: "blob"
+};
+
+export const requestProtocolsMap: IRequestProtocolsMap = {
+  rest: "rest",
+  jsonRpc: "jsonRpc"
 };

@@ -3,4 +3,5 @@ dist/
 lib/index.ts
 lib/requests/base-request.ts
 lib/requests/rest-request.ts
+lib/requests/json-rpc-request.ts
 !**/.*

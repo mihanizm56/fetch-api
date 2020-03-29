@@ -1,11 +1,13 @@
 export { RestRequest } from "@/requests/rest-request";
-export { errorConstructor } from "@/errors/error-constructor";
+export { JSONRPCRequest } from "@/requests/json-rpc-request";
+export { errorRestConstructor } from "@/errors/error-constructor";
 export {
   getFormattedResponseErrorText
 } from "@/errors/get-formatted-response-error";
 
 export {
-  IBaseResponse,
+  IRESTResponse,
+  IJSONRPCResponse,
   QueryParamsType,
   IRequestParams,
   ErrorsMap,
