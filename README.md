@@ -1,6 +1,6 @@
 # @mihanizm56/fetch-api
 
-## Sollution for http/1.1 requests based on window.fetch api
+## Sollution for http/1.1 isomorphic fetch
 
 ### Benefits:
 
@@ -11,6 +11,7 @@
 - Provides the ability to match the exact error from `errorsMap`
 - Provides different kinds of the response formats to parse
 - Returns ALWAYS the hard prepared response structure
+- Works in browser and node environments
 
 #### RestRequest input options:
 
@@ -30,7 +31,21 @@
 - data (object) - the main data from the backend
 - additionalErrors (object) - the additional multiple errors from the backend
 
+#### JSONRPCRequest input options:
+
+- the same as RestRequest input options
+- id (string | number) - the request id
+
+#### JSONRPCRequest output options:
+
+- jsonrpc (string) - version of json-rpc
+- result (object | array) - the main data from the backend
+- error (object) - (non required, exists only if there is an error) the error object with message and code from the backend
+- id (string | number) - the request id
+
 ## Examples of usage
+
+### REST API
 
 #### installation
 
@@ -42,9 +57,9 @@ npm install @mihanizm56/fetch-api
 
 ```javascript
 import Joi from "@hapi/joi";
-import { RestRequest, IBaseResponse } from "@mihanizm56/fetch-api";
+import { RestRequest, IRESTResponse } from "@mihanizm56/fetch-api";
 
-export const getContractsRequest = (): Promise<IBaseResponse> =>
+export const getContractsRequest = (): Promise<IRESTResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
     errorsMap: {
@@ -71,30 +86,30 @@ export const getContractsRequest = (): Promise<IBaseResponse> =>
 #### post(put/patch/delete have the same format) request
 
 ```javascript
-import { RestRequest, IBaseResponse } from '@mihanizm56/fetch-api';
+import { RestRequest, IRESTResponse } from "@mihanizm56/fetch-api";
 
-export const createReviseRequest = (someData): Promise<IBaseResponse> =>
+export const createReviseRequest = (someData): Promise<IRESTResponse> =>
   new RestRequest().postRequest({
-    endpoint: 'http://localhost:3000',
+    endpoint: "http://localhost:3000",
     errorsMap: {
-        TIMEOUT_ERROR: 'Превышено ожидание запроса',
-        REQUEST_DEFAULT_ERROR: 'Системная ошибка',
-        [FORBIDDEN]: 'Данное действие недоступно',
+      TIMEOUT_ERROR: "Превышено ожидание запроса",
+      REQUEST_DEFAULT_ERROR: "Системная ошибка",
+      [FORBIDDEN]: "Данное действие недоступно"
     },
     body: JSON.stringify(someData),
-    mode: 'cors',
-    parseType:'blob',
-    queryParams:{
-        id:'test_id_123'
+    mode: "cors",
+    parseType: "blob",
+    queryParams: {
+      id: "test_id_123"
     },
-    headers:{
-          Content-Type:'application/json'
+    headers: {
+      "Content-Type": "application/json"
     },
     responseSchema: Joi.object({
       username: Joi.string().required(),
-      password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
     })
-  })
+  });
 ```
 
 #### The usage of the request api
@@ -103,4 +118,46 @@ export const createReviseRequest = (someData): Promise<IBaseResponse> =>
 const { error, errorText, data, additionalErrors } = await createReviseRequest(
   someData
 );
+```
+
+### JSON-RPC API
+
+```javascript
+import { JSONRPCRequest, IJSONRPCResponse } from "@mihanizm56/fetch-api";
+
+export const createItemsRequest = ({
+  someData,
+  requestId
+}): Promise<IJSONRPCResponse> =>
+  new JSONRPCRequest().makeRequest({
+    endpoint: "http://localhost:3000",
+    errorsMap: {
+      TIMEOUT_ERROR: "Превышено ожидание запроса",
+      REQUEST_DEFAULT_ERROR: "Системная ошибка"
+    },
+    body: JSON.stringify({ ...someData, id: requestId }),
+    mode: "cors",
+    queryParams: {
+      id: "123"
+    },
+    responseSchema: Joi.object({
+      items: Joi.array().items(
+        Joi.object({
+          id: Joi.string().required(),
+          name: Joi.string().required(),
+          name: Joi.string()
+        })
+      )
+    }),
+    id: requestId
+  });
+```
+
+#### The usage of the request api
+
+```javascript
+const { jsonrpc, result, error, id } = await createItemsRequest({
+  someData,
+  requestId: "1"
+});
 ```

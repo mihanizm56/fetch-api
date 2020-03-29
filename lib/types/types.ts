@@ -1,7 +1,7 @@
 import { Schema } from "joi"; // eslint-disable-line
-import { parseTypesMap, requestProtocolsMap } from "../constants/shared";
+import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 
-export type ModeCorsType = "cors" | "no-cors";
+export type ModeCorsType = 'cors' | 'no-cors';
 
 export type ErrorsMap = { [key: string]: string } & {
   TIMEOUT_ERROR: string;

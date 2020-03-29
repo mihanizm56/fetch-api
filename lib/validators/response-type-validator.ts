@@ -1,6 +1,6 @@
 import { Schema } from "joi"; // eslint-disable-line
-import { IRESTResponse, IJSONRPCResponse } from "@/types/types";
-import { requestProtocolsMap } from "@/constants/shared";
+import { IRESTResponse, IJSONRPCResponse } from '@/types/types';
+import { requestProtocolsMap } from '@/constants/shared';
 
 interface IResponseFormatValidator {
   response: IRESTResponse & IJSONRPCResponse;
@@ -30,15 +30,15 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   }
 
   public getIsBaseFormatRequestValid = () =>
-    "error" in this.response &&
-    "errorText" in this.response &&
-    "additionalErrors" in this.response &&
-    "data" in this.response;
+    'error' in this.response &&
+    'errorText' in this.response &&
+    'additionalErrors' in this.response &&
+    'data' in this.response;
 
   public getIsJSONRPCFormatRequestValid = () =>
-    "jsonrpc" in this.response &&
-    "result" in this.response &&
-    "id" in this.response;
+    'jsonrpc' in this.response &&
+    'result' in this.response &&
+    'id' in this.response;
 
   public getIsSchemaRequestValid = () => {
     const responsePartToValidate =
@@ -53,7 +53,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
   public getResponseFormatIsValid = () => {
     if (!Boolean(this.response)) {
-      console.error("response is empty");
+      console.error('response is empty');
       return false;
     }
 
@@ -64,7 +64,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     // if the base format is not valid
     if (!isFormatValid) {
-      console.error("response format is not valid");
+      console.error('response format is not valid');
       return false;
     }
 
@@ -72,7 +72,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     // if the schema format is not valid
     if (!isSchemaRequestValid) {
-      console.error("response schema is not valid");
+      console.error('response schema is not valid');
       return false;
     }
 

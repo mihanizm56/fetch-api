@@ -1,9 +1,9 @@
-import { ErrorRestConstructorParams } from "@/types/types";
-import { DEFAULT_ERROR_MESSAGE } from "./constants";
+import { ErrorRestConstructorParams } from '@/types/types';
+import { DEFAULT_ERROR_MESSAGE } from './constants';
 
 export const getFormattedResponseErrorText = ({
   errorTextKey,
-  errorsMap
+  errorsMap,
 }: ErrorRestConstructorParams) => {
   const formattedError = errorsMap[errorTextKey];
 
