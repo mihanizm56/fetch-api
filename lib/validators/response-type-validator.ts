@@ -1,6 +1,7 @@
 import { Schema } from "joi"; // eslint-disable-line
 import { IRESTResponse, IJSONRPCResponse } from '@/types/types';
 import { requestProtocolsMap } from '@/constants/shared';
+import { getProtocolTypeIsRest } from '@/utils/get-protocol-type-is-rest';
 
 interface IResponseFormatValidator {
   response: IRESTResponse & IJSONRPCResponse;
@@ -37,14 +38,20 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
   public getIsJSONRPCFormatRequestValid = () =>
     'jsonrpc' in this.response &&
-    'result' in this.response &&
+    ('result' in this.response || 'error' in this.response) &&
     'id' in this.response;
 
   public getIsSchemaRequestValid = () => {
-    const responsePartToValidate =
-      this.requestProtocol === requestProtocolsMap.rest
-        ? this.response.data
-        : this.response.result;
+    const { error, data, result } = this.response;
+
+    // if the error flag is true
+    if (Boolean(error)) {
+      return true;
+    }
+
+    const responsePartToValidate = getProtocolTypeIsRest(this.requestProtocol)
+      ? data
+      : result;
 
     const validationResult = this.schema.validate(responsePartToValidate);
 
@@ -57,14 +64,13 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       return false;
     }
 
-    const isFormatValid =
-      this.requestProtocol === requestProtocolsMap.rest
-        ? this.getIsBaseFormatRequestValid()
-        : this.getIsJSONRPCFormatRequestValid();
+    const isFormatValid = getProtocolTypeIsRest(this.requestProtocol)
+      ? this.getIsBaseFormatRequestValid()
+      : this.getIsJSONRPCFormatRequestValid();
 
     // if the base format is not valid
     if (!isFormatValid) {
-      console.error('response format is not valid');
+      console.error('response base format is not valid');
       return false;
     }
 
@@ -72,7 +78,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     // if the schema format is not valid
     if (!isSchemaRequestValid) {
-      console.error('response schema is not valid');
+      console.error('response schema format is not valid');
       return false;
     }
 
