@@ -1,17 +1,15 @@
 module.exports = {
-  roots: ['<rootDir>/lib'],
+  roots: ['<rootDir>/integrational-tests'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    // '^.+\\.ts$': 'ts-jest',
+    '^.+\\.js$': 'babel-jest',
   },
-  testRegex: '(/__tests__/.*|(\\.|/)(test))\\.ts$',
+  testRegex: '(/tests/.*|(\\.|/)(test))\\.(ts|js)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
-    '^@/(.*)': '<rootDir>/src/$1',
+    '^@/(.*)': '<rootDir>/lib/$1',
   },
-  collectCoverageFrom: [
-    'src/**/*.ts',
-    '!**/node_modules/**',
-    '!**/vendor/**',
-  ],
+  collectCoverageFrom: ['lib/**/*.ts', '!**/node_modules/**', '!**/vendor/**'],
   coverageDirectory: '<rootDir>/coverage',
+  browser: false,
 };

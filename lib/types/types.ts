@@ -8,6 +8,17 @@ export type ErrorsMap = { [key: string]: string } & {
   REQUEST_DEFAULT_ERROR: string;
 };
 
+export interface IJSONPRCRequestParams extends IRequestParams {
+  id: string;
+  version: {
+    jsonrpc: string;
+  };
+  body: {
+    method: string;
+    params: Record<string, any>;
+  };
+}
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
@@ -19,35 +30,45 @@ export interface IRequestParams {
   errorsMap: ErrorsMap;
   responseSchema: Schema;
   requestProtocol: keyof typeof requestProtocolsMap;
-  id?: string | number;
 }
 
-export interface IRESTResponse {
+export interface IResponse {
   error: boolean;
   errorText: string;
   data: Record<string, any> | null;
   additionalErrors: Record<string, any> | Array<any> | null;
 }
 
-export interface IJSONRPCResponse {
+export interface IRESTPureResponse {
+  error: boolean;
+  errorText: string;
+  data: Record<string, any> | null;
+  additionalErrors: Record<string, any> | Array<any> | null;
+}
+
+export interface IJSONRPCPureResponse {
   jsonrpc: string;
   result?: any;
-  error?: { [key: string]: string };
+  error?: {
+    code: string;
+    message: string;
+    additionalErrors: Record<string, any> | Array<any> | null;
+  };
   id: string | number;
 }
 
 export type QueryParamsType = { [key: string]: string | number };
 
 export type RequestRacerParams = {
-  request: Promise<IRESTResponse | IJSONRPCResponse>;
+  request: Promise<IResponse>;
   fetchController?: any;
   errorsMap: ErrorsMap;
   requestProtocol: keyof typeof requestProtocolsMap;
-  idOfRequest?: string | number;
+  requestId?: string | number;
 };
 
 export type ParseResponseParams = {
-  response: IRESTResponse | IJSONRPCResponse;
+  response: IRESTPureResponse | IJSONRPCPureResponse;
   parseType?: keyof typeof parseTypesMap;
   isResponseOk: boolean;
 };
@@ -62,8 +83,13 @@ export type ErrorRestConstructorParams = {
   errorsMap: { [key: string]: string };
 };
 
-export type ErrorJSONRPCConstructorParams = {
+export type ErrorConstructorParams = {
   errorTextKey: string;
   errorsMap: { [key: string]: string };
   id?: string | number;
+};
+
+export type FormatDataTypeValidatorParamsType = {
+  responseData: any; // 'cause we dont know about the structure
+  responseSchema: any; // 'cause we dont know about the schema
 };
