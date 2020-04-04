@@ -5,10 +5,11 @@
 ### Benefits:
 
 - Provides validation for responses (based on @hapi/joi Schema validation)
+- Provides the ability to make rest-api and json-rpc protocol requests in One interface
 - Provides query-params serialize
 - Provides cancel-request if the timeout is higher than 60 seconds
 - Provides error catching (you dont need to use try/catch)
-- Provides the ability to match the exact error from `errorsMap`
+- Provides the ability to match the exact error from errorsMap parameter
 - Provides different kinds of the response formats to parse
 - Returns ALWAYS the hard prepared response structure
 - Works in browser and node environments
@@ -17,7 +18,7 @@
 
 - endpoint(string): the request url
 - responseSchema: the response Schema that parsed by @hapi/joi <br/>(you must use the @hapi/joi in your project and insert the response Schema into this field)
-- body(JSON | FormData): the request body (you have to JSON or FormData it by youself)
+- body(JSON | FormData): the request body
 - mode('cors' | 'no-cors'): the cors type
 - parseType('json' | 'blob'): the type to parse the response (json by default)
 - queryParams(object): the object with the query parameters (they will be serialized automatically)
@@ -30,18 +31,6 @@
 - errorText (string) - the main error message from the backend
 - data (object) - the main data from the backend
 - additionalErrors (object) - the additional multiple errors from the backend
-
-#### JSONRPCRequest input options:
-
-- the same as RestRequest input options
-- id (string | number) - the request id
-
-#### JSONRPCRequest output options:
-
-- jsonrpc (string) - version of json-rpc
-- result (object | array) - the main data from the backend
-- error (object) - (non required, exists only if there is an error) the error object with message and code from the backend
-- id (string | number) - the request id
 
 ## Examples of usage
 
@@ -57,9 +46,9 @@ npm install @mihanizm56/fetch-api
 
 ```javascript
 import Joi from "@hapi/joi";
-import { RestRequest, IRESTResponse } from "@mihanizm56/fetch-api";
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
-export const getContractsRequest = (): Promise<IRESTResponse> =>
+export const getContractsRequest = (): Promise<IResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
     errorsMap: {
@@ -86,9 +75,9 @@ export const getContractsRequest = (): Promise<IRESTResponse> =>
 #### post(put/patch/delete have the same format) request
 
 ```javascript
-import { RestRequest, IRESTResponse } from "@mihanizm56/fetch-api";
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
-export const createReviseRequest = (someData): Promise<IRESTResponse> =>
+export const createReviseRequest = (someData): Promise<IResponse> =>
   new RestRequest().postRequest({
     endpoint: "http://localhost:3000",
     errorsMap: {
@@ -123,19 +112,19 @@ const { error, errorText, data, additionalErrors } = await createReviseRequest(
 ### JSON-RPC API
 
 ```javascript
-import { JSONRPCRequest, IJSONRPCResponse } from "@mihanizm56/fetch-api";
+import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";
 
-export const createItemsRequest = ({
-  someData,
-  requestId
-}): Promise<IJSONRPCResponse> =>
+export const createItemsRequest = (someData): Promise<IResponse> =>
   new JSONRPCRequest().makeRequest({
     endpoint: "http://localhost:3000",
     errorsMap: {
       TIMEOUT_ERROR: "Превышено ожидание запроса",
       REQUEST_DEFAULT_ERROR: "Системная ошибка"
     },
-    body: JSON.stringify({ ...someData, id: requestId }),
+    body: {
+      method: 'some method',
+      params: 123
+    }
     mode: "cors",
     queryParams: {
       id: "123"
@@ -149,15 +138,11 @@ export const createItemsRequest = ({
         })
       )
     }),
-    id: requestId
   });
 ```
 
 #### The usage of the request api
 
 ```javascript
-const { jsonrpc, result, error, id } = await createItemsRequest({
-  someData,
-  requestId: "1"
-});
+const { error, errorText, data, additionalErrors } = await createItemsRequest(someData);
 ```
