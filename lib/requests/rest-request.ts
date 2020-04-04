@@ -3,7 +3,7 @@ import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
 
 export class RestRequest extends BaseRequest {
-  public getRequest = (requestParams: IRequestParams) =>
+  public getRequest = (requestParams: Omit<IRequestParams,'method'>) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
@@ -11,7 +11,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public postRequest = (requestParams: IRequestParams) =>
+  public postRequest = (requestParams: Omit<IRequestParams,'method'>) =>
     this.makeFetch({
       ...requestParams,
       method: "POST",
@@ -19,7 +19,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public putRequest = (requestParams: IRequestParams) =>
+  public putRequest = (requestParams: Omit<IRequestParams,'method'>) =>
     this.makeFetch({
       ...requestParams,
       method: "PUT",
@@ -27,7 +27,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public patchRequest = (requestParams: IRequestParams) =>
+  public patchRequest = (requestParams: Omit<IRequestParams,'method'>) =>
     this.makeFetch({
       ...requestParams,
       method: "PATCH",
@@ -35,7 +35,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public deleteRequest = (requestParams: IRequestParams) =>
+  public deleteRequest = (requestParams: Omit<IRequestParams,'method'>) =>
     this.makeFetch({
       ...requestParams,
       method: "DELETE",
@@ -43,7 +43,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public getBlobRequest = (requestParams: IRequestParams) =>
+  public getBlobRequest = (requestParams: Omit<IRequestParams,'method'>) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",

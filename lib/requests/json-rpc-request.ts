@@ -4,16 +4,18 @@ import { BaseRequest } from "./base-request";
 import { uniqueId } from "@/utils/unique-id";
 
 export class JSONRPCRequest extends BaseRequest {
-  public makeRequest = (requestParams: IJSONPRCRequestParams): Promise<IResponse> =>
+  public makeRequest = (
+    requestParams: Omit<IJSONPRCRequestParams,'method'>
+  ): Promise<IResponse> =>
     this.makeFetch({
       ...requestParams,
-      headers:{
+      headers: {
         ...requestParams.headers,
-        'content-type':'application/json'
+        "content-type": "application/json"
       },
-      id: uniqueId('json-rpc_'),
-      version:{
-        "jsonrpc": "2.0"
+      id: uniqueId("json-rpc_"),
+      version: {
+        jsonrpc: "2.0"
       },
       method: "POST",
       parseType: parseTypesMap.json,

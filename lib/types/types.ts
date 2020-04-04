@@ -23,7 +23,7 @@ export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
   mode?: ModeCorsType;
-  method?: string;
+  method: string;
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
@@ -92,4 +92,25 @@ export type ErrorConstructorParams = {
 export type FormatDataTypeValidatorParamsType = {
   responseData: any; // 'cause we dont know about the structure
   responseSchema: any; // 'cause we dont know about the schema
+};
+
+export type GetIsomorphicFetchReturnsType = {
+  requestFetch: () => Promise<IResponse>;
+  fetchController?: AbortController;
+};
+
+export type GetIsomorphicFetchParamsType = {
+  endpoint: string;
+  fetchParams: Pick<
+    IRequestParams & Partial<IJSONPRCRequestParams>,
+    'headers' | 'body' | 'mode' | 'method'
+  >;
+};
+
+export type GetFetchBodyParamsType = {
+  requestProtocol: keyof typeof requestProtocolsMap;
+  body: any;
+  method: string;
+  version?: { jsonrpc: string };
+  id?: string;
 };
