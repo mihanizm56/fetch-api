@@ -131,14 +131,7 @@ export class BaseRequest implements IBaseRequests {
       queryParams
     });
 
-    console.log('body',body);
-
     const fetchBody =  (requestProtocol === requestProtocolsMap.rest) ? {...body}: {...body,...version,id}
-
-    console.log('fetchBody',JSON.stringify(fetchBody));
-
-    console.log('method',method);
-    
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
@@ -167,8 +160,13 @@ export class BaseRequest implements IBaseRequests {
           });
           const responceId = respondedData.id
 
+
+
+
           const formattedResponseData:IResponse = (requestProtocol === requestProtocolsMap.rest) ? respondedData : formatResponseJSONRPCData(respondedData)
 
+
+          
          
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator({

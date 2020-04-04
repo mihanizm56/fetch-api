@@ -9,6 +9,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)': '<rootDir>/lib/$1',
   },
+  setupFiles: ['./integrational-tests/server/runner.js'],
   collectCoverageFrom: ['lib/**/*.ts', '!**/node_modules/**', '!**/vendor/**'],
   coverageDirectory: '<rootDir>/coverage',
   browser: false,

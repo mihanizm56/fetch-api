@@ -25,26 +25,36 @@ const sendNegativeData = res =>
     data: {},
   });
 
+const sendSuccessDataRPC = (res, id, data) =>
+  res.status(200).json({
+    jsonrpc: '2.0',
+    id,
+    result: data,
+  });
+
+const sendNegativeDataRPC = (res, id) =>
+  res.status(200).json({
+    jsonrpc: '2.0',
+    id,
+    error: {
+      code: 500,
+      message: 'test error',
+      additionalErrors: {
+        username: 'not valid data',
+      },
+    },
+  });
+
 // positive rest
 app.get('/rest', (req, res) => sendSuccessData(res, { foo: 'bar' }));
-app.post('/rest', (req, res) => {
-  console.log('//////', req.body);
-
-  sendSuccessData(res, { foo: 'bar', index: 1 });
-});
-app.put('/rest', (req, res) =>
-  // console.log(req.body) ||
-  sendSuccessData(res, { putField: 123 }),
-);
-app.patch('/rest', (req, res) =>
-  // console.log(req.body) ||
+app.post('/rest', (req, res) => sendSuccessData(res, { foo: 'bar', index: 1 }));
+app.put('/rest', (req, res) => sendSuccessData(res, { putField: 123 }));
+app.delete('/rest', (req, res) => sendSuccessData(res, { test: null }));
+app.patch('/rest', (req, res) => {
   sendSuccessData(res, {
     test: 'test',
-  }),
-);
-app.delete('/rest', (req, res) =>
-  // console.log(req.body) ||
-  sendSuccessData(res, { test: null }),);
+  });
+});
 
 // negative rest
 app.get('/rest/negative', (req, res) => sendNegativeData(res));
@@ -52,6 +62,23 @@ app.post('/rest/negative', (req, res) => sendNegativeData(res));
 app.put('/rest/negative', (req, res) => sendNegativeData(res));
 app.patch('/rest/negative', (req, res) => sendNegativeData(res));
 app.delete('/rest/negative', (req, res) => sendNegativeData(res));
+
+// positive json-rpc
+app.post('/json-rpc', (req, res) => {
+  const { id } = req.body;
+
+  sendSuccessDataRPC(res, id, {
+    foo: '1',
+    index: 123,
+  });
+});
+
+// negative json-rpc
+app.post('/json-rpc/negative', (req, res) => {
+  const { id } = req.body;
+
+  sendNegativeDataRPC(res, id);
+});
 
 // eslint-disable-next-line
 app.listen(PORT, () => console.info(`mock server started on port ${PORT}`));

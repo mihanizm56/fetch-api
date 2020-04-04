@@ -16,6 +16,9 @@ module.exports.postRestRequest = responseSchema =>
     body: {
       value: 123,
     },
+    headers: {
+      'content-type': 'application/json',
+    },
   });
 
 module.exports.putRestRequest = responseSchema =>
@@ -23,6 +26,9 @@ module.exports.putRestRequest = responseSchema =>
     endpoint: 'http://localhost:8080/rest',
     errorsMap,
     responseSchema,
+    headers: {
+      'content-type': 'application/json',
+    },
   });
 
 module.exports.patchRestRequest = responseSchema =>
@@ -30,6 +36,9 @@ module.exports.patchRestRequest = responseSchema =>
     endpoint: 'http://localhost:8080/rest',
     errorsMap,
     responseSchema,
+    headers: {
+      'content-type': 'application/json',
+    },
   });
 
 module.exports.deleteRestRequest = responseSchema =>
@@ -37,6 +46,9 @@ module.exports.deleteRestRequest = responseSchema =>
     endpoint: 'http://localhost:8080/rest',
     errorsMap,
     responseSchema,
+    headers: {
+      'content-type': 'application/json',
+    },
   });
 
 module.exports.getNegativeRestRequest = responseSchema =>
