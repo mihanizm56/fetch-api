@@ -113,3 +113,8 @@ export type GetFetchBodyParamsType = {
   version?: { jsonrpc: string };
   id?: string;
 };
+
+export type ExtendedIResponse = Pick<
+  IResponse,
+  'data' | 'error' | 'errorText'
+> & { additionalErrors?: Record<string, any> | null };

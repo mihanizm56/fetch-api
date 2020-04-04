@@ -45,6 +45,17 @@ const sendNegativeDataRPC = (res, id) =>
     },
   });
 
+const sendNegativeErrorDataRPC = (res, id) =>
+  res.status(200).json({
+    jsonrpc: '2.0',
+    id,
+    error: {
+      code: 500,
+      message: 'test error',
+    },
+  });
+  
+
 // positive rest
 app.get('/rest', (req, res) => sendSuccessData(res, { foo: 'bar' }));
 app.post('/rest', (req, res) => sendSuccessData(res, { foo: 'bar', index: 1 }));
@@ -78,6 +89,13 @@ app.post('/json-rpc/negative', (req, res) => {
   const { id } = req.body;
 
   sendNegativeDataRPC(res, id);
+});
+
+// negative json-rpc with no additionalErrors
+app.post('/json-rpc/negative', (req, res) => {
+  const { id } = req.body;
+
+  sendNegativeErrorDataRPC(res, id);
 });
 
 // eslint-disable-next-line

@@ -1,10 +1,19 @@
-import { IResponse, IJSONRPCPureResponse } from '@/types/types';
+import { IJSONRPCPureResponse, ExtendedIResponse } from '@/types/types';
 
 export const formatResponseJSONRPCData = (
   data: IJSONRPCPureResponse,
-): IResponse => ({
-  errorText: data.error ? data.error.message : '',
-  additionalErrors: data.error ? data.error.additionalErrors : null,
-  error: Boolean(data.error),
-  data: Boolean(data.result) ? data.result : {},
-});
+): ExtendedIResponse => {
+  const responseRestFormat: ExtendedIResponse = {
+    errorText: data.error ? data.error.message : '',
+    error: Boolean(data.error),
+    data: Boolean(data.result) ? data.result : {},
+  };
+
+  if (data.error && data.error.additionalErrors) {
+    responseRestFormat.additionalErrors = data.error.additionalErrors;
+  } else {
+    responseRestFormat.additionalErrors = null;
+  }
+
+  return responseRestFormat;
+};

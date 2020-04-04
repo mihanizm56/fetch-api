@@ -26,3 +26,16 @@ module.exports.JSONRPCNegativeRequest = responseSchema =>
       },
     },
   });
+
+module.exports.JSONRPCNegativeErrorsRequest = responseSchema =>
+  new JSONRPCRequest().makeRequest({
+    endpoint: 'http://localhost:8080/json-rpc/negative/errors',
+    errorsMap,
+    responseSchema,
+    body: {
+      method: 'test_method',
+      options: {
+        foo: 'bar',
+      },
+    },
+  });
