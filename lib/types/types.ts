@@ -29,7 +29,6 @@ export interface IRequestParams {
   queryParams?: { [key: string]: string };
   errorsMap: ErrorsMap;
   responseSchema: Schema;
-  requestProtocol: keyof typeof requestProtocolsMap;
 }
 
 export interface IResponse {

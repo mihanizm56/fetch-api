@@ -25,7 +25,7 @@ import { objectToQueryString } from "../utils/object-to-query-string";
 
 interface IBaseRequests {
   makeFetch: (
-    values: IRequestParams & IJSONPRCRequestParams
+    values: IRequestParams & IJSONPRCRequestParams & {  requestProtocol: keyof typeof requestProtocolsMap;}
   ) => Promise<IResponse>;
 
   requestRacer: (params: RequestRacerParams) => Promise<any>;
@@ -121,7 +121,7 @@ export class BaseRequest implements IBaseRequests {
   }
 
   makeFetch = <
-    MakeFetchType extends IRequestParams & Partial<IJSONPRCRequestParams>
+    MakeFetchType extends IRequestParams & Partial<IJSONPRCRequestParams> & {  requestProtocol: keyof typeof requestProtocolsMap;}
   >({
     id,
     version,
