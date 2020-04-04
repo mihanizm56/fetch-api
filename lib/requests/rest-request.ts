@@ -3,7 +3,7 @@ import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
 
 export class RestRequest extends BaseRequest {
-  public getRequest = (requestParams: Omit<IRequestParams,'method'>) =>
+  public getRequest = (requestParams: Omit<IRequestParams,'method'&'requestProtocol'>) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
