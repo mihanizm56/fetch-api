@@ -5,7 +5,7 @@ import { uniqueId } from "@/utils/unique-id";
 
 export class JSONRPCRequest extends BaseRequest {
   public makeRequest = (
-    requestParams: Omit<IJSONPRCRequestParams,'method'&'requestProtocol'>
+    requestParams: Omit<IJSONPRCRequestParams,'method'|'requestProtocol'>
   ): Promise<IResponse> =>
     this.makeFetch({
       ...requestParams,
