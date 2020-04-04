@@ -11,7 +11,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public postRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'>) =>
+  public postRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'> & {body:any}) =>
     this.makeFetch({
       ...requestParams,
       method: "POST",
@@ -19,7 +19,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public putRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'>) =>
+  public putRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'> & {body:any}) =>
     this.makeFetch({
       ...requestParams,
       method: "PUT",
@@ -27,7 +27,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public patchRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'>) =>
+  public patchRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'> & {body:any}) =>
     this.makeFetch({
       ...requestParams,
       method: "PATCH",
@@ -35,7 +35,7 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest
     });
 
-  public deleteRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'>) =>
+  public deleteRequest = (requestParams: Omit<IRequestParams,'method'|'requestProtocol'> & {body:any}) =>
     this.makeFetch({
       ...requestParams,
       method: "DELETE",
