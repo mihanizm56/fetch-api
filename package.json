@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.1.0",
+  "version": "3.0.5-beta.18",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,12 +29,12 @@
   "homepage": "https://github.com/mihanizm56/fetch-api#readme",
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@types/joi": "14.3.4",
-    "@types/node-fetch": "2.5.5",
-    "node-fetch": "2.6.0",
-    "typescript": "3.8.3"
+    "node-fetch": "2.6.0"
   },
   "devDependencies": {
+    "typescript": "3.8.3",
+    "@types/joi": "14.3.4",
+    "@types/node-fetch": "2.5.5",
     "@commitlint/cli": "8.2.0",
     "@types/jest": "24.9.1",
     "@typescript-eslint/eslint-plugin": "2.5.0",
