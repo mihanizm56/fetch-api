@@ -8,7 +8,7 @@ import {
   IJSONPRCRequestParams,
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
-  GetFetchBodyParamsType
+  GetFetchBodyParamsType,
 } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { formatResponseJSONRPCData } from "@/utils/format-response-json-rpc-data";
@@ -20,12 +20,14 @@ import { TIMEOUT_VALUE } from "../constants/timeout";
 import { jsonParser } from "../utils/parsers/json-parser";
 import { blobParser } from "../utils/parsers/blob-parser";
 import { objectToQueryString } from "../utils/object-to-query-string";
-
-
+import { isRestRequest } from "@/utils/is-rest-request";
 
 interface IBaseRequests {
   makeFetch: (
-    values: IRequestParams & IJSONPRCRequestParams & {  requestProtocol: keyof typeof requestProtocolsMap;}
+    values: IRequestParams &
+      IJSONPRCRequestParams & {
+        requestProtocol: keyof typeof requestProtocolsMap;
+      }
   ) => Promise<IResponse>;
 
   requestRacer: (params: RequestRacerParams) => Promise<any>;
@@ -41,7 +43,7 @@ export class BaseRequest implements IBaseRequests {
   parseResponseData = ({
     response,
     parseType,
-    isResponseOk
+    isResponseOk,
   }: ParseResponseParams) => {
     // if not 200 then always get json format
     if (!isResponseOk) {
@@ -64,7 +66,7 @@ export class BaseRequest implements IBaseRequests {
   // get an isomorfic fetch
   getIsomorphicFetch = ({
     endpoint,
-    fetchParams
+    fetchParams,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
     if (typeof window === "undefined") {
       const requestFetch = (nodeFetch.bind(
@@ -81,19 +83,19 @@ export class BaseRequest implements IBaseRequests {
 
     const requestFetch = (window.fetch.bind(null, endpoint, {
       ...fetchParams,
-      signal: fetchController.signal
+      signal: fetchController.signal,
     }) as () => Promise<unknown>) as () => Promise<IResponse>;
 
     return {
       requestFetch,
-      fetchController
+      fetchController,
     };
   };
 
   // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
-    queryParams
+    queryParams,
   }: FormattedEndpointParams): string => {
     if (!Boolean(queryParams)) {
       return endpoint;
@@ -103,25 +105,33 @@ export class BaseRequest implements IBaseRequests {
   };
 
   // get formatted fetch body in needed
-  getFetchBody = ({requestProtocol,body,method,version,id}:GetFetchBodyParamsType) => {
-    if(method === 'GET'){
-      return undefined
+  getFetchBody = ({
+    requestProtocol,
+    body,
+    method,
+    version,
+    id,
+  }: GetFetchBodyParamsType) => {
+    if (method === "GET") {
+      return undefined;
     }
 
-    if(requestProtocol === requestProtocolsMap.jsonRpc){
-      return JSON.stringify({ ...body, ...version, id })
+    if (requestProtocol === requestProtocolsMap.jsonRpc) {
+      return JSON.stringify({ ...body, ...version, id });
     } else {
-      if(body instanceof FormData){
-        return body
+      if (body instanceof FormData) {
+        return body;
       } else {
-        return JSON.stringify(body)
+        return JSON.stringify(body);
       }
-
     }
-  }
+  };
 
   makeFetch = <
-    MakeFetchType extends IRequestParams & Partial<IJSONPRCRequestParams> & {  requestProtocol: keyof typeof requestProtocolsMap;}
+    MakeFetchType extends IRequestParams &
+      Partial<IJSONPRCRequestParams> & {
+        requestProtocol: keyof typeof requestProtocolsMap;
+      }
   >({
     id,
     version,
@@ -134,15 +144,20 @@ export class BaseRequest implements IBaseRequests {
     queryParams,
     errorsMap,
     responseSchema,
-    requestProtocol
+    requestProtocol,
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
-      queryParams
+      queryParams,
     });
 
-    const fetchBody = this.getFetchBody({requestProtocol,body,version,method,id})
-
+    const fetchBody = this.getFetchBody({
+      requestProtocol,
+      body,
+      version,
+      method,
+      id,
+    });
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
@@ -150,8 +165,8 @@ export class BaseRequest implements IBaseRequests {
         body: fetchBody,
         mode,
         headers,
-        method
-      }
+        method,
+      },
     });
 
     const request = requestFetch()
@@ -167,34 +182,28 @@ export class BaseRequest implements IBaseRequests {
           const respondedData: any = await this.parseResponseData({
             response,
             parseType,
-            isResponseOk
+            isResponseOk,
           });
-          const responceId = respondedData.id;
 
-          const formattedResponseData: IResponse =
-            requestProtocol === requestProtocolsMap.rest
+          // validate the format of the request
+          const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
+            requestProtocol
+          );
+
+          // get the full validation result
+          const isFormatValid: boolean = formatDataTypeValidator({
+            response: respondedData,
+            schema: responseSchema,
+            prevId: id,
+          });
+
+          if (isFormatValid) {
+            const formattedResponseData: IResponse = isRestRequest(
+              requestProtocol
+            )
               ? respondedData
               : formatResponseJSONRPCData(respondedData);
 
-          // validate the format of the request
-          const formatDataTypeValidator = new FormatDataTypeValidator({
-            responseData: formattedResponseData,
-            responseSchema
-          });
-
-          // get the full validation result
-          const isFormatValid: boolean = formatDataTypeValidator.getResponseFormatIsValid();
-
-          // get the same ids if jsonRPC request goes or return true if the rest protocol
-          const areIdsTheSame: boolean =
-            id && responceId
-              ? formatDataTypeValidator.getCompareIds({
-                  requestId: id,
-                  responceId
-                })
-              : true;
-
-          if (isFormatValid && areIdsTheSame) {
             return formattedResponseData;
           }
         }
@@ -204,12 +213,12 @@ export class BaseRequest implements IBaseRequests {
           errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE
         );
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("get error in fetch", error.message);
 
         return errorResponseConstructor({
           errorsMap,
-          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR
+          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
         });
       });
 
@@ -217,21 +226,20 @@ export class BaseRequest implements IBaseRequests {
       request,
       fetchController,
       errorsMap,
-      requestProtocol
     });
   };
 
   requestRacer = ({
     request,
     fetchController,
-    errorsMap
+    errorsMap,
   }: RequestRacerParams): Promise<IResponse> => {
     const defaultError: IResponse = errorResponseConstructor({
       errorsMap,
-      errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR
+      errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
     });
 
-    const timeoutException: Promise<IResponse> = new Promise(resolve =>
+    const timeoutException: Promise<IResponse> = new Promise((resolve) =>
       setTimeout(() => {
         // if the window fetch
         if (typeof window !== "undefined") {

@@ -18,6 +18,13 @@ const {
   deleteNegativeRestRequest,
 } = require('./requests/rest');
 
+const SYSTEM_ERROR = {
+  additionalErrors: null,
+  data: {},
+  error: true,
+  errorText: 'Системная ошибка',
+};
+
 describe('tests rest request protocol', () => {
   beforeEach(() => {
     delete global.window;
@@ -141,52 +148,27 @@ describe('tests rest request protocol', () => {
     test('get request', async () => {
       const data = await getRestRequest(postRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
     test('post request', async () => {
       const data = await postRestRequest(getRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
     test('put request', async () => {
       const data = await putRestRequest(patchRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
     test('patch request', async () => {
       const data = await patchRestRequest(putRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
     test('delete request', async () => {
       const data = await deleteRestRequest(putRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
   });
 });

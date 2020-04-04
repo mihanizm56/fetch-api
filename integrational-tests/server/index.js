@@ -54,7 +54,6 @@ const sendNegativeErrorDataRPC = (res, id) =>
       message: 'test error',
     },
   });
-  
 
 // positive rest
 app.get('/rest', (req, res) => sendSuccessData(res, { foo: 'bar' }));

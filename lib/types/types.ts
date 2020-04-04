@@ -62,7 +62,6 @@ export type RequestRacerParams = {
   request: Promise<IResponse>;
   fetchController?: any;
   errorsMap: ErrorsMap;
-  requestProtocol: keyof typeof requestProtocolsMap;
   requestId?: string | number;
 };
 
@@ -118,3 +117,16 @@ export type ExtendedIResponse = Pick<
   IResponse,
   'data' | 'error' | 'errorText'
 > & { additionalErrors?: Record<string, any> | null };
+
+export type GetCompareIdsParams = { requestId: string; responceId: string };
+
+export type GetIsSchemaResponseValidParams = {
+  data: any;
+  error: boolean;
+  schema: Schema;
+};
+
+export type GetIsJSONRPCFormatResponseValidParams = {
+  response: IJSONRPCPureResponse;
+  prevId: string | number;
+};

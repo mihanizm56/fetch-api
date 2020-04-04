@@ -9,7 +9,8 @@ export const formatResponseJSONRPCData = (
     data: Boolean(data.result) ? data.result : {},
   };
 
-  if (data.error && data.error.additionalErrors) {
+  // insert field additionalErrors manually
+  if (data.error) {
     responseRestFormat.additionalErrors = data.error.additionalErrors;
   } else {
     responseRestFormat.additionalErrors = null;

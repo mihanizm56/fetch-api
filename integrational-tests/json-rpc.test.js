@@ -2,7 +2,7 @@ const { JSONRPCSchemaOne, JSONRPCSchemaTwo } = require('./schemas/json-rpc');
 const {
   JSONRPCRequest,
   JSONRPCNegativeRequest,
-  JSONRPCNegativeErrorsRequest
+  JSONRPCNegativeErrorsRequest,
 } = require('./requests/json-rpc');
 
 describe('tests rest request protocol', () => {
@@ -39,7 +39,6 @@ describe('tests rest request protocol', () => {
   describe('negative response with not additionalErrors field', () => {
     test('test request one', async () => {
       const data = await JSONRPCNegativeErrorsRequest(JSONRPCSchemaTwo);
-
 
       expect(data).toEqual({
         additionalErrors: null,
