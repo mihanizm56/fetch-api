@@ -27,7 +27,7 @@ interface IBaseRequests {
     values: IRequestParams &
       IJSONPRCRequestParams & {
         requestProtocol: keyof typeof requestProtocolsMap;
-      }
+      } & {method:string}
   ) => Promise<IResponse>;
 
   requestRacer: (params: RequestRacerParams) => Promise<any>;
@@ -131,7 +131,7 @@ export class BaseRequest implements IBaseRequests {
     MakeFetchType extends IRequestParams &
       Partial<IJSONPRCRequestParams> & {
         requestProtocol: keyof typeof requestProtocolsMap;
-      }
+      } & {method:string}
   >({
     id,
     version,

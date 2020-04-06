@@ -23,7 +23,7 @@ export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
   mode?: ModeCorsType;
-  method: string;
+  method?: string;
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
