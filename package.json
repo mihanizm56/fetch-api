@@ -15,6 +15,7 @@
     "packages-vulnerability-check": "check-audit",
     "save": "npm run commit && git push && npm version patch && git push && npm run pub",
     "pub": "npm publish --access=public",
+    "beta": "npm publish --tag beta --access=public",
     "size": "pkgfiles"
   },
   "repository": {
