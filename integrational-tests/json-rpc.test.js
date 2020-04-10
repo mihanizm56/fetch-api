@@ -2,6 +2,7 @@ const { JSONRPCSchemaOne, JSONRPCSchemaTwo } = require('./schemas/json-rpc');
 const {
   JSONRPCRequest,
   JSONRPCNegativeRequest,
+  JSONRPCNegativeRequestEn,
   JSONRPCNegativeErrorsRequest,
 } = require('./requests/json-rpc');
 
@@ -24,14 +25,25 @@ describe('tests rest request protocol', () => {
   });
 
   describe('negative response', () => {
-    test('test request one', async () => {
+    test('get error in ru', async () => {
       const data = await JSONRPCNegativeRequest(JSONRPCSchemaTwo);
 
       expect(data).toEqual({
-        additionalErrors: { username: 'not valid data' },
-        data: {},
+        additionalErrors: { err: 'test error', trKey: 'test' },
+        data: null,
         error: true,
-        errorText: 'test error',
+        errorText: 'Тестовая ошибка',
+      });
+    });
+
+    test('get error in en', async () => {
+      const data = await JSONRPCNegativeRequestEn(JSONRPCSchemaTwo);
+
+      expect(data).toEqual({
+        additionalErrors: { err: 'test error', trKey: 'test' },
+        data: null,
+        error: true,
+        errorText: 'Test error',
       });
     });
   });

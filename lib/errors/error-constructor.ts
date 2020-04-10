@@ -2,10 +2,10 @@ import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-e
 import { IResponse, ErrorConstructorParams } from '@/types/types';
 
 export const errorResponseConstructor = (
-  errorText: ErrorConstructorParams,
+  errorDictionaryParams: ErrorConstructorParams,
 ): IResponse => ({
   error: true,
-  errorText: getFormattedResponseErrorText(errorText),
+  errorText: getFormattedResponseErrorText(errorDictionaryParams),
   data: {},
   additionalErrors: null,
 });

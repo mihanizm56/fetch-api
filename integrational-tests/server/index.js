@@ -18,7 +18,7 @@ const sendSuccessData = (res, data) =>
 const sendNegativeData = res =>
   res.status(400).json({
     error: true,
-    errorText: 'test error',
+    errorText: 'test',
     additionalErrors: {
       username: 'not valid data',
     },
@@ -39,8 +39,9 @@ const sendNegativeDataRPC = (res, id) =>
     error: {
       code: 500,
       message: 'test error',
-      additionalErrors: {
-        username: 'not valid data',
+      data: {
+        err: 'test error',
+        trKey: 'test',
       },
     },
   });

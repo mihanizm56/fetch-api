@@ -11,8 +11,6 @@ import {
   GetFetchBodyParamsType,
 } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
-import { formatResponseJSONRPCData } from "@/utils/format-response-json-rpc-data";
-import { DEFAULT_ERROR_MESSAGE } from "../errors/constants";
 import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
 import { errorResponseConstructor } from "../errors/error-constructor";
@@ -20,7 +18,7 @@ import { TIMEOUT_VALUE } from "../constants/timeout";
 import { jsonParser } from "../utils/parsers/json-parser";
 import { blobParser } from "../utils/parsers/blob-parser";
 import { objectToQueryString } from "../utils/object-to-query-string";
-import { isRestRequest } from "@/utils/is-rest-request";
+import { FormatResponseFactory } from "@/formatters/format-response-factory";
 
 interface IBaseRequests {
   makeFetch: (
@@ -145,6 +143,7 @@ export class BaseRequest implements IBaseRequests {
     errorsMap,
     responseSchema,
     requestProtocol,
+    locale = 'ru'
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -195,22 +194,25 @@ export class BaseRequest implements IBaseRequests {
             response: respondedData,
             schema: responseSchema,
             prevId: id,
-          });
+          });          
 
           if (isFormatValid) {
-            const formattedResponseData: IResponse = isRestRequest(
-              requestProtocol
-            )
-              ? respondedData
-              : formatResponseJSONRPCData(respondedData);
+            const responseFormatter = new FormatResponseFactory().createFormatter({
+              ...respondedData,
+              locale,
+              errorsMap,
+              protocol:requestProtocol
+            })
 
+            const formattedResponseData = responseFormatter.getFormattedResponse()            
+            
             return formattedResponseData;
           }
         }
 
         // if not status from the whitelist - throw error with default error
         throw new Error(
-          errorsMap.REQUEST_DEFAULT_ERROR || DEFAULT_ERROR_MESSAGE
+          'REQUEST_DEFAULT_ERROR'
         );
       })
       .catch((error) => {
@@ -218,7 +220,8 @@ export class BaseRequest implements IBaseRequests {
 
         return errorResponseConstructor({
           errorsMap,
-          errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
+          errorTextKey: error.message,
+          locale
         });
       });
 
@@ -226,6 +229,7 @@ export class BaseRequest implements IBaseRequests {
       request,
       fetchController,
       errorsMap,
+      locale
     });
   };
 
@@ -233,10 +237,12 @@ export class BaseRequest implements IBaseRequests {
     request,
     fetchController,
     errorsMap,
+    locale
   }: RequestRacerParams): Promise<IResponse> => {
     const defaultError: IResponse = errorResponseConstructor({
       errorsMap,
-      errorTextKey: errorsMap.REQUEST_DEFAULT_ERROR,
+      errorTextKey: 'REQUEST_DEFAULT_ERROR',
+      locale
     });
 
     const timeoutException: Promise<IResponse> = new Promise((resolve) =>

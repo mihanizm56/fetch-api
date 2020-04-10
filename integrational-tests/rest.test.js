@@ -12,18 +12,17 @@ const {
   patchRestRequest,
   deleteRestRequest,
   getNegativeRestRequest,
+  getNegativeRestRequestEn,
   postNegativeRestRequest,
   putNegativeRestRequest,
   patchNegativeRestRequest,
   deleteNegativeRestRequest,
 } = require('./requests/rest');
-
-const SYSTEM_ERROR = {
-  additionalErrors: null,
-  data: {},
-  error: true,
-  errorText: 'Системная ошибка',
-};
+const {
+  SYSTEM_ERROR,
+  translatedErrorRu,
+  translatedErrorEn,
+} = require('./constants');
 
 describe('tests rest request protocol', () => {
   beforeEach(() => {
@@ -85,62 +84,32 @@ describe('tests rest request protocol', () => {
     test('get request', async () => {
       const data = await getNegativeRestRequest(getRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: {
-          username: 'not valid data',
-        },
-        data: {},
-        error: true,
-        errorText: 'test error',
-      });
+      expect(data).toEqual(translatedErrorRu);
+    });
+    test('get request and get error in en', async () => {
+      const data = await getNegativeRestRequestEn(getRestSchema);
+
+      expect(data).toEqual(translatedErrorEn);
     });
     test('post request', async () => {
       const data = await postNegativeRestRequest(postRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: {
-          username: 'not valid data',
-        },
-        data: {},
-        error: true,
-        errorText: 'test error',
-      });
+      expect(data).toEqual(translatedErrorRu);
     });
     test('put request', async () => {
       const data = await putNegativeRestRequest(putRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: {
-          username: 'not valid data',
-        },
-        data: {},
-        error: true,
-        errorText: 'test error',
-      });
+      expect(data).toEqual(translatedErrorRu);
     });
     test('patch request', async () => {
       const data = await patchNegativeRestRequest(patchRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: {
-          username: 'not valid data',
-        },
-        data: {},
-        error: true,
-        errorText: 'test error',
-      });
+      expect(data).toEqual(translatedErrorRu);
     });
     test('delete request', async () => {
       const data = await deleteNegativeRestRequest(deleteRestSchema);
 
-      expect(data).toEqual({
-        additionalErrors: {
-          username: 'not valid data',
-        },
-        data: {},
-        error: true,
-        errorText: 'test error',
-      });
+      expect(data).toEqual(translatedErrorRu);
     });
   });
 

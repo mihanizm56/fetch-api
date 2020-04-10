@@ -4,17 +4,17 @@ import { BaseRequest } from "./base-request";
 
 export class RestRequest extends BaseRequest {
   public getRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol">
+    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "body" | "parseType">
   ) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
       parseType: parseTypesMap.json,
-      requestProtocol: requestProtocolsMap.rest,
+      requestProtocol: requestProtocolsMap.rest
     });
 
   public postRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol"> & {
+    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType"> & {
       body: any;
     }
   ) =>
@@ -22,11 +22,11 @@ export class RestRequest extends BaseRequest {
       ...requestParams,
       method: "POST",
       parseType: parseTypesMap.json,
-      requestProtocol: requestProtocolsMap.rest,
+      requestProtocol: requestProtocolsMap.rest
     });
 
   public putRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol"> & {
+    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType"> & {
       body: any;
     }
   ) =>
@@ -34,11 +34,11 @@ export class RestRequest extends BaseRequest {
       ...requestParams,
       method: "PUT",
       parseType: parseTypesMap.json,
-      requestProtocol: requestProtocolsMap.rest,
+      requestProtocol: requestProtocolsMap.rest
     });
 
   public patchRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol"> & {
+    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType"> & {
       body: any;
     }
   ) =>
@@ -46,28 +46,26 @@ export class RestRequest extends BaseRequest {
       ...requestParams,
       method: "PATCH",
       parseType: parseTypesMap.json,
-      requestProtocol: requestProtocolsMap.rest,
+      requestProtocol: requestProtocolsMap.rest
     });
 
   public deleteRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol"> & {
-      body: any;
-    }
+    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType">
   ) =>
     this.makeFetch({
       ...requestParams,
       method: "DELETE",
       parseType: parseTypesMap.json,
-      requestProtocol: requestProtocolsMap.rest,
+      requestProtocol: requestProtocolsMap.rest
     });
 
   public getBlobRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol">
+    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType">
   ) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
       parseType: parseTypesMap.blob,
-      requestProtocol: requestProtocolsMap.rest,
+      requestProtocol: requestProtocolsMap.rest
     });
 }

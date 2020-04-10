@@ -40,7 +40,8 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       ('result' in response ||
         (response.error &&
           'code' in response.error &&
-          'additionalErrors' in response.error &&
+          'data' in response.error &&
+          'trKey' in response.error.data &&
           'message' in response.error)) &&
         'jsonrpc' in response &&
         'id' in response &&

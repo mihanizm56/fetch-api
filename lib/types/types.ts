@@ -3,9 +3,17 @@ import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
-export type ErrorsMap = { [key: string]: string } & {
-  TIMEOUT_ERROR: string;
-  REQUEST_DEFAULT_ERROR: string;
+export type ErrorsMap = {
+  [key: string]: {
+    [key: string]: string;
+  };
+} & {
+  TIMEOUT_ERROR: {
+    ru: string;
+  };
+  REQUEST_DEFAULT_ERROR: {
+    ru: string;
+  };
 };
 
 export interface IJSONPRCRequestParams extends IRequestParams {
@@ -19,6 +27,16 @@ export interface IJSONPRCRequestParams extends IRequestParams {
   };
 }
 
+export type FormatResponseRESTDataOptionsType = {
+  errorsMap: ErrorsMap;
+  locale: string;
+} & IRESTPureResponse;
+
+export type FormatResponseJSONRPCDataOptionsType = {
+  errorsMap: ErrorsMap;
+  locale: string;
+} & IJSONRPCPureResponse;
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
@@ -29,6 +47,7 @@ export interface IRequestParams {
   queryParams?: { [key: string]: string };
   errorsMap: ErrorsMap;
   responseSchema: Schema;
+  locale?: string;
 }
 
 export interface IResponse {
@@ -45,14 +64,19 @@ export interface IRESTPureResponse {
   additionalErrors: Record<string, any> | Array<any> | null;
 }
 
+export type JSONRPCErrorType = {
+  code: string;
+  message: string;
+  data: {
+    err: string;
+    trKey: string;
+  };
+};
+
 export interface IJSONRPCPureResponse {
   jsonrpc: string;
   result?: any;
-  error?: {
-    code: string;
-    message: string;
-    additionalErrors: Record<string, any> | Array<any> | null;
-  };
+  error?: JSONRPCErrorType;
   id: string | number;
 }
 
@@ -63,6 +87,7 @@ export type RequestRacerParams = {
   fetchController?: any;
   errorsMap: ErrorsMap;
   requestId?: string | number;
+  locale: string;
 };
 
 export type ParseResponseParams = {
@@ -76,15 +101,10 @@ export type FormattedEndpointParams = {
   queryParams?: QueryParamsType;
 };
 
-export type ErrorRestConstructorParams = {
-  errorTextKey: string;
-  errorsMap: { [key: string]: string };
-};
-
 export type ErrorConstructorParams = {
   errorTextKey: string;
-  errorsMap: { [key: string]: string };
-  id?: string | number;
+  errorsMap: ErrorsMap;
+  locale: string;
 };
 
 export type FormatDataTypeValidatorParamsType = {
@@ -113,11 +133,6 @@ export type GetFetchBodyParamsType = {
   id?: string;
 };
 
-export type ExtendedIResponse = Pick<
-  IResponse,
-  'data' | 'error' | 'errorText'
-> & { additionalErrors?: Record<string, any> | null };
-
 export type GetCompareIdsParams = { requestId: string; responceId: string };
 
 export type GetIsSchemaResponseValidParams = {
@@ -130,3 +145,18 @@ export type GetIsJSONRPCFormatResponseValidParams = {
   response: IJSONRPCPureResponse;
   prevId: string | number;
 };
+
+export abstract class ResponseFormatter {
+  public abstract getFormattedResponse: () => IResponse;
+}
+
+export type FormatResponseParamsType = {
+  locale: string;
+  errorsMap: ErrorsMap;
+  protocol: keyof typeof requestProtocolsMap;
+} & IRESTPureResponse &
+  IJSONRPCPureResponse;
+
+export interface IFormatResponseFactory {
+  createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
+}

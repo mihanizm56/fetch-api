@@ -58,6 +58,14 @@ module.exports.getNegativeRestRequest = responseSchema =>
     responseSchema,
   });
 
+module.exports.getNegativeRestRequestEn = responseSchema =>
+  new RestRequest().getRequest({
+    endpoint: 'http://localhost:8080/rest/negative',
+    errorsMap,
+    responseSchema,
+    locale: 'en',
+  });
+
 module.exports.postNegativeRestRequest = responseSchema =>
   new RestRequest().postRequest({
     endpoint: 'http://localhost:8080/rest/negative',
