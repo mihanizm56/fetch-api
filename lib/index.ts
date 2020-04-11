@@ -9,6 +9,8 @@ export {
   IResponse,
   QueryParamsType,
   IRequestParams,
+  ComplexRequestParams,
+  SimpleRequestParams,
   ErrorsMap,
   ModeCorsType
 } from "./types/types";

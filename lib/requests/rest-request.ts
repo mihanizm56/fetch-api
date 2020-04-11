@@ -1,4 +1,4 @@
-import { IRequestParams } from "@/types/types";
+import { IRequestParams, ComplexRequestParams, SimpleRequestParams } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
 
@@ -14,9 +14,7 @@ export class RestRequest extends BaseRequest {
     });
 
   public postRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType"> & {
-      body: any;
-    }
+    requestParams: ComplexRequestParams
   ) =>
     this.makeFetch({
       ...requestParams,
@@ -26,9 +24,7 @@ export class RestRequest extends BaseRequest {
     });
 
   public putRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType"> & {
-      body: any;
-    }
+    requestParams: ComplexRequestParams
   ) =>
     this.makeFetch({
       ...requestParams,
@@ -38,9 +34,7 @@ export class RestRequest extends BaseRequest {
     });
 
   public patchRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType"> & {
-      body: any;
-    }
+    requestParams: ComplexRequestParams
   ) =>
     this.makeFetch({
       ...requestParams,
@@ -50,7 +44,7 @@ export class RestRequest extends BaseRequest {
     });
 
   public deleteRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType">
+    requestParams: SimpleRequestParams
   ) =>
     this.makeFetch({
       ...requestParams,
@@ -60,7 +54,7 @@ export class RestRequest extends BaseRequest {
     });
 
   public getBlobRequest = (
-    requestParams: Omit<IRequestParams, "method" | "requestProtocol" | "parseType">
+    requestParams: SimpleRequestParams
   ) =>
     this.makeFetch({
       ...requestParams,

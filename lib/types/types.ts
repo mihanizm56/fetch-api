@@ -50,6 +50,18 @@ export interface IRequestParams {
   locale?: string;
 }
 
+export type ComplexRequestParams = Omit<
+  IRequestParams,
+  'method' | 'requestProtocol' | 'parseType'
+> & {
+  body: any;
+};
+
+export type SimpleRequestParams = Omit<
+  IRequestParams,
+  'method' | 'requestProtocol' | 'parseType'
+>;
+
 export interface IResponse {
   error: boolean;
   errorText: string;
