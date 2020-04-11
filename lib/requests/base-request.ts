@@ -213,9 +213,7 @@ export class BaseRequest implements IBaseRequests {
         }
 
         // if not status from the whitelist - throw error with default error
-        throw new Error(
-          'REQUEST_DEFAULT_ERROR'
-        );
+        throw new Error(isErrorTextStraightToOutput ? response.statusText : 'REQUEST_DEFAULT_ERROR');
       })
       .catch((error) => {
         console.error("get error in fetch", error.message);
