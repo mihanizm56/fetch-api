@@ -39,6 +39,18 @@ export type FormatResponseJSONRPCDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
 } & IJSONRPCPureResponse;
 
+export type ResponseValidateType = {
+  response: any;
+  schema: Schema;
+  prevId?: string;
+};
+
+export type ExtraValidationCallback = ({
+  response,
+  schema,
+  prevId,
+}: ResponseValidateType) => boolean;
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
@@ -51,6 +63,7 @@ export interface IRequestParams {
   responseSchema: Schema;
   locale?: string;
   isErrorTextStraightToOutput?: boolean;
+  extraValidationCallback?: ExtraValidationCallback;
 }
 
 export type ComplexRequestParams = Omit<
@@ -178,3 +191,8 @@ export type FormatResponseParamsType = {
 export interface IFormatResponseFactory {
   createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
 }
+
+export type GetFormatValidateMethodParams = {
+  protocol: keyof typeof requestProtocolsMap;
+  extraValidationCallback?: ExtraValidationCallback;
+};

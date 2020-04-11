@@ -8,7 +8,7 @@ import {
   IJSONPRCRequestParams,
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
-  GetFetchBodyParamsType,
+  GetFetchBodyParamsType
 } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { StatusValidator } from "../validators/response-status-validator";
@@ -25,7 +25,7 @@ interface IBaseRequests {
     values: IRequestParams &
       IJSONPRCRequestParams & {
         requestProtocol: keyof typeof requestProtocolsMap;
-      } & {method:string}
+      } & { method: string }
   ) => Promise<IResponse>;
 
   requestRacer: (params: RequestRacerParams) => Promise<any>;
@@ -41,7 +41,7 @@ export class BaseRequest implements IBaseRequests {
   parseResponseData = ({
     response,
     parseType,
-    isResponseOk,
+    isResponseOk
   }: ParseResponseParams) => {
     // if not 200 then always get json format
     if (!isResponseOk) {
@@ -64,7 +64,7 @@ export class BaseRequest implements IBaseRequests {
   // get an isomorfic fetch
   getIsomorphicFetch = ({
     endpoint,
-    fetchParams,
+    fetchParams
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
     if (typeof window === "undefined") {
       const requestFetch = (nodeFetch.bind(
@@ -81,19 +81,19 @@ export class BaseRequest implements IBaseRequests {
 
     const requestFetch = (window.fetch.bind(null, endpoint, {
       ...fetchParams,
-      signal: fetchController.signal,
+      signal: fetchController.signal
     }) as () => Promise<unknown>) as () => Promise<IResponse>;
 
     return {
       requestFetch,
-      fetchController,
+      fetchController
     };
   };
 
   // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
-    queryParams,
+    queryParams
   }: FormattedEndpointParams): string => {
     if (!Boolean(queryParams)) {
       return endpoint;
@@ -108,7 +108,7 @@ export class BaseRequest implements IBaseRequests {
     body,
     method,
     version,
-    id,
+    id
   }: GetFetchBodyParamsType) => {
     if (method === "GET") {
       return undefined;
@@ -129,7 +129,7 @@ export class BaseRequest implements IBaseRequests {
     MakeFetchType extends IRequestParams &
       Partial<IJSONPRCRequestParams> & {
         requestProtocol: keyof typeof requestProtocolsMap;
-      } & {method:string}
+      } & { method: string }
   >({
     id,
     version,
@@ -143,12 +143,13 @@ export class BaseRequest implements IBaseRequests {
     errorsMap,
     responseSchema,
     requestProtocol,
-    locale = 'ru',
-    isErrorTextStraightToOutput
+    locale = "ru",
+    isErrorTextStraightToOutput,
+    extraValidationCallback
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
-      queryParams,
+      queryParams
     });
 
     const fetchBody = this.getFetchBody({
@@ -156,7 +157,7 @@ export class BaseRequest implements IBaseRequests {
       body,
       version,
       method,
-      id,
+      id
     });
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
@@ -165,8 +166,8 @@ export class BaseRequest implements IBaseRequests {
         body: fetchBody,
         mode,
         headers,
-        method,
-      },
+        method
+      }
     });
 
     const request = requestFetch()
@@ -182,40 +183,49 @@ export class BaseRequest implements IBaseRequests {
           const respondedData: any = await this.parseResponseData({
             response,
             parseType,
-            isResponseOk,
+            isResponseOk
           });
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
-            requestProtocol
+            {
+              protocol: requestProtocol,
+              extraValidationCallback
+            }
           );
 
           // get the full validation result
           const isFormatValid: boolean = formatDataTypeValidator({
             response: respondedData,
             schema: responseSchema,
-            prevId: id,
-          });          
+            prevId: id
+          })
 
           if (isFormatValid) {
-            const responseFormatter = new FormatResponseFactory().createFormatter({
-              ...respondedData,
-              locale,
-              errorsMap,
-              protocol:requestProtocol,
-              isErrorTextStraightToOutput
-            })
+            const responseFormatter = new FormatResponseFactory().createFormatter(
+              {
+                ...respondedData,
+                locale,
+                errorsMap,
+                protocol: requestProtocol,
+                isErrorTextStraightToOutput
+              }
+            );
 
-            const formattedResponseData = responseFormatter.getFormattedResponse()            
-            
+            const formattedResponseData = responseFormatter.getFormattedResponse();
+
             return formattedResponseData;
           }
         }
 
         // if not status from the whitelist - throw error with default error
-        throw new Error(isErrorTextStraightToOutput ? response.statusText : 'REQUEST_DEFAULT_ERROR');
+        throw new Error(
+          isErrorTextStraightToOutput
+            ? response.statusText
+            : "REQUEST_DEFAULT_ERROR"
+        );
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("get error in fetch", error.message);
 
         return errorResponseConstructor({
@@ -244,12 +254,12 @@ export class BaseRequest implements IBaseRequests {
   }: RequestRacerParams): Promise<IResponse> => {
     const defaultError: IResponse = errorResponseConstructor({
       errorsMap,
-      errorTextKey: 'REQUEST_DEFAULT_ERROR',
+      errorTextKey: "REQUEST_DEFAULT_ERROR",
       locale,
       isErrorTextStraightToOutput
     });
 
-    const timeoutException: Promise<IResponse> = new Promise((resolve) =>
+    const timeoutException: Promise<IResponse> = new Promise(resolve =>
       setTimeout(() => {
         // if the window fetch
         if (typeof window !== "undefined") {

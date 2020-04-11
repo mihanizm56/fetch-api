@@ -41,6 +41,23 @@ module.exports.JSONRPCNegativeRequestEn = responseSchema =>
     locale: 'en',
   });
 
+module.exports.JSONRPCRequestWithCustomResponseValidation = ({
+  responseSchema,
+  extraValidationCallback,
+}) =>
+  new JSONRPCRequest().makeRequest({
+    endpoint: 'http://localhost:8080/json-rpc',
+    errorsMap,
+    responseSchema,
+    body: {
+      method: 'test_method',
+      options: {
+        foo: 'bar',
+      },
+    },
+    extraValidationCallback,
+  });
+
 module.exports.JSONRPCNegativeErrorsRequestStraightError = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',

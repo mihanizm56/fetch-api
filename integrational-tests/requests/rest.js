@@ -8,6 +8,17 @@ module.exports.getRestRequest = responseSchema =>
     responseSchema,
   });
 
+module.exports.getRestRequestWithCustomResponseValidation = ({
+  responseSchema,
+  extraValidationCallback,
+}) =>
+  new RestRequest().getRequest({
+    endpoint: 'http://localhost:8080/rest',
+    errorsMap,
+    responseSchema,
+    extraValidationCallback,
+  });
+
 module.exports.postRestRequest = responseSchema =>
   new RestRequest().postRequest({
     endpoint: 'http://localhost:8080/rest',

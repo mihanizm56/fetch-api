@@ -5,7 +5,9 @@ const {
   JSONRPCNegativeRequestEn,
   JSONRPCNegativeErrorsRequest,
   JSONRPCNegativeErrorsRequestStraightError,
+  JSONRPCRequestWithCustomResponseValidation,
 } = require('./requests/json-rpc');
+const { SYSTEM_ERROR } = require('./constants');
 
 describe('tests rest request protocol', () => {
   beforeEach(() => {
@@ -57,8 +59,35 @@ describe('tests rest request protocol', () => {
         additionalErrors: { err: 'test error', trKey: 'test' },
         data: null,
         error: true,
-        errorText: 'test error',
+        errorText: 'test error message',
       });
+    });
+
+    test('get request with extra handler validation callback, callback returns true', async () => {
+      const extraValidationCallback = () => true;
+
+      const data = await JSONRPCRequestWithCustomResponseValidation({
+        responseSchema: JSONRPCSchemaTwo,
+        extraValidationCallback,
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: { foo: '1', index: 123 },
+        error: false,
+        errorText: '',
+      });
+    });
+
+    test('get request with extra handler validation callback, callback returns false', async () => {
+      const extraValidationCallback = () => false;
+
+      const data = await JSONRPCRequestWithCustomResponseValidation({
+        responseSchema: JSONRPCSchemaTwo,
+        extraValidationCallback,
+      });
+
+      expect(data).toEqual(SYSTEM_ERROR);
     });
   });
 
@@ -66,12 +95,7 @@ describe('tests rest request protocol', () => {
     test('test request one', async () => {
       const data = await JSONRPCNegativeErrorsRequest(JSONRPCSchemaTwo);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
   });
 
@@ -79,12 +103,7 @@ describe('tests rest request protocol', () => {
     test('test request one', async () => {
       const data = await JSONRPCRequest(JSONRPCSchemaOne);
 
-      expect(data).toEqual({
-        additionalErrors: null,
-        data: {},
-        error: true,
-        errorText: 'Системная ошибка',
-      });
+      expect(data).toEqual(SYSTEM_ERROR);
     });
   });
 });

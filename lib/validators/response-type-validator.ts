@@ -1,9 +1,9 @@
-import { Schema } from "joi"; // eslint-disable-line
 import {
   IRESTPureResponse,
   GetIsJSONRPCFormatResponseValidParams,
   GetIsSchemaResponseValidParams,
   GetCompareIdsParams,
+  GetFormatValidateMethodParams,
 } from '@/types/types';
 import { requestProtocolsMap } from '@/constants/shared';
 
@@ -22,7 +22,7 @@ interface IResponseFormatValidator {
 
   getJSONRPCFormatIsValid: (response: any) => boolean;
 
-  getFormatValidateMethod: (protocol: keyof typeof requestProtocolsMap) => any; // todo fix any type in next release
+  getFormatValidateMethod: (params: GetFormatValidateMethodParams) => any; // todo fix any type in next release
 }
 
 export class FormatDataTypeValidator implements IResponseFormatValidator {
@@ -129,7 +129,15 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     return true;
   };
 
-  getFormatValidateMethod = (protocol: keyof typeof requestProtocolsMap) => {
+  getFormatValidateMethod = ({
+    protocol,
+    extraValidationCallback,
+  }: GetFormatValidateMethodParams) => {
+    // if there is an extra callback for validations
+    if (extraValidationCallback) {
+      return extraValidationCallback;
+    }
+
     switch (protocol) {
       case requestProtocolsMap.rest:
         return this.getRestFormatIsValid;

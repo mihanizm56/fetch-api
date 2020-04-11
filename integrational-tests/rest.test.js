@@ -18,6 +18,7 @@ const {
   patchNegativeRestRequest,
   deleteNegativeRestRequest,
   getNegativeRestRequestStraightError,
+  getRestRequestWithCustomResponseValidation,
 } = require('./requests/rest');
 const {
   SYSTEM_ERROR,
@@ -79,6 +80,31 @@ describe('tests rest request protocol', () => {
         error: false,
         errorText: '',
       });
+    });
+    test('get request with extra handler validation callback, callback returns true', async () => {
+      const extraValidationCallback = () => true;
+
+      const data = await getRestRequestWithCustomResponseValidation({
+        responseSchema: getRestSchema,
+        extraValidationCallback,
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: { foo: 'bar' },
+        error: false,
+        errorText: '',
+      });
+    });
+    test('get request with extra handler validation callback, callback returns false', async () => {
+      const extraValidationCallback = () => false;
+
+      const data = await getRestRequestWithCustomResponseValidation({
+        responseSchema: getRestSchema,
+        extraValidationCallback,
+      });
+
+      expect(data).toEqual(SYSTEM_ERROR);
     });
   });
   describe('negative response', () => {
