@@ -196,3 +196,7 @@ export type GetFormatValidateMethodParams = {
   protocol: keyof typeof requestProtocolsMap;
   extraValidationCallback?: ExtraValidationCallback;
 };
+
+export type GetterRequestBaseParamsType = {
+  errorsMap: ErrorsMap;
+};

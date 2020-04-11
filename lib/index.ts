@@ -12,5 +12,6 @@ export {
   ComplexRequestParams,
   SimpleRequestParams,
   ErrorsMap,
-  ModeCorsType
+  ModeCorsType,
+  GetterRequestBaseParamsType
 } from "./types/types";
