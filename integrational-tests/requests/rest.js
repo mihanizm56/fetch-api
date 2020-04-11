@@ -66,6 +66,14 @@ module.exports.getNegativeRestRequestEn = responseSchema =>
     locale: 'en',
   });
 
+module.exports.getNegativeRestRequestStraightError = responseSchema =>
+  new RestRequest().getRequest({
+    endpoint: 'http://localhost:8080/rest/negative',
+    errorsMap,
+    responseSchema,
+    isErrorTextStraightToOutput: true,
+  });
+
 module.exports.postNegativeRestRequest = responseSchema =>
   new RestRequest().postRequest({
     endpoint: 'http://localhost:8080/rest/negative',

@@ -19,6 +19,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     result,
     jsonrpc,
     id,
+    isErrorTextStraightToOutput,
   }: FormatResponseParamsType): ResponseFormatter => {
     return isRestRequest(protocol)
       ? new RestResponseFormatter({
@@ -28,6 +29,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           locale,
           additionalErrors,
           errorsMap,
+          isErrorTextStraightToOutput,
         })
       : new JSONRPCResponseFormatter({
           jsonrpc,
@@ -36,6 +38,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           result,
           locale,
           errorsMap,
+          isErrorTextStraightToOutput,
         });
   };
 }

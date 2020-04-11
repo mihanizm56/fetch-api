@@ -41,6 +41,20 @@ module.exports.JSONRPCNegativeRequestEn = responseSchema =>
     locale: 'en',
   });
 
+module.exports.JSONRPCNegativeErrorsRequestStraightError = responseSchema =>
+  new JSONRPCRequest().makeRequest({
+    endpoint: 'http://localhost:8080/json-rpc/negative',
+    errorsMap,
+    responseSchema,
+    body: {
+      method: 'test_method',
+      options: {
+        foo: 'bar',
+      },
+    },
+    isErrorTextStraightToOutput: true,
+  });
+
 module.exports.JSONRPCNegativeErrorsRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative/errors',

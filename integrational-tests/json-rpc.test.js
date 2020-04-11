@@ -4,6 +4,7 @@ const {
   JSONRPCNegativeRequest,
   JSONRPCNegativeRequestEn,
   JSONRPCNegativeErrorsRequest,
+  JSONRPCNegativeErrorsRequestStraightError,
 } = require('./requests/json-rpc');
 
 describe('tests rest request protocol', () => {
@@ -44,6 +45,19 @@ describe('tests rest request protocol', () => {
         data: null,
         error: true,
         errorText: 'Test error',
+      });
+    });
+
+    test('get straight error text from server', async () => {
+      const data = await JSONRPCNegativeErrorsRequestStraightError(
+        JSONRPCSchemaTwo,
+      );
+
+      expect(data).toEqual({
+        additionalErrors: { err: 'test error', trKey: 'test' },
+        data: null,
+        error: true,
+        errorText: 'test error',
       });
     });
   });

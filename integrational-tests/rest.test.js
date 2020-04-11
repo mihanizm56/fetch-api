@@ -17,6 +17,7 @@ const {
   putNegativeRestRequest,
   patchNegativeRestRequest,
   deleteNegativeRestRequest,
+  getNegativeRestRequestStraightError,
 } = require('./requests/rest');
 const {
   SYSTEM_ERROR,
@@ -90,6 +91,16 @@ describe('tests rest request protocol', () => {
       const data = await getNegativeRestRequestEn(getRestSchema);
 
       expect(data).toEqual(translatedErrorEn);
+    });
+    test('get straight error text from server', async () => {
+      const data = await getNegativeRestRequestStraightError(getRestSchema);
+
+      expect(data).toEqual({
+        additionalErrors: { username: 'not valid data' },
+        data: {},
+        error: true,
+        errorText: 'test',
+      });
     });
     test('post request', async () => {
       const data = await postNegativeRestRequest(postRestSchema);

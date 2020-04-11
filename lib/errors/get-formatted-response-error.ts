@@ -5,9 +5,11 @@ export const getFormattedResponseErrorText = ({
   errorTextKey,
   errorsMap,
   locale,
+  isErrorTextStraightToOutput,
 }: ErrorConstructorParams): string => {
-  const formattedError =
-    errorsMap[errorTextKey] && errorsMap[errorTextKey][locale];
+  const formattedError = !isErrorTextStraightToOutput
+    ? errorsMap[errorTextKey] && errorsMap[errorTextKey][locale]
+    : errorTextKey;
 
   return formattedError || DEFAULT_ERROR_MESSAGE;
 };

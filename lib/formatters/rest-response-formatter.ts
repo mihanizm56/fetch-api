@@ -19,6 +19,8 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   additionalErrors: Record<string, any> | Array<any> | null;
 
+  isErrorTextStraightToOutput?: boolean;
+
   constructor({
     error,
     locale,
@@ -26,6 +28,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     errorText,
     additionalErrors,
     data,
+    isErrorTextStraightToOutput,
   }: FormatResponseRESTDataOptionsType) {
     super();
 
@@ -35,6 +38,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     this.errorText = errorText;
     this.additionalErrors = additionalErrors;
     this.data = data;
+    this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
   }
 
   getFormattedResponse = (): IResponse => ({
@@ -45,6 +49,7 @@ export class RestResponseFormatter extends ResponseFormatter {
           errorTextKey: this.errorText,
           locale: this.locale,
           errorsMap: this.errorsMap,
+          isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
         })
       : '',
     additionalErrors: this.additionalErrors,

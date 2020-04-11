@@ -16,11 +16,14 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   errorsMap: ErrorsMap;
 
+  isErrorTextStraightToOutput?: boolean;
+
   constructor({
     error,
     locale,
     errorsMap,
     result,
+    isErrorTextStraightToOutput,
   }: FormatResponseJSONRPCDataOptionsType) {
     super();
 
@@ -28,14 +31,18 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     this.error = error;
     this.locale = locale;
     this.errorsMap = errorsMap;
+    this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
   }
 
   getFormattedResponse = (): IResponse => ({
     errorText: this.error
       ? getFormattedResponseErrorText({
-          errorTextKey: this.error.data.trKey,
+          errorTextKey: this.isErrorTextStraightToOutput
+            ? this.error.message
+            : this.error.data.trKey,
           errorsMap: this.errorsMap,
           locale: this.locale,
+          isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
         })
       : '',
     error: Boolean(this.error),

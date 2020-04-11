@@ -143,7 +143,8 @@ export class BaseRequest implements IBaseRequests {
     errorsMap,
     responseSchema,
     requestProtocol,
-    locale = 'ru'
+    locale = 'ru',
+    isErrorTextStraightToOutput
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -201,7 +202,8 @@ export class BaseRequest implements IBaseRequests {
               ...respondedData,
               locale,
               errorsMap,
-              protocol:requestProtocol
+              protocol:requestProtocol,
+              isErrorTextStraightToOutput
             })
 
             const formattedResponseData = responseFormatter.getFormattedResponse()            
@@ -221,7 +223,8 @@ export class BaseRequest implements IBaseRequests {
         return errorResponseConstructor({
           errorsMap,
           errorTextKey: error.message,
-          locale
+          locale,
+          isErrorTextStraightToOutput
         });
       });
 
@@ -229,7 +232,8 @@ export class BaseRequest implements IBaseRequests {
       request,
       fetchController,
       errorsMap,
-      locale
+      locale,
+      isErrorTextStraightToOutput
     });
   };
 
@@ -237,12 +241,14 @@ export class BaseRequest implements IBaseRequests {
     request,
     fetchController,
     errorsMap,
-    locale
+    locale,
+    isErrorTextStraightToOutput
   }: RequestRacerParams): Promise<IResponse> => {
     const defaultError: IResponse = errorResponseConstructor({
       errorsMap,
       errorTextKey: 'REQUEST_DEFAULT_ERROR',
-      locale
+      locale,
+      isErrorTextStraightToOutput
     });
 
     const timeoutException: Promise<IResponse> = new Promise((resolve) =>

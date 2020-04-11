@@ -30,11 +30,13 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 export type FormatResponseRESTDataOptionsType = {
   errorsMap: ErrorsMap;
   locale: string;
+  isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
   errorsMap: ErrorsMap;
   locale: string;
+  isErrorTextStraightToOutput?: boolean;
 } & IJSONRPCPureResponse;
 
 export interface IRequestParams {
@@ -48,6 +50,7 @@ export interface IRequestParams {
   errorsMap: ErrorsMap;
   responseSchema: Schema;
   locale?: string;
+  isErrorTextStraightToOutput?: boolean;
 }
 
 export type ComplexRequestParams = Omit<
@@ -100,6 +103,7 @@ export type RequestRacerParams = {
   errorsMap: ErrorsMap;
   requestId?: string | number;
   locale: string;
+  isErrorTextStraightToOutput?: boolean;
 };
 
 export type ParseResponseParams = {
@@ -117,6 +121,7 @@ export type ErrorConstructorParams = {
   errorTextKey: string;
   errorsMap: ErrorsMap;
   locale: string;
+  isErrorTextStraightToOutput?: boolean;
 };
 
 export type FormatDataTypeValidatorParamsType = {
@@ -166,6 +171,7 @@ export type FormatResponseParamsType = {
   locale: string;
   errorsMap: ErrorsMap;
   protocol: keyof typeof requestProtocolsMap;
+  isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse &
   IJSONRPCPureResponse;
 
