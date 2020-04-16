@@ -11,8 +11,6 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   error: boolean;
 
-  locale: string;
-
   errorsMap: ErrorsMap;
 
   errorText: string;
@@ -23,7 +21,6 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   constructor({
     error,
-    locale,
     errorsMap,
     errorText,
     additionalErrors,
@@ -33,7 +30,6 @@ export class RestResponseFormatter extends ResponseFormatter {
     super();
 
     this.error = error;
-    this.locale = locale;
     this.errorsMap = errorsMap;
     this.errorText = errorText;
     this.additionalErrors = additionalErrors;
@@ -47,7 +43,6 @@ export class RestResponseFormatter extends ResponseFormatter {
     errorText: this.error
       ? getFormattedResponseErrorText({
           errorTextKey: this.errorText,
-          locale: this.locale,
           errorsMap: this.errorsMap,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
         })

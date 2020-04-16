@@ -9,7 +9,6 @@ import { RestResponseFormatter } from './rest-response-formatter';
 
 export class FormatResponseFactory implements IFormatResponseFactory {
   createFormatter = ({
-    locale,
     errorsMap,
     protocol,
     data,
@@ -26,7 +25,6 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           data,
           error,
           errorText,
-          locale,
           additionalErrors,
           errorsMap,
           isErrorTextStraightToOutput,
@@ -36,7 +34,6 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           id,
           error,
           result,
-          locale,
           errorsMap,
           isErrorTextStraightToOutput,
         });

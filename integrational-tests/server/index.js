@@ -38,9 +38,9 @@ const sendNegativeDataRPC = (res, id) =>
     id,
     error: {
       code: 500,
-      message: 'test error message',
+      message: 'Тестовая ошибка',
       data: {
-        err: 'test error',
+        err: 'Тестовая ошибка',
         trKey: 'test',
       },
     },
@@ -52,7 +52,7 @@ const sendNegativeErrorDataRPC = (res, id) =>
     id,
     error: {
       code: 500,
-      message: 'test error',
+      message: 'Тестовая ошибка',
     },
   });
 

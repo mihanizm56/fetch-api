@@ -9,7 +9,7 @@ const {
 } = require('./requests/json-rpc');
 const { SYSTEM_ERROR } = require('./constants');
 
-describe('tests rest request protocol', () => {
+describe('tests json-rpc request protocol', () => {
   beforeEach(() => {
     delete global.window;
   });
@@ -32,7 +32,7 @@ describe('tests rest request protocol', () => {
       const data = await JSONRPCNegativeRequest(JSONRPCSchemaTwo);
 
       expect(data).toEqual({
-        additionalErrors: { err: 'test error', trKey: 'test' },
+        additionalErrors: { err: 'Тестовая ошибка', trKey: 'test' },
         data: null,
         error: true,
         errorText: 'Тестовая ошибка',
@@ -43,10 +43,10 @@ describe('tests rest request protocol', () => {
       const data = await JSONRPCNegativeRequestEn(JSONRPCSchemaTwo);
 
       expect(data).toEqual({
-        additionalErrors: { err: 'test error', trKey: 'test' },
+        additionalErrors: { err: 'Тестовая ошибка', trKey: 'test' },
         data: null,
         error: true,
-        errorText: 'Test error',
+        errorText: 'Тестовая ошибка',
       });
     });
 
@@ -56,10 +56,10 @@ describe('tests rest request protocol', () => {
       );
 
       expect(data).toEqual({
-        additionalErrors: { err: 'test error', trKey: 'test' },
+        additionalErrors: { err: 'Тестовая ошибка', trKey: 'test' },
         data: null,
         error: true,
-        errorText: 'test error message',
+        errorText: 'Тестовая ошибка',
       });
     });
 

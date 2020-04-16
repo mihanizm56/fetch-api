@@ -4,16 +4,10 @@ import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 export type ModeCorsType = 'cors' | 'no-cors';
 
 export type ErrorsMap = {
-  [key: string]: {
-    [key: string]: string;
-  };
+  [key: string]: string;
 } & {
-  TIMEOUT_ERROR: {
-    ru: string;
-  };
-  REQUEST_DEFAULT_ERROR: {
-    ru: string;
-  };
+  TIMEOUT_ERROR: string;
+  REQUEST_DEFAULT_ERROR: string;
 };
 
 export interface IJSONPRCRequestParams extends IRequestParams {
@@ -29,13 +23,11 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 
 export type FormatResponseRESTDataOptionsType = {
   errorsMap: ErrorsMap;
-  locale: string;
   isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
   errorsMap: ErrorsMap;
-  locale: string;
   isErrorTextStraightToOutput?: boolean;
 } & IJSONRPCPureResponse;
 
@@ -61,7 +53,6 @@ export interface IRequestParams {
   queryParams?: { [key: string]: string };
   errorsMap: ErrorsMap;
   responseSchema: Schema;
-  locale?: string;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
 }
@@ -115,7 +106,6 @@ export type RequestRacerParams = {
   fetchController?: any;
   errorsMap: ErrorsMap;
   requestId?: string | number;
-  locale: string;
   isErrorTextStraightToOutput?: boolean;
 };
 
@@ -133,7 +123,6 @@ export type FormattedEndpointParams = {
 export type ErrorConstructorParams = {
   errorTextKey: string;
   errorsMap: ErrorsMap;
-  locale: string;
   isErrorTextStraightToOutput?: boolean;
 };
 
@@ -181,7 +170,6 @@ export abstract class ResponseFormatter {
 }
 
 export type FormatResponseParamsType = {
-  locale: string;
   errorsMap: ErrorsMap;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;

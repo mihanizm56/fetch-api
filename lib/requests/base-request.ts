@@ -143,7 +143,6 @@ export class BaseRequest implements IBaseRequests {
     errorsMap,
     responseSchema,
     requestProtocol,
-    locale = "ru",
     isErrorTextStraightToOutput,
     extraValidationCallback
   }: MakeFetchType): Promise<IResponse> => {
@@ -205,7 +204,6 @@ export class BaseRequest implements IBaseRequests {
             const responseFormatter = new FormatResponseFactory().createFormatter(
               {
                 ...respondedData,
-                locale,
                 errorsMap,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput
@@ -231,7 +229,6 @@ export class BaseRequest implements IBaseRequests {
         return errorResponseConstructor({
           errorsMap,
           errorTextKey: error.message,
-          locale,
           isErrorTextStraightToOutput
         });
       });
@@ -240,7 +237,6 @@ export class BaseRequest implements IBaseRequests {
       request,
       fetchController,
       errorsMap,
-      locale,
       isErrorTextStraightToOutput
     });
   };
@@ -249,13 +245,11 @@ export class BaseRequest implements IBaseRequests {
     request,
     fetchController,
     errorsMap,
-    locale,
     isErrorTextStraightToOutput
   }: RequestRacerParams): Promise<IResponse> => {
     const defaultError: IResponse = errorResponseConstructor({
       errorsMap,
       errorTextKey: "REQUEST_DEFAULT_ERROR",
-      locale,
       isErrorTextStraightToOutput
     });
 

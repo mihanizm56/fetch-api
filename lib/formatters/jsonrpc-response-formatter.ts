@@ -12,15 +12,12 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   error?: JSONRPCErrorType;
 
-  locale: string;
-
   errorsMap: ErrorsMap;
 
   isErrorTextStraightToOutput?: boolean;
 
   constructor({
     error,
-    locale,
     errorsMap,
     result,
     isErrorTextStraightToOutput,
@@ -29,7 +26,6 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
     this.result = result;
     this.error = error;
-    this.locale = locale;
     this.errorsMap = errorsMap;
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
   }
@@ -41,7 +37,6 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
             ? this.error.message
             : this.error.data.trKey,
           errorsMap: this.errorsMap,
-          locale: this.locale,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
         })
       : '',

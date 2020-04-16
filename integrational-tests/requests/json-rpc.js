@@ -38,7 +38,6 @@ module.exports.JSONRPCNegativeRequestEn = responseSchema =>
         foo: 'bar',
       },
     },
-    locale: 'en',
   });
 
 module.exports.JSONRPCRequestWithCustomResponseValidation = ({
