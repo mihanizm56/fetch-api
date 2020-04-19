@@ -1,9 +1,9 @@
 import {
   ResponseFormatter,
   IResponse,
-  ErrorsMap,
   JSONRPCErrorType,
   FormatResponseJSONRPCDataOptionsType,
+  FormattedLanguageDictionary,
 } from '@/types/types';
 import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
 
@@ -12,13 +12,13 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   error?: JSONRPCErrorType;
 
-  errorsMap: ErrorsMap;
+  langDict: FormattedLanguageDictionary;
 
   isErrorTextStraightToOutput?: boolean;
 
   constructor({
     error,
-    errorsMap,
+    langDict,
     result,
     isErrorTextStraightToOutput,
   }: FormatResponseJSONRPCDataOptionsType) {
@@ -26,7 +26,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
     this.result = result;
     this.error = error;
-    this.errorsMap = errorsMap;
+    this.langDict = langDict;
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
   }
 
@@ -36,7 +36,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
           errorTextKey: this.isErrorTextStraightToOutput
             ? this.error.message
             : this.error.data.trKey,
-          errorsMap: this.errorsMap,
+          languageDictionary: this.langDict,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
         })
       : '',

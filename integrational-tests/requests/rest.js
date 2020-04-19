@@ -1,10 +1,10 @@
 const { RestRequest } = require('../../dist');
-const { errorsMap } = require('../constants');
+const { langDict } = require('../constants');
 
 module.exports.getRestRequest = responseSchema =>
   new RestRequest().getRequest({
     endpoint: 'http://localhost:8080/rest',
-    errorsMap,
+    langDict,
     responseSchema,
   });
 
@@ -14,7 +14,7 @@ module.exports.getRestRequestWithCustomResponseValidation = ({
 }) =>
   new RestRequest().getRequest({
     endpoint: 'http://localhost:8080/rest',
-    errorsMap,
+    langDict,
     responseSchema,
     extraValidationCallback,
   });
@@ -22,7 +22,7 @@ module.exports.getRestRequestWithCustomResponseValidation = ({
 module.exports.postRestRequest = responseSchema =>
   new RestRequest().postRequest({
     endpoint: 'http://localhost:8080/rest',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       value: 123,
@@ -35,7 +35,7 @@ module.exports.postRestRequest = responseSchema =>
 module.exports.putRestRequest = responseSchema =>
   new RestRequest().putRequest({
     endpoint: 'http://localhost:8080/rest',
-    errorsMap,
+    langDict,
     responseSchema,
     headers: {
       'content-type': 'application/json',
@@ -45,7 +45,7 @@ module.exports.putRestRequest = responseSchema =>
 module.exports.patchRestRequest = responseSchema =>
   new RestRequest().patchRequest({
     endpoint: 'http://localhost:8080/rest',
-    errorsMap,
+    langDict,
     responseSchema,
     headers: {
       'content-type': 'application/json',
@@ -55,7 +55,7 @@ module.exports.patchRestRequest = responseSchema =>
 module.exports.deleteRestRequest = responseSchema =>
   new RestRequest().deleteRequest({
     endpoint: 'http://localhost:8080/rest',
-    errorsMap,
+    langDict,
     responseSchema,
     headers: {
       'content-type': 'application/json',
@@ -65,21 +65,21 @@ module.exports.deleteRestRequest = responseSchema =>
 module.exports.getNegativeRestRequest = responseSchema =>
   new RestRequest().getRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
   });
 
 module.exports.getNegativeRestRequestEn = responseSchema =>
   new RestRequest().getRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
   });
 
 module.exports.getNegativeRestRequestStraightError = responseSchema =>
   new RestRequest().getRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
     isErrorTextStraightToOutput: true,
   });
@@ -87,27 +87,27 @@ module.exports.getNegativeRestRequestStraightError = responseSchema =>
 module.exports.postNegativeRestRequest = responseSchema =>
   new RestRequest().postRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
   });
 
 module.exports.putNegativeRestRequest = responseSchema =>
   new RestRequest().putRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
   });
 
 module.exports.patchNegativeRestRequest = responseSchema =>
   new RestRequest().patchRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
   });
 
 module.exports.deleteNegativeRestRequest = responseSchema =>
   new RestRequest().deleteRequest({
     endpoint: 'http://localhost:8080/rest/negative',
-    errorsMap,
+    langDict,
     responseSchema,
   });

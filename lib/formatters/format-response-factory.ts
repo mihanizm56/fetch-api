@@ -9,7 +9,7 @@ import { RestResponseFormatter } from './rest-response-formatter';
 
 export class FormatResponseFactory implements IFormatResponseFactory {
   createFormatter = ({
-    errorsMap,
+    langDict,
     protocol,
     data,
     error,
@@ -26,7 +26,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           error,
           errorText,
           additionalErrors,
-          errorsMap,
+          langDict,
           isErrorTextStraightToOutput,
         })
       : new JSONRPCResponseFormatter({
@@ -34,7 +34,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           id,
           error,
           result,
-          errorsMap,
+          langDict,
           isErrorTextStraightToOutput,
         });
   };

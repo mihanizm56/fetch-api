@@ -8,9 +8,11 @@ import {
   IJSONPRCRequestParams,
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
-  GetFetchBodyParamsType
+  GetFetchBodyParamsType,
+  FormattedLanguageDictionary,
+  LanguageDictionary
 } from "@/types/types";
-import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
+import { parseTypesMap, requestProtocolsMap, defaultErrorsMap } from "@/constants/shared";
 import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
 import { errorResponseConstructor } from "../errors/error-constructor";
@@ -102,6 +104,12 @@ export class BaseRequest implements IBaseRequests {
     return `${endpoint}?${objectToQueryString(queryParams)}`;
   };
 
+
+  getFormattedLanguageDictionary = (langDict:LanguageDictionary):FormattedLanguageDictionary => ({
+    ...defaultErrorsMap,
+    ...langDict
+  })
+
   // get formatted fetch body in needed
   getFetchBody = ({
     requestProtocol,
@@ -140,12 +148,14 @@ export class BaseRequest implements IBaseRequests {
     endpoint,
     parseType,
     queryParams,
-    errorsMap,
+    langDict,
     responseSchema,
     requestProtocol,
     isErrorTextStraightToOutput,
     extraValidationCallback
   }: MakeFetchType): Promise<IResponse> => {
+    const formattedLanguageDictionary = this.getFormattedLanguageDictionary(langDict)
+
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
       queryParams
@@ -204,7 +214,7 @@ export class BaseRequest implements IBaseRequests {
             const responseFormatter = new FormatResponseFactory().createFormatter(
               {
                 ...respondedData,
-                errorsMap,
+                langDict,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput
               }
@@ -227,7 +237,7 @@ export class BaseRequest implements IBaseRequests {
         console.error("get error in fetch", error.message);
 
         return errorResponseConstructor({
-          errorsMap,
+          languageDictionary:formattedLanguageDictionary,
           errorTextKey: error.message,
           isErrorTextStraightToOutput
         });
@@ -236,7 +246,7 @@ export class BaseRequest implements IBaseRequests {
     return this.requestRacer({
       request,
       fetchController,
-      errorsMap,
+      languageDictionary:formattedLanguageDictionary,
       isErrorTextStraightToOutput
     });
   };
@@ -244,12 +254,12 @@ export class BaseRequest implements IBaseRequests {
   requestRacer = ({
     request,
     fetchController,
-    errorsMap,
+    languageDictionary,
     isErrorTextStraightToOutput
   }: RequestRacerParams): Promise<IResponse> => {
     const defaultError: IResponse = errorResponseConstructor({
-      errorsMap,
-      errorTextKey: "REQUEST_DEFAULT_ERROR",
+      languageDictionary,
+      errorTextKey: "timeout-error",
       isErrorTextStraightToOutput
     });
 

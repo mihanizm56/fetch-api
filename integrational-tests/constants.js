@@ -1,6 +1,4 @@
-module.exports.errorsMap = {
-  TIMEOUT_ERROR: 'Превышено ожидание запроса',
-  REQUEST_DEFAULT_ERROR: 'Системная ошибка',
+module.exports.langDict = {
   test: 'Тестовая ошибка',
 };
 
@@ -8,7 +6,7 @@ module.exports.SYSTEM_ERROR = {
   additionalErrors: null,
   data: {},
   error: true,
-  errorText: 'Системная ошибка',
+  errorText: 'network error',
 };
 
 module.exports.translatedErrorRu = {

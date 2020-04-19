@@ -1,10 +1,10 @@
 const { JSONRPCRequest } = require('../../dist');
-const { errorsMap } = require('../constants');
+const { langDict } = require('../constants');
 
 module.exports.JSONRPCRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       method: 'test_method',
@@ -17,7 +17,7 @@ module.exports.JSONRPCRequest = responseSchema =>
 module.exports.JSONRPCNegativeRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       method: 'test_method',
@@ -30,7 +30,7 @@ module.exports.JSONRPCNegativeRequest = responseSchema =>
 module.exports.JSONRPCNegativeRequestEn = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       method: 'test_method',
@@ -46,7 +46,7 @@ module.exports.JSONRPCRequestWithCustomResponseValidation = ({
 }) =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       method: 'test_method',
@@ -60,7 +60,7 @@ module.exports.JSONRPCRequestWithCustomResponseValidation = ({
 module.exports.JSONRPCNegativeErrorsRequestStraightError = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       method: 'test_method',
@@ -74,7 +74,7 @@ module.exports.JSONRPCNegativeErrorsRequestStraightError = responseSchema =>
 module.exports.JSONRPCNegativeErrorsRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative/errors',
-    errorsMap,
+    langDict,
     responseSchema,
     body: {
       method: 'test_method',

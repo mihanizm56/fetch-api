@@ -1,8 +1,8 @@
 import {
   ResponseFormatter,
   IResponse,
-  ErrorsMap,
   FormatResponseRESTDataOptionsType,
+  FormattedLanguageDictionary,
 } from '@/types/types';
 import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
 
@@ -11,7 +11,7 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   error: boolean;
 
-  errorsMap: ErrorsMap;
+  langDict: FormattedLanguageDictionary;
 
   errorText: string;
 
@@ -21,7 +21,7 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   constructor({
     error,
-    errorsMap,
+    langDict,
     errorText,
     additionalErrors,
     data,
@@ -30,7 +30,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     super();
 
     this.error = error;
-    this.errorsMap = errorsMap;
+    this.langDict = langDict;
     this.errorText = errorText;
     this.additionalErrors = additionalErrors;
     this.data = data;
@@ -43,7 +43,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     errorText: this.error
       ? getFormattedResponseErrorText({
           errorTextKey: this.errorText,
-          errorsMap: this.errorsMap,
+          languageDictionary: this.langDict,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
         })
       : '',

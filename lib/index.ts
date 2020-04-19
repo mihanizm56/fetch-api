@@ -11,7 +11,8 @@ export {
   IRequestParams,
   ComplexRequestParams,
   SimpleRequestParams,
-  ErrorsMap,
+  LanguageDictionary,
+  FormattedLanguageDictionary,
   ModeCorsType,
   GetterRequestBaseParamsType
 } from "./types/types";

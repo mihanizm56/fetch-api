@@ -149,7 +149,6 @@ describe('tests rest request protocol', () => {
       expect(data).toEqual(translatedErrorRu);
     });
   });
-
   describe('not valid response', () => {
     test('get request', async () => {
       const data = await getRestRequest(postRestSchema);

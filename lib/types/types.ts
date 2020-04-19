@@ -3,11 +3,12 @@ import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
-export type ErrorsMap = {
+export type LanguageDictionary = {
   [key: string]: string;
-} & {
-  TIMEOUT_ERROR: string;
-  REQUEST_DEFAULT_ERROR: string;
+};
+
+export type FormattedLanguageDictionary = {
+  [key: string]: string;
 };
 
 export interface IJSONPRCRequestParams extends IRequestParams {
@@ -22,12 +23,12 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 }
 
 export type FormatResponseRESTDataOptionsType = {
-  errorsMap: ErrorsMap;
+  langDict: FormattedLanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
-  errorsMap: ErrorsMap;
+  langDict: FormattedLanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
 } & IJSONRPCPureResponse;
 
@@ -51,7 +52,7 @@ export interface IRequestParams {
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
-  errorsMap: ErrorsMap;
+  langDict: LanguageDictionary;
   responseSchema: ObjectSchema;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
@@ -104,7 +105,7 @@ export type QueryParamsType = { [key: string]: string | number };
 export type RequestRacerParams = {
   request: Promise<IResponse>;
   fetchController?: any;
-  errorsMap: ErrorsMap;
+  languageDictionary: FormattedLanguageDictionary;
   requestId?: string | number;
   isErrorTextStraightToOutput?: boolean;
 };
@@ -122,7 +123,7 @@ export type FormattedEndpointParams = {
 
 export type ErrorConstructorParams = {
   errorTextKey: string;
-  errorsMap: ErrorsMap;
+  languageDictionary: FormattedLanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
 };
 
@@ -170,7 +171,7 @@ export abstract class ResponseFormatter {
 }
 
 export type FormatResponseParamsType = {
-  errorsMap: ErrorsMap;
+  langDict: FormattedLanguageDictionary;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse &
@@ -186,5 +187,5 @@ export type GetFormatValidateMethodParams = {
 };
 
 export type GetterRequestBaseParamsType = {
-  errorsMap: ErrorsMap;
+  langDict: FormattedLanguageDictionary;
 };
