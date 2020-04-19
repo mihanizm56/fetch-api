@@ -98,6 +98,12 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
   // todo fix any type
   public getJSONRPCFormatIsValid = ({ response, schema, prevId }: any) => {
+    if (!Boolean(prevId)) {
+      console.error('prevId was not provided');
+
+      return false;
+    }
+
     if (!Boolean(response)) {
       console.error('response is empty');
       return false;

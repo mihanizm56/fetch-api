@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.2.0-beta.13",
+  "version": "3.2.0-beta.14",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
     "save": "npm run commit && git push && npm version patch && git push && npm run pub",
-    "pub": "npm publish --access=public",
+    "release": "npm publish --access=public",
     "beta": "npm publish --tag beta --access=public",
     "size": "pkgfiles"
   },
