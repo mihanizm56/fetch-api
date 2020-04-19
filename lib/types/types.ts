@@ -16,8 +16,8 @@ export interface IJSONPRCRequestParams extends IRequestParams {
   version: {
     jsonrpc: string;
   };
-  body: {
-    method: string;
+  body?: {
+    method?: string;
     params?: string | number | Array<any> | Record<string, any>;
   };
 }
