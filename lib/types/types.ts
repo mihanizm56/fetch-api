@@ -184,3 +184,5 @@ export type GetFormatValidateMethodParams = {
 export type GetterRequestBaseParamsType = {
   langDict: FormattedLanguageDictionary;
 };
+
+export type IDType = string;

@@ -4,6 +4,7 @@ import {
   GetCompareIdsParams,
   GetFormatValidateMethodParams,
   IJSONRPCPureResponse,
+  IDType,
 } from '@/types/types';
 import { requestProtocolsMap } from '@/constants/shared';
 
@@ -90,15 +91,24 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     return true;
   };
 
+  checkIdsEquality = ({ prev, curr }: { prev: IDType; curr: IDType }) =>
+    prev === curr;
+
   // todo fix any type
   public getJSONRPCFormatIsValid = ({ response, schema, prevId }: any) => {
-    if (prevId !== response.id) {
-      console.error('request-response ids are not equal');
+    if (!Boolean(response)) {
+      console.error('response is empty');
       return false;
     }
 
-    if (!Boolean(response)) {
-      console.error('response is empty');
+    const idsAreEqual = this.checkIdsEquality({
+      prev: prevId,
+      curr: response.id,
+    });
+
+    // if ids are not equal
+    if (!idsAreEqual) {
+      console.error('request-response ids are not equal');
       return false;
     }
 
