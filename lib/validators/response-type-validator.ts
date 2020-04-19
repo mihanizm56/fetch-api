@@ -1,18 +1,16 @@
 import {
   IRESTPureResponse,
-  GetIsJSONRPCFormatResponseValidParams,
   GetIsSchemaResponseValidParams,
   GetCompareIdsParams,
   GetFormatValidateMethodParams,
+  IJSONRPCPureResponse,
 } from '@/types/types';
 import { requestProtocolsMap } from '@/constants/shared';
 
 interface IResponseFormatValidator {
   getIsRestFormatResponseValid: (response: IRESTPureResponse) => boolean;
 
-  getIsJSONRPCFormatResponseValid: (
-    params: GetIsJSONRPCFormatResponseValidParams,
-  ) => boolean;
+  getIsJSONRPCFormatResponseValid: (params: IJSONRPCPureResponse) => boolean;
 
   getIsSchemaResponseValid: (params: GetIsSchemaResponseValidParams) => boolean;
 
@@ -32,10 +30,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     'additionalErrors' in response &&
     'data' in response;
 
-  public getIsJSONRPCFormatResponseValid = ({
-    response,
-    prevId,
-  }: GetIsJSONRPCFormatResponseValidParams) =>
+  public getIsJSONRPCFormatResponseValid = (response: IJSONRPCPureResponse) =>
     Boolean(
       ('result' in response ||
         (response.error &&
@@ -44,8 +39,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
           'trKey' in response.error.data &&
           'message' in response.error)) &&
         'jsonrpc' in response &&
-        'id' in response &&
-        response.id === prevId,
+        'id' in response,
     );
 
   public getIsSchemaResponseValid = ({
@@ -98,9 +92,8 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
   // todo fix any type
   public getJSONRPCFormatIsValid = ({ response, schema, prevId }: any) => {
-    if (!Boolean(prevId)) {
-      console.error('prevId was not provided');
-
+    if (prevId !== response.id) {
+      console.error('request-response ids are not equal');
       return false;
     }
 
@@ -109,10 +102,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       return false;
     }
 
-    const isFormatValid = this.getIsJSONRPCFormatResponseValid({
-      response,
-      prevId,
-    });
+    const isFormatValid = this.getIsJSONRPCFormatResponseValid(response);
 
     // if the base format is not valid
     if (!isFormatValid) {

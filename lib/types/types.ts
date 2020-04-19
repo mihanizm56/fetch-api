@@ -161,11 +161,6 @@ export type GetIsSchemaResponseValidParams = {
   schema: ObjectSchema;
 };
 
-export type GetIsJSONRPCFormatResponseValidParams = {
-  response: IJSONRPCPureResponse;
-  prevId: string | number;
-};
-
 export abstract class ResponseFormatter {
   public abstract getFormattedResponse: () => IResponse;
 }
