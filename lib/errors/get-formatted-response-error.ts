@@ -5,9 +5,20 @@ export const getFormattedResponseErrorText = ({
   languageDictionary,
   isErrorTextStraightToOutput,
 }: ErrorConstructorParams): string => {
-  const formattedError = !isErrorTextStraightToOutput
-    ? languageDictionary[errorTextKey]
-    : errorTextKey;
+  const NETWORK_ERROR_KEY = 'network-error';
+  const dictNetworkError = languageDictionary[NETWORK_ERROR_KEY];
 
-  return formattedError || languageDictionary['network-error'];
+  const formattedError = isErrorTextStraightToOutput
+    ? errorTextKey
+    : languageDictionary[errorTextKey];
+
+  if (Boolean(formattedError)) {
+    return formattedError;
+  }
+
+  if (Boolean(dictNetworkError)) {
+    return dictNetworkError;
+  }
+
+  return NETWORK_ERROR_KEY;
 };
