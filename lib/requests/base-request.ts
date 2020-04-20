@@ -257,14 +257,14 @@ export class BaseRequest implements IBaseRequests {
     languageDictionary,
     isErrorTextStraightToOutput
   }: RequestRacerParams): Promise<IResponse> => {
-    const defaultError: IResponse = errorResponseConstructor({
-      languageDictionary,
-      errorTextKey: "timeout-error",
-      isErrorTextStraightToOutput
-    });
-
     const timeoutException: Promise<IResponse> = new Promise(resolve =>
       setTimeout(() => {
+        const defaultError: IResponse = errorResponseConstructor({
+          languageDictionary,
+          errorTextKey: "timeout-error",
+          isErrorTextStraightToOutput
+        });
+
         // if the window fetch
         if (typeof window !== "undefined") {
           fetchController.abort();
