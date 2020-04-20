@@ -1,4 +1,3 @@
-import { ObjectSchema } from "joi"; // eslint-disable-line
 import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
@@ -34,7 +33,7 @@ export type FormatResponseJSONRPCDataOptionsType = {
 
 export type ResponseValidateType = {
   response: any;
-  schema: ObjectSchema;
+  schema: any;
   prevId?: string;
 };
 
@@ -53,7 +52,7 @@ export interface IRequestParams {
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
   langDict: LanguageDictionary;
-  responseSchema: ObjectSchema;
+  responseSchema: any;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
 }
@@ -158,7 +157,7 @@ export type GetCompareIdsParams = { requestId: string; responceId: string };
 export type GetIsSchemaResponseValidParams = {
   data: any;
   error: boolean;
-  schema: ObjectSchema;
+  schema: any;
 };
 
 export abstract class ResponseFormatter {
