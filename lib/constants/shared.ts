@@ -19,6 +19,13 @@ export const requestProtocolsMap: IRequestProtocolsMap = {
 };
 
 export const defaultErrorsMap = {
-  'network-error': 'network error',
-  'timeout-error': 'timeout error',
+  'network-error': {
+    text: 'network error',
+  },
+  'timeout-error': {
+    text: 'timeout error',
+  },
 };
+
+export const NETWORK_ERROR_KEY = 'network-error';
+export const TIMEOUT_ERROR = 'timeout-error';

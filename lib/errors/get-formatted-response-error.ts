@@ -1,24 +1,26 @@
 import { ErrorConstructorParams } from '@/types/types';
+import { NETWORK_ERROR_KEY } from '@/constants/shared';
 
 export const getFormattedResponseErrorText = ({
   errorTextKey,
   languageDictionary,
   isErrorTextStraightToOutput,
 }: ErrorConstructorParams): string => {
-  const NETWORK_ERROR_KEY = 'network-error';
-  const dictNetworkError = languageDictionary[NETWORK_ERROR_KEY];
+  if (isErrorTextStraightToOutput) {
+    return errorTextKey;
+  }
 
-  const formattedError = isErrorTextStraightToOutput
-    ? errorTextKey
-    : languageDictionary[errorTextKey];
+  const dictNetworkError = languageDictionary[NETWORK_ERROR_KEY]
+    ? languageDictionary[NETWORK_ERROR_KEY].text
+    : NETWORK_ERROR_KEY;
+
+  const formattedError = languageDictionary[errorTextKey]
+    ? languageDictionary[errorTextKey].text
+    : dictNetworkError;
 
   if (Boolean(formattedError)) {
     return formattedError;
   }
 
-  if (Boolean(dictNetworkError)) {
-    return dictNetworkError;
-  }
-
-  return NETWORK_ERROR_KEY;
+  return dictNetworkError;
 };

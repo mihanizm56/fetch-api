@@ -12,7 +12,6 @@ export {
   ComplexRequestParams,
   SimpleRequestParams,
   LanguageDictionary,
-  FormattedLanguageDictionary,
   ModeCorsType,
   GetterRequestBaseParamsType
 } from "./types/types";

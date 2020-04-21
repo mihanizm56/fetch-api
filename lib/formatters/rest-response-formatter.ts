@@ -2,7 +2,7 @@ import {
   ResponseFormatter,
   IResponse,
   FormatResponseRESTDataOptionsType,
-  FormattedLanguageDictionary,
+  LanguageDictionary,
 } from '@/types/types';
 import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
 
@@ -11,7 +11,7 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   error: boolean;
 
-  langDict: FormattedLanguageDictionary;
+  langDict: LanguageDictionary;
 
   errorText: string;
 

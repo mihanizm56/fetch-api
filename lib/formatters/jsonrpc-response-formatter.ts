@@ -3,7 +3,7 @@ import {
   IResponse,
   JSONRPCErrorType,
   FormatResponseJSONRPCDataOptionsType,
-  FormattedLanguageDictionary,
+  LanguageDictionary,
 } from '@/types/types';
 import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
 
@@ -12,7 +12,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   error?: JSONRPCErrorType;
 
-  langDict: FormattedLanguageDictionary;
+  langDict: LanguageDictionary;
 
   isErrorTextStraightToOutput?: boolean;
 

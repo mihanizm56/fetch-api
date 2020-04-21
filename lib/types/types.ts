@@ -3,11 +3,9 @@ import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 export type ModeCorsType = 'cors' | 'no-cors';
 
 export type LanguageDictionary = {
-  [key: string]: string;
-};
-
-export type FormattedLanguageDictionary = {
-  [key: string]: string;
+  [key: string]: {
+    text: string;
+  };
 };
 
 export interface IJSONPRCRequestParams extends IRequestParams {
@@ -22,12 +20,12 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 }
 
 export type FormatResponseRESTDataOptionsType = {
-  langDict: FormattedLanguageDictionary;
+  langDict: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
-  langDict: FormattedLanguageDictionary;
+  langDict: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
 } & IJSONRPCPureResponse;
 
@@ -104,7 +102,7 @@ export type QueryParamsType = { [key: string]: string | number };
 export type RequestRacerParams = {
   request: Promise<IResponse>;
   fetchController?: any;
-  languageDictionary: FormattedLanguageDictionary;
+  languageDictionary: LanguageDictionary;
   requestId?: string | number;
   isErrorTextStraightToOutput?: boolean;
 };
@@ -122,7 +120,7 @@ export type FormattedEndpointParams = {
 
 export type ErrorConstructorParams = {
   errorTextKey: string;
-  languageDictionary: FormattedLanguageDictionary;
+  languageDictionary: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
 };
 
@@ -165,7 +163,7 @@ export abstract class ResponseFormatter {
 }
 
 export type FormatResponseParamsType = {
-  langDict: FormattedLanguageDictionary;
+  langDict: LanguageDictionary;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse &
@@ -181,7 +179,7 @@ export type GetFormatValidateMethodParams = {
 };
 
 export type GetterRequestBaseParamsType = {
-  langDict: FormattedLanguageDictionary;
+  langDict: LanguageDictionary;
 };
 
 export type IDType = string;

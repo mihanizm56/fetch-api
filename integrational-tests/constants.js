@@ -1,5 +1,7 @@
 module.exports.langDict = {
-  test: 'Тестовая ошибка',
+  test: {
+    text: 'Тестовая ошибка',
+  },
 };
 
 module.exports.SYSTEM_ERROR = {

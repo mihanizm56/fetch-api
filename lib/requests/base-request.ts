@@ -9,10 +9,9 @@ import {
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
   GetFetchBodyParamsType,
-  FormattedLanguageDictionary,
   LanguageDictionary
 } from "@/types/types";
-import { parseTypesMap, requestProtocolsMap, defaultErrorsMap } from "@/constants/shared";
+import { parseTypesMap, requestProtocolsMap, defaultErrorsMap, NETWORK_ERROR_KEY, TIMEOUT_ERROR } from "@/constants/shared";
 import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
 import { errorResponseConstructor } from "../errors/error-constructor";
@@ -105,7 +104,7 @@ export class BaseRequest implements IBaseRequests {
   };
 
 
-  getFormattedLanguageDictionary = (langDict:LanguageDictionary):FormattedLanguageDictionary => ({
+  getFormattedLanguageDictionary = (langDict:LanguageDictionary):LanguageDictionary => ({
     ...defaultErrorsMap,
     ...langDict
   })
@@ -230,7 +229,7 @@ export class BaseRequest implements IBaseRequests {
         throw new Error(
           isErrorTextStraightToOutput
             ? response.statusText
-            : "REQUEST_DEFAULT_ERROR"
+            : NETWORK_ERROR_KEY
         );
       })
       .catch(error => {
@@ -261,7 +260,7 @@ export class BaseRequest implements IBaseRequests {
       setTimeout(() => {
         const defaultError: IResponse = errorResponseConstructor({
           languageDictionary,
-          errorTextKey: "timeout-error",
+          errorTextKey: TIMEOUT_ERROR,
           isErrorTextStraightToOutput
         });
 
