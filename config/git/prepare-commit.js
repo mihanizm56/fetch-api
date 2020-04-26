@@ -9,7 +9,7 @@ const runPrecommitExecutor = () => {
 console.info(
     'info',
     'runPrecommitExecutor goes on platform ',
-    process.platform,z
+    process.platform,
 );
 
 const isWindows =
