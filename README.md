@@ -9,7 +9,7 @@
 - Provides query-params serialize
 - Provides cancel-request if the timeout is higher than 60 seconds
 - Provides error catching (you dont need to use try/catch)
-- Provides the ability to match the exact error from errorsMap parameter
+- Provides the ability to match the exact error from langDict parameter
 - Provides different kinds of the response formats to parse
 - Returns ALWAYS the hard prepared response structure
 - Works in browser and node environments
@@ -23,7 +23,7 @@
 - parseType('json' | 'blob'): the type to parse the response (json by default)
 - queryParams(object): the object with the query parameters (they will be serialized automatically)
 - headers(object): the object with the headers
-- errorsMap(object): the object with the errors keys and translated values (TIMEOUT_ERROR and REQUEST_DEFAULT_ERROR fields are required, others must be provided according to the backend errors)
+- langDict(object): the object with the errors keys and translated values ('timeout error' and 'timeout error' others must be provided by default - others must be provided from the whole language dictionary)
 
 #### RestRequest output options:
 
@@ -51,10 +51,16 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const getContractsRequest = (): Promise<IResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
-    errorsMap: {
-      TIMEOUT_ERROR: "Превышено ожидание запроса",
-      REQUEST_DEFAULT_ERROR: "Системная ошибка",
-      [FORBIDDEN]: "Данное действие недоступно"
+    langDict = {
+      'network-error': {
+        text: 'Системная ошибка',
+      },
+      'timeout-error': {
+        text: 'Превышено время ожидания ответа',
+      },
+      'test error': {
+        text: 'Тестовая ошибка',
+      },
     },
     responseSchema: Joi.object({
       username: Joi.string().required(),
@@ -64,11 +70,11 @@ export const getContractsRequest = (): Promise<IResponse> =>
         killers: Joi.array().items(
           Joi.object({
             username: Joi.string().required(),
-            count: Joi.number().required()
-          })
-        )
-      })
-    })
+            count: Joi.number().required(),
+          }).unknown()
+        ),
+      }).unknown(),
+    }).unknown(),
   });
 ```
 
@@ -80,24 +86,27 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const createReviseRequest = (someData): Promise<IResponse> =>
   new RestRequest().postRequest({
     endpoint: "http://localhost:3000",
-    errorsMap: {
-      TIMEOUT_ERROR: "Превышено ожидание запроса",
-      REQUEST_DEFAULT_ERROR: "Системная ошибка",
-      [FORBIDDEN]: "Данное действие недоступно"
+    langDict = {
+      'network-error': {
+        text: 'Системная ошибка',
+      },
+      'timeout-error': {
+        text: 'Превышено время ожидания ответа',
+      },
     },
     body: JSON.stringify(someData),
     mode: "cors",
     parseType: "blob",
     queryParams: {
-      id: "test_id_123"
+      id: "test_id_123",
     },
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     responseSchema: Joi.object({
       username: Joi.string().required(),
-      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-    })
+      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+    }).unknown(),
   });
 ```
 
@@ -117,9 +126,13 @@ import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";
 export const createItemsRequest = (someData): Promise<IResponse> =>
   new JSONRPCRequest().makeRequest({
     endpoint: "http://localhost:3000",
-    errorsMap: {
-      TIMEOUT_ERROR: "Превышено ожидание запроса",
-      REQUEST_DEFAULT_ERROR: "Системная ошибка"
+    langDict = {
+      'network-error': {
+        text: 'Системная ошибка',
+      },
+      'timeout-error': {
+        text: 'Превышено время ожидания ответа',
+      },
     },
     body: {
       method: 'some method',
@@ -135,14 +148,16 @@ export const createItemsRequest = (someData): Promise<IResponse> =>
           id: Joi.string().required(),
           name: Joi.string().required(),
           name: Joi.string()
-        })
+        }).unknown()
       )
-    }),
+    }).unknown(),
   });
 ```
 
 #### The usage of the request api
 
 ```javascript
-const { error, errorText, data, additionalErrors } = await createItemsRequest(someData);
+const { error, errorText, data, additionalErrors } = await createItemsRequest(
+  someData
+);
 ```
