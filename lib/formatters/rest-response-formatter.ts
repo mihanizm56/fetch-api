@@ -4,7 +4,7 @@ import {
   FormatResponseRESTDataOptionsType,
   LanguageDictionary,
 } from '@/types/types';
-import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
+import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 
 export class RestResponseFormatter extends ResponseFormatter {
   data?: any;
@@ -41,7 +41,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     data: this.data || {},
     error: this.error,
     errorText: this.error
-      ? getFormattedResponseErrorText({
+      ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
           errorTextKey: this.errorText,
           languageDictionary: this.langDict,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,

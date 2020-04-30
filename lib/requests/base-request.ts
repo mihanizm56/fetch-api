@@ -1,4 +1,4 @@
-import nodeFetch from "node-fetch";
+import nodeFetch from 'node-fetch';
 import {
   RequestRacerParams,
   ParseResponseParams,
@@ -9,17 +9,23 @@ import {
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
   GetFetchBodyParamsType,
-  LanguageDictionary
-} from "@/types/types";
-import { parseTypesMap, requestProtocolsMap, defaultErrorsMap, NETWORK_ERROR_KEY, TIMEOUT_ERROR } from "@/constants/shared";
-import { StatusValidator } from "../validators/response-status-validator";
-import { FormatDataTypeValidator } from "../validators/response-type-validator";
-import { errorResponseConstructor } from "../errors/error-constructor";
-import { TIMEOUT_VALUE } from "../constants/timeout";
-import { jsonParser } from "../utils/parsers/json-parser";
-import { blobParser } from "../utils/parsers/blob-parser";
-import { objectToQueryString } from "../utils/object-to-query-string";
-import { FormatResponseFactory } from "@/formatters/format-response-factory";
+  LanguageDictionary,
+} from '@/types/types';
+import {
+  parseTypesMap,
+  requestProtocolsMap,
+  defaultErrorsMap,
+  NETWORK_ERROR_KEY,
+  TIMEOUT_ERROR,
+} from '@/constants/shared';
+import { StatusValidator } from '../validators/response-status-validator';
+import { FormatDataTypeValidator } from '../validators/response-type-validator';
+import { ErrorResponseFormatter } from '../errors-formatter/error-response-formatter';
+import { TIMEOUT_VALUE } from '../constants/timeout';
+import { jsonParser } from '../utils/parsers/json-parser';
+import { blobParser } from '../utils/parsers/blob-parser';
+import { objectToQueryString } from '../utils/object-to-query-string';
+import { FormatResponseFactory } from '@/formatters/format-response-factory';
 
 interface IBaseRequests {
   makeFetch: (
@@ -42,7 +48,7 @@ export class BaseRequest implements IBaseRequests {
   parseResponseData = ({
     response,
     parseType,
-    isResponseOk
+    isResponseOk,
   }: ParseResponseParams) => {
     // if not 200 then always get json format
     if (!isResponseOk) {
@@ -65,9 +71,9 @@ export class BaseRequest implements IBaseRequests {
   // get an isomorfic fetch
   getIsomorphicFetch = ({
     endpoint,
-    fetchParams
+    fetchParams,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       const requestFetch = (nodeFetch.bind(
         // eslint-disable-line
         null,
@@ -82,19 +88,19 @@ export class BaseRequest implements IBaseRequests {
 
     const requestFetch = (window.fetch.bind(null, endpoint, {
       ...fetchParams,
-      signal: fetchController.signal
+      signal: fetchController.signal,
     }) as () => Promise<unknown>) as () => Promise<IResponse>;
 
     return {
       requestFetch,
-      fetchController
+      fetchController,
     };
   };
 
   // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
-    queryParams
+    queryParams,
   }: FormattedEndpointParams): string => {
     if (!Boolean(queryParams)) {
       return endpoint;
@@ -103,11 +109,12 @@ export class BaseRequest implements IBaseRequests {
     return `${endpoint}?${objectToQueryString(queryParams)}`;
   };
 
-
-  getFormattedLanguageDictionary = (langDict:LanguageDictionary):LanguageDictionary => ({
+  getFormattedLanguageDictionary = (
+    langDict?: LanguageDictionary
+  ): LanguageDictionary => ({
     ...defaultErrorsMap,
-    ...langDict
-  })
+    ...langDict,
+  });
 
   // get formatted fetch body in needed
   getFetchBody = ({
@@ -115,9 +122,9 @@ export class BaseRequest implements IBaseRequests {
     body,
     method,
     version,
-    id
+    id,
   }: GetFetchBodyParamsType) => {
-    if (method === "GET") {
+    if (method === 'GET') {
       return undefined;
     }
 
@@ -151,13 +158,16 @@ export class BaseRequest implements IBaseRequests {
     responseSchema,
     requestProtocol,
     isErrorTextStraightToOutput,
-    extraValidationCallback
+    extraValidationCallback,
+    translationFunc,
   }: MakeFetchType): Promise<IResponse> => {
-    const formattedLanguageDictionary = this.getFormattedLanguageDictionary(langDict)
+    const formattedLanguageDictionary = this.getFormattedLanguageDictionary(
+      langDict
+    );
 
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
-      queryParams
+      queryParams,
     });
 
     const fetchBody = this.getFetchBody({
@@ -165,7 +175,7 @@ export class BaseRequest implements IBaseRequests {
       body,
       version,
       method,
-      id
+      id,
     });
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
@@ -174,8 +184,8 @@ export class BaseRequest implements IBaseRequests {
         body: fetchBody,
         mode,
         headers,
-        method
-      }
+        method,
+      },
     });
 
     const request = requestFetch()
@@ -191,14 +201,14 @@ export class BaseRequest implements IBaseRequests {
           const respondedData: any = await this.parseResponseData({
             response,
             parseType,
-            isResponseOk
+            isResponseOk,
           });
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
             {
               protocol: requestProtocol,
-              extraValidationCallback
+              extraValidationCallback,
             }
           );
 
@@ -206,8 +216,8 @@ export class BaseRequest implements IBaseRequests {
           const isFormatValid: boolean = formatDataTypeValidator({
             response: respondedData,
             schema: responseSchema,
-            prevId: id
-          })
+            prevId: id,
+          });
 
           if (isFormatValid) {
             const responseFormatter = new FormatResponseFactory().createFormatter(
@@ -215,7 +225,7 @@ export class BaseRequest implements IBaseRequests {
                 ...respondedData,
                 langDict,
                 protocol: requestProtocol,
-                isErrorTextStraightToOutput
+                isErrorTextStraightToOutput,
               }
             );
 
@@ -227,26 +237,24 @@ export class BaseRequest implements IBaseRequests {
 
         // if not status from the whitelist - throw error with default error
         throw new Error(
-          isErrorTextStraightToOutput
-            ? response.statusText
-            : NETWORK_ERROR_KEY
+          isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY
         );
       })
-      .catch(error => {
-        console.error("get error in fetch", error.message);
+      .catch((error) => {
+        console.error('get error in fetch', error.message);
 
-        return errorResponseConstructor({
-          languageDictionary:formattedLanguageDictionary,
+        return new ErrorResponseFormatter().getFormattedErrorResponse({
+          languageDictionary: formattedLanguageDictionary,
           errorTextKey: error.message,
-          isErrorTextStraightToOutput
+          isErrorTextStraightToOutput,
         });
       });
 
     return this.requestRacer({
       request,
       fetchController,
-      languageDictionary:formattedLanguageDictionary,
-      isErrorTextStraightToOutput
+      languageDictionary: formattedLanguageDictionary,
+      isErrorTextStraightToOutput,
     });
   };
 
@@ -254,18 +262,20 @@ export class BaseRequest implements IBaseRequests {
     request,
     fetchController,
     languageDictionary,
-    isErrorTextStraightToOutput
+    isErrorTextStraightToOutput,
   }: RequestRacerParams): Promise<IResponse> => {
-    const timeoutException: Promise<IResponse> = new Promise(resolve =>
+    const timeoutException: Promise<IResponse> = new Promise((resolve) =>
       setTimeout(() => {
-        const defaultError: IResponse = errorResponseConstructor({
-          languageDictionary,
-          errorTextKey: TIMEOUT_ERROR,
-          isErrorTextStraightToOutput
-        });
+        const defaultError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
+          {
+            languageDictionary,
+            errorTextKey: TIMEOUT_ERROR,
+            isErrorTextStraightToOutput,
+          }
+        );
 
         // if the window fetch
-        if (typeof window !== "undefined") {
+        if (typeof window !== 'undefined') {
           fetchController.abort();
         }
 

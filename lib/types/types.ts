@@ -8,6 +8,11 @@ export type LanguageDictionary = {
   };
 };
 
+export type TranslateFunction = (
+  key: string,
+  options: Record<string, any>,
+) => string;
+
 export interface IJSONPRCRequestParams extends IRequestParams {
   id: string;
   version: {
@@ -49,7 +54,8 @@ export interface IRequestParams {
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
-  langDict: LanguageDictionary;
+  langDict?: LanguageDictionary;
+  translationFunc?: TranslateFunction;
   responseSchema: any;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
@@ -118,7 +124,7 @@ export type FormattedEndpointParams = {
   queryParams?: QueryParamsType;
 };
 
-export type ErrorConstructorParams = {
+export type ErrorResponseFormatterConstructorParams = {
   errorTextKey: string;
   languageDictionary: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;

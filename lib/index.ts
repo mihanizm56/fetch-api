@@ -1,9 +1,8 @@
-export { RestRequest } from "@/requests/rest-request";
-export { JSONRPCRequest } from "@/requests/json-rpc-request";
-export { errorResponseConstructor } from "@/errors/error-constructor";
+export { RestRequest } from '@/requests/rest-request';
+export { JSONRPCRequest } from '@/requests/json-rpc-request';
 export {
-  getFormattedResponseErrorText
-} from "@/errors/get-formatted-response-error";
+  ErrorResponseFormatter,
+} from '@/errors-formatter/error-response-formatter';
 
 export {
   IResponse,
@@ -13,5 +12,5 @@ export {
   SimpleRequestParams,
   LanguageDictionary,
   ModeCorsType,
-  GetterRequestBaseParamsType
-} from "./types/types";
+  GetterRequestBaseParamsType,
+} from './types/types';

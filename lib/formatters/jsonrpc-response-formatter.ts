@@ -5,7 +5,7 @@ import {
   FormatResponseJSONRPCDataOptionsType,
   LanguageDictionary,
 } from '@/types/types';
-import { getFormattedResponseErrorText } from '@/errors/get-formatted-response-error';
+import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 
 export class JSONRPCResponseFormatter extends ResponseFormatter {
   result?: any;
@@ -32,7 +32,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   getFormattedResponse = (): IResponse => ({
     errorText: this.error
-      ? getFormattedResponseErrorText({
+      ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
           errorTextKey: this.isErrorTextStraightToOutput
             ? this.error.message
             : this.error.data.trKey,
