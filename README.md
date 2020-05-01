@@ -9,7 +9,7 @@
 - Provides query-params serialize
 - Provides cancel-request if the timeout is higher than 60 seconds
 - Provides error catching (you dont need to use try/catch)
-- Provides the ability to match the exact error from langDict parameter
+- Provides the ability to match the exact error translation
 - Provides different kinds of the response formats to parse
 - Returns ALWAYS the hard prepared response structure
 - Works in browser and node environments
@@ -23,7 +23,6 @@
 - parseType('json' | 'blob'): the type to parse the response (json by default)
 - queryParams(object): the object with the query parameters (they will be serialized automatically)
 - headers(object): the object with the headers
-- langDict(object): the object with the errors keys and translated values ('timeout error' and 'timeout error' others must be provided by default - others must be provided from the whole language dictionary)
 
 #### RestRequest output options:
 
@@ -51,17 +50,6 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const getContractsRequest = (): Promise<IResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
-    langDict = {
-      'network-error': {
-        text: 'Системная ошибка',
-      },
-      'timeout-error': {
-        text: 'Превышено время ожидания ответа',
-      },
-      'test error': {
-        text: 'Тестовая ошибка',
-      },
-    },
     responseSchema: Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
@@ -86,14 +74,6 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const createReviseRequest = (someData): Promise<IResponse> =>
   new RestRequest().postRequest({
     endpoint: "http://localhost:3000",
-    langDict = {
-      'network-error': {
-        text: 'Системная ошибка',
-      },
-      'timeout-error': {
-        text: 'Превышено время ожидания ответа',
-      },
-    },
     body: JSON.stringify(someData),
     mode: "cors",
     parseType: "blob",
@@ -126,14 +106,6 @@ import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";
 export const createItemsRequest = (someData): Promise<IResponse> =>
   new JSONRPCRequest().makeRequest({
     endpoint: "http://localhost:3000",
-    langDict = {
-      'network-error': {
-        text: 'Системная ошибка',
-      },
-      'timeout-error': {
-        text: 'Превышено время ожидания ответа',
-      },
-    },
     body: {
       method: 'some method',
       params: 123
