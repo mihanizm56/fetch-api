@@ -18,14 +18,6 @@ export const requestProtocolsMap: IRequestProtocolsMap = {
   jsonRpc: 'jsonRpc',
 };
 
-export const defaultErrorsMap = {
-  'network-error': {
-    text: 'network error',
-  },
-  'timeout-error': {
-    text: 'timeout error',
-  },
-};
-
+export const DEFAULT_ERROR_TEXT = 'Request error';
+export const TIMEOUT_ERROR_KEY = 'timeout-error';
 export const NETWORK_ERROR_KEY = 'network-error';
-export const TIMEOUT_ERROR = 'timeout-error';

@@ -32,10 +32,15 @@ describe('tests json-rpc request protocol', () => {
       const data = await JSONRPCNegativeRequest(JSONRPCSchemaTwo);
 
       expect(data).toEqual({
-        additionalErrors: { err: 'Тестовая ошибка', trKey: 'test' },
-        data: null,
+        additionalErrors: {
+          err: 'Тестовая ошибка',
+          trData: { value1: '1', value2: '2' },
+          trKey: 'test.key.tr',
+        },
+        data: {},
         error: true,
-        errorText: 'Тестовая ошибка',
+        errorText:
+          'trans func returns translation with key test.key.tr {"value1":"1","value2":"2"}',
       });
     });
 
@@ -43,10 +48,15 @@ describe('tests json-rpc request protocol', () => {
       const data = await JSONRPCNegativeRequestEn(JSONRPCSchemaTwo);
 
       expect(data).toEqual({
-        additionalErrors: { err: 'Тестовая ошибка', trKey: 'test' },
-        data: null,
+        additionalErrors: {
+          err: 'Тестовая ошибка',
+          trData: { value1: '1', value2: '2' },
+          trKey: 'test.key.tr',
+        },
+        data: {},
         error: true,
-        errorText: 'Тестовая ошибка',
+        errorText:
+          'trans func returns translation with key test.key.tr {"value1":"1","value2":"2"}',
       });
     });
 
@@ -56,8 +66,12 @@ describe('tests json-rpc request protocol', () => {
       );
 
       expect(data).toEqual({
-        additionalErrors: { err: 'Тестовая ошибка', trKey: 'test' },
-        data: null,
+        additionalErrors: {
+          err: 'Тестовая ошибка',
+          trData: { value1: '1', value2: '2' },
+          trKey: 'test.key.tr',
+        },
+        data: {},
         error: true,
         errorText: 'Тестовая ошибка',
       });
@@ -91,7 +105,7 @@ describe('tests json-rpc request protocol', () => {
     });
   });
 
-  describe('negative response with not additionalErrors field', () => {
+  describe('negative response with no additionalErrors field', () => {
     test('test request one', async () => {
       const data = await JSONRPCNegativeErrorsRequest(JSONRPCSchemaTwo);
 
@@ -99,7 +113,7 @@ describe('tests json-rpc request protocol', () => {
     });
   });
 
-  describe('not valid response', () => {
+  describe('not valid schema response', () => {
     test('test request one', async () => {
       const data = await JSONRPCRequest(JSONRPCSchemaOne);
 

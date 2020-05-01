@@ -9,14 +9,12 @@ import {
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
   GetFetchBodyParamsType,
-  LanguageDictionary,
 } from '@/types/types';
 import {
   parseTypesMap,
   requestProtocolsMap,
-  defaultErrorsMap,
   NETWORK_ERROR_KEY,
-  TIMEOUT_ERROR,
+  TIMEOUT_ERROR_KEY,
 } from '@/constants/shared';
 import { StatusValidator } from '../validators/response-status-validator';
 import { FormatDataTypeValidator } from '../validators/response-type-validator';
@@ -109,13 +107,6 @@ export class BaseRequest implements IBaseRequests {
     return `${endpoint}?${objectToQueryString(queryParams)}`;
   };
 
-  getFormattedLanguageDictionary = (
-    langDict?: LanguageDictionary
-  ): LanguageDictionary => ({
-    ...defaultErrorsMap,
-    ...langDict,
-  });
-
   // get formatted fetch body in needed
   getFetchBody = ({
     requestProtocol,
@@ -154,17 +145,12 @@ export class BaseRequest implements IBaseRequests {
     endpoint,
     parseType,
     queryParams,
-    langDict,
     responseSchema,
     requestProtocol,
     isErrorTextStraightToOutput,
     extraValidationCallback,
-    translationFunc,
+    translateFunction,
   }: MakeFetchType): Promise<IResponse> => {
-    const formattedLanguageDictionary = this.getFormattedLanguageDictionary(
-      langDict
-    );
-
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
       queryParams,
@@ -220,15 +206,17 @@ export class BaseRequest implements IBaseRequests {
           });
 
           if (isFormatValid) {
+            // get the formatter func
             const responseFormatter = new FormatResponseFactory().createFormatter(
               {
                 ...respondedData,
-                langDict,
+                translateFunction,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
               }
             );
 
+            // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
             return formattedResponseData;
@@ -241,10 +229,10 @@ export class BaseRequest implements IBaseRequests {
         );
       })
       .catch((error) => {
-        console.error('get error in fetch', error.message);
+        console.error('get error in the request', error.message);
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
-          languageDictionary: formattedLanguageDictionary,
+          translateFunction,
           errorTextKey: error.message,
           isErrorTextStraightToOutput,
         });
@@ -253,7 +241,7 @@ export class BaseRequest implements IBaseRequests {
     return this.requestRacer({
       request,
       fetchController,
-      languageDictionary: formattedLanguageDictionary,
+      translateFunction,
       isErrorTextStraightToOutput,
     });
   };
@@ -261,15 +249,15 @@ export class BaseRequest implements IBaseRequests {
   requestRacer = ({
     request,
     fetchController,
-    languageDictionary,
+    translateFunction,
     isErrorTextStraightToOutput,
   }: RequestRacerParams): Promise<IResponse> => {
     const timeoutException: Promise<IResponse> = new Promise((resolve) =>
       setTimeout(() => {
         const defaultError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
           {
-            languageDictionary,
-            errorTextKey: TIMEOUT_ERROR,
+            translateFunction,
+            errorTextKey: TIMEOUT_ERROR_KEY,
             isErrorTextStraightToOutput,
           }
         );

@@ -20,11 +20,7 @@ const {
   getNegativeRestRequestStraightError,
   getRestRequestWithCustomResponseValidation,
 } = require('./requests/rest');
-const {
-  SYSTEM_ERROR,
-  translatedErrorRu,
-  translatedErrorEn,
-} = require('./constants');
+const { SYSTEM_ERROR } = require('./constants');
 
 describe('tests rest request protocol', () => {
   beforeEach(() => {
@@ -111,49 +107,109 @@ describe('tests rest request protocol', () => {
     test('get request', async () => {
       const data = await getNegativeRestRequest(getRestSchema);
 
-      expect(data).toEqual(translatedErrorRu);
+      expect(data).toEqual({
+        additionalErrors: {
+          translateOptions: {
+            foo: '1',
+            bar: '2',
+            baz: '3',
+          },
+          username: 'not valid data',
+        },
+        data: {},
+        error: true,
+        errorText: 'test translate key test.error.key',
+      });
     });
     test('get request and get error in en', async () => {
       const data = await getNegativeRestRequestEn(getRestSchema);
-
-      expect(data).toEqual(translatedErrorEn);
-    });
-    test('get straight error text from server', async () => {
-      const data = await getNegativeRestRequestStraightError(getRestSchema);
 
       expect(data).toEqual({
         additionalErrors: { username: 'not valid data' },
         data: {},
         error: true,
-        errorText: 'test',
+        errorText: 'test translate en key test en key',
+      });
+    });
+    test('get straight error text from server', async () => {
+      const data = await getNegativeRestRequestStraightError(getRestSchema);
+
+      expect(data).toEqual({
+        additionalErrors: {
+          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          username: 'not valid data',
+        },
+        data: {},
+        error: true,
+        errorText: 'test.error.key',
       });
     });
     test('post request', async () => {
       const data = await postNegativeRestRequest(postRestSchema);
 
-      expect(data).toEqual(translatedErrorRu);
+      expect(data).toEqual({
+        additionalErrors: {
+          username: 'not valid data',
+        },
+        data: {},
+        error: true,
+        errorText:
+          'trans func returns translation with key test.error.key undefined',
+      });
     });
     test('put request', async () => {
       const data = await putNegativeRestRequest(putRestSchema);
 
-      expect(data).toEqual(translatedErrorRu);
+      expect(data).toEqual({
+        additionalErrors: {
+          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          username: 'not valid data',
+        },
+        data: {},
+        error: true,
+        errorText:
+          'trans func returns translation with key test.error.key {"foo":"1","bar":"2","baz":"3"}',
+      });
     });
     test('patch request', async () => {
       const data = await patchNegativeRestRequest(patchRestSchema);
 
-      expect(data).toEqual(translatedErrorRu);
+      expect(data).toEqual({
+        additionalErrors: {
+          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          username: 'not valid data',
+        },
+        data: {},
+        error: true,
+        errorText:
+          'trans func returns translation with key test.error.key {"foo":"1","bar":"2","baz":"3"}',
+      });
     });
     test('delete request', async () => {
       const data = await deleteNegativeRestRequest(deleteRestSchema);
 
-      expect(data).toEqual(translatedErrorRu);
+      expect(data).toEqual({
+        additionalErrors: {
+          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          username: 'not valid data',
+        },
+        data: {},
+        error: true,
+        errorText:
+          'trans func returns translation with key test.error.key {"foo":"1","bar":"2","baz":"3"}',
+      });
     });
   });
   describe('not valid response', () => {
-    test('get request', async () => {
+    test('get request with no translateFunction provided', async () => {
       const data = await getRestRequest(postRestSchema);
 
-      expect(data).toEqual(SYSTEM_ERROR);
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText: 'Request error',
+      });
     });
     test('post request', async () => {
       const data = await postRestRequest(getRestSchema);

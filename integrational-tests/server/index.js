@@ -18,7 +18,32 @@ const sendSuccessData = (res, data) =>
 const sendNegativeData = res =>
   res.status(400).json({
     error: true,
-    errorText: 'test',
+    errorText: 'test.error.key',
+    additionalErrors: {
+      username: 'not valid data',
+      translateOptions: {
+        foo: '1',
+        bar: '2',
+        baz: '3',
+      },
+    },
+    data: {},
+  });
+
+const sendNegativeDataWithoutTrOptions = res =>
+  res.status(400).json({
+    error: true,
+    errorText: 'test.error.key',
+    additionalErrors: {
+      username: 'not valid data',
+    },
+    data: {},
+  });
+
+const sendNegativeDataEn = res =>
+  res.status(400).json({
+    error: true,
+    errorText: 'test en key',
     additionalErrors: {
       username: 'not valid data',
     },
@@ -41,7 +66,11 @@ const sendNegativeDataRPC = (res, id) =>
       message: 'Тестовая ошибка',
       data: {
         err: 'Тестовая ошибка',
-        trKey: 'test',
+        trKey: 'test.key.tr',
+        trData: {
+          value1: '1',
+          value2: '2',
+        },
       },
     },
   });
@@ -69,7 +98,8 @@ app.patch('/rest', (req, res) => {
 
 // negative rest
 app.get('/rest/negative', (req, res) => sendNegativeData(res));
-app.post('/rest/negative', (req, res) => sendNegativeData(res));
+app.get('/rest/negative/en', (req, res) => sendNegativeDataEn(res));
+app.post('/rest/negative', (req, res) => sendNegativeDataWithoutTrOptions(res));
 app.put('/rest/negative', (req, res) => sendNegativeData(res));
 app.patch('/rest/negative', (req, res) => sendNegativeData(res));
 app.delete('/rest/negative', (req, res) => sendNegativeData(res));
@@ -92,7 +122,7 @@ app.post('/json-rpc/negative', (req, res) => {
 });
 
 // negative json-rpc with no additionalErrors
-app.post('/json-rpc/negative', (req, res) => {
+app.post('/json-rpc/negative/no-add', (req, res) => {
   const { id } = req.body;
 
   sendNegativeErrorDataRPC(res, id);

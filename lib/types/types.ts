@@ -2,16 +2,14 @@ import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
-export type LanguageDictionary = {
-  [key: string]: {
-    text: string;
-  };
-};
-
 export type TranslateFunction = (
   key: string,
-  options: Record<string, any>,
+  options?: Record<string, any> | null,
 ) => string;
+
+export type AdditionalErrors = {
+  translateOptions: Record<string, any>;
+};
 
 export interface IJSONPRCRequestParams extends IRequestParams {
   id: string;
@@ -25,13 +23,13 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 }
 
 export type FormatResponseRESTDataOptionsType = {
-  langDict: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunction;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
-  langDict: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunction;
 } & IJSONRPCPureResponse;
 
 export type ResponseValidateType = {
@@ -54,8 +52,7 @@ export interface IRequestParams {
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
-  langDict?: LanguageDictionary;
-  translationFunc?: TranslateFunction;
+  translateFunction?: TranslateFunction;
   responseSchema: any;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
@@ -77,14 +74,14 @@ export interface IResponse {
   error: boolean;
   errorText: string;
   data: Record<string, any> | null;
-  additionalErrors: Record<string, any> | Array<any> | null;
+  additionalErrors: Record<string, any> | null;
 }
 
 export interface IRESTPureResponse {
   error: boolean;
   errorText: string;
   data: Record<string, any> | null;
-  additionalErrors: Record<string, any> | Array<any> | null;
+  additionalErrors: AdditionalErrors | null;
 }
 
 export type JSONRPCErrorType = {
@@ -93,6 +90,7 @@ export type JSONRPCErrorType = {
   data: {
     err: string;
     trKey: string;
+    trData?: Record<string, any>;
   };
 };
 
@@ -108,9 +106,9 @@ export type QueryParamsType = { [key: string]: string | number };
 export type RequestRacerParams = {
   request: Promise<IResponse>;
   fetchController?: any;
-  languageDictionary: LanguageDictionary;
   requestId?: string | number;
   isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunction;
 };
 
 export type ParseResponseParams = {
@@ -126,8 +124,9 @@ export type FormattedEndpointParams = {
 
 export type ErrorResponseFormatterConstructorParams = {
   errorTextKey: string;
-  languageDictionary: LanguageDictionary;
   isErrorTextStraightToOutput?: boolean;
+  errorTextData?: Record<string, any> | null;
+  translateFunction?: TranslateFunction;
 };
 
 export type FormatDataTypeValidatorParamsType = {
@@ -169,23 +168,15 @@ export abstract class ResponseFormatter {
 }
 
 export type FormatResponseParamsType = {
-  langDict: LanguageDictionary;
   protocol: keyof typeof requestProtocolsMap;
+  translateFunction?: TranslateFunction;
   isErrorTextStraightToOutput?: boolean;
 } & IRESTPureResponse &
   IJSONRPCPureResponse;
 
-export interface IFormatResponseFactory {
-  createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
-}
-
 export type GetFormatValidateMethodParams = {
   protocol: keyof typeof requestProtocolsMap;
   extraValidationCallback?: ExtraValidationCallback;
-};
-
-export type GetterRequestBaseParamsType = {
-  langDict: LanguageDictionary;
 };
 
 export type IDType = string;

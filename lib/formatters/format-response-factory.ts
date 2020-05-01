@@ -1,15 +1,15 @@
-import {
-  IFormatResponseFactory,
-  ResponseFormatter,
-  FormatResponseParamsType,
-} from '@/types/types';
+import { ResponseFormatter, FormatResponseParamsType } from '@/types/types';
 import { isRestRequest } from '../utils/is-rest-request';
 import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 import { RestResponseFormatter } from './rest-response-formatter';
 
+export interface IFormatResponseFactory {
+  createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
+}
+
 export class FormatResponseFactory implements IFormatResponseFactory {
   createFormatter = ({
-    langDict,
+    translateFunction,
     protocol,
     data,
     error,
@@ -26,7 +26,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           error,
           errorText,
           additionalErrors,
-          langDict,
+          translateFunction,
           isErrorTextStraightToOutput,
         })
       : new JSONRPCResponseFormatter({
@@ -34,7 +34,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           id,
           error,
           result,
-          langDict,
+          translateFunction,
           isErrorTextStraightToOutput,
         });
   };

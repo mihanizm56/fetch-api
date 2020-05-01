@@ -1,14 +1,8 @@
-module.exports.langDict = {
-  test: {
-    text: 'Тестовая ошибка',
-  },
-};
-
 module.exports.SYSTEM_ERROR = {
   additionalErrors: null,
   data: {},
   error: true,
-  errorText: 'network error',
+  errorText: 'trans func returns translation with key network-error undefined',
 };
 
 module.exports.translatedErrorRu = {
@@ -24,3 +18,6 @@ module.exports.translatedErrorEn = {
   error: true,
   errorText: 'Тестовая ошибка',
 };
+
+module.exports.translateFunction = (key, options) =>
+  `trans func returns translation with key ${key} ${JSON.stringify(options)}`;

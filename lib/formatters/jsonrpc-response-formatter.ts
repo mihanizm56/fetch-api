@@ -3,7 +3,7 @@ import {
   IResponse,
   JSONRPCErrorType,
   FormatResponseJSONRPCDataOptionsType,
-  LanguageDictionary,
+  TranslateFunction,
 } from '@/types/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 
@@ -12,22 +12,22 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   error?: JSONRPCErrorType;
 
-  langDict: LanguageDictionary;
+  translateFunction?: TranslateFunction;
 
   isErrorTextStraightToOutput?: boolean;
 
   constructor({
     error,
-    langDict,
     result,
     isErrorTextStraightToOutput,
+    translateFunction,
   }: FormatResponseJSONRPCDataOptionsType) {
     super();
 
     this.result = result;
     this.error = error;
-    this.langDict = langDict;
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
+    this.translateFunction = translateFunction;
   }
 
   getFormattedResponse = (): IResponse => ({
@@ -36,12 +36,13 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
           errorTextKey: this.isErrorTextStraightToOutput
             ? this.error.message
             : this.error.data.trKey,
-          languageDictionary: this.langDict,
+          translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
+          errorTextData: this.error.data.trData,
         })
       : '',
     error: Boolean(this.error),
-    data: this.result || null,
+    data: this.result || {},
     additionalErrors: this.error ? this.error.data : null,
   });
 }

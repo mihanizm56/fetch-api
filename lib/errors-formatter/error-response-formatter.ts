@@ -2,7 +2,7 @@ import {
   IResponse,
   ErrorResponseFormatterConstructorParams,
 } from '@/types/types';
-import { NETWORK_ERROR_KEY } from '@/constants/shared';
+import { DEFAULT_ERROR_TEXT } from '@/constants/shared';
 
 interface IErrorResponseFormatter {
   getFormattedErrorResponse: (
@@ -17,26 +17,24 @@ interface IErrorResponseFormatter {
 export class ErrorResponseFormatter implements IErrorResponseFormatter {
   getFormattedErrorTextResponse = ({
     errorTextKey,
-    languageDictionary,
     isErrorTextStraightToOutput,
+    errorTextData,
+    translateFunction,
   }: ErrorResponseFormatterConstructorParams): string => {
     if (isErrorTextStraightToOutput) {
       return errorTextKey;
     }
 
-    const dictNetworkError = languageDictionary[NETWORK_ERROR_KEY]
-      ? languageDictionary[NETWORK_ERROR_KEY].text
-      : NETWORK_ERROR_KEY;
-
-    const formattedError = languageDictionary[errorTextKey]
-      ? languageDictionary[errorTextKey].text
-      : dictNetworkError;
-
-    if (Boolean(formattedError)) {
-      return formattedError;
+    if (translateFunction) {
+      return translateFunction(errorTextKey, errorTextData);
     }
 
-    return dictNetworkError;
+    // eslint-disable-next-line
+    console.warn(
+      'no translateFunction is provided and it is not straight output',
+    );
+
+    return DEFAULT_ERROR_TEXT;
   };
 
   getFormattedErrorResponse = (
@@ -47,6 +45,6 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
       errorDictionaryParams,
     ),
     data: {},
-    additionalErrors: null,
+    additionalErrors: errorDictionaryParams.errorTextData || null,
   });
 }

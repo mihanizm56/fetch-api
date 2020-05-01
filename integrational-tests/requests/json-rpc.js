@@ -1,10 +1,10 @@
 const { JSONRPCRequest } = require('../../dist');
-const { langDict } = require('../constants');
+const { translateFunction } = require('../constants');
 
 module.exports.JSONRPCRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc',
-    langDict,
+    translateFunction,
     responseSchema,
     body: {
       method: 'test_method',
@@ -17,7 +17,7 @@ module.exports.JSONRPCRequest = responseSchema =>
 module.exports.JSONRPCNegativeRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',
-    langDict,
+    translateFunction,
     responseSchema,
     body: {
       method: 'test_method',
@@ -30,7 +30,7 @@ module.exports.JSONRPCNegativeRequest = responseSchema =>
 module.exports.JSONRPCNegativeRequestEn = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',
-    langDict,
+    translateFunction,
     responseSchema,
     body: {
       method: 'test_method',
@@ -46,7 +46,7 @@ module.exports.JSONRPCRequestWithCustomResponseValidation = ({
 }) =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc',
-    langDict,
+    translateFunction,
     responseSchema,
     body: {
       method: 'test_method',
@@ -60,7 +60,7 @@ module.exports.JSONRPCRequestWithCustomResponseValidation = ({
 module.exports.JSONRPCNegativeErrorsRequestStraightError = responseSchema =>
   new JSONRPCRequest().makeRequest({
     endpoint: 'http://localhost:8080/json-rpc/negative',
-    langDict,
+    translateFunction,
     responseSchema,
     body: {
       method: 'test_method',
@@ -73,8 +73,8 @@ module.exports.JSONRPCNegativeErrorsRequestStraightError = responseSchema =>
 
 module.exports.JSONRPCNegativeErrorsRequest = responseSchema =>
   new JSONRPCRequest().makeRequest({
-    endpoint: 'http://localhost:8080/json-rpc/negative/errors',
-    langDict,
+    endpoint: 'http://localhost:8080/json-rpc/negative/no-add',
+    translateFunction,
     responseSchema,
     body: {
       method: 'test_method',

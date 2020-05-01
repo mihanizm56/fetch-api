@@ -2,7 +2,8 @@ import {
   ResponseFormatter,
   IResponse,
   FormatResponseRESTDataOptionsType,
-  LanguageDictionary,
+  TranslateFunction,
+  AdditionalErrors,
 } from '@/types/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 
@@ -11,17 +12,17 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   error: boolean;
 
-  langDict: LanguageDictionary;
+  translateFunction?: TranslateFunction;
 
   errorText: string;
 
-  additionalErrors: Record<string, any> | Array<any> | null;
+  additionalErrors: AdditionalErrors | null;
 
   isErrorTextStraightToOutput?: boolean;
 
   constructor({
     error,
-    langDict,
+    translateFunction,
     errorText,
     additionalErrors,
     data,
@@ -30,7 +31,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     super();
 
     this.error = error;
-    this.langDict = langDict;
+    this.translateFunction = translateFunction;
     this.errorText = errorText;
     this.additionalErrors = additionalErrors;
     this.data = data;
@@ -43,10 +44,13 @@ export class RestResponseFormatter extends ResponseFormatter {
     errorText: this.error
       ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
           errorTextKey: this.errorText,
-          languageDictionary: this.langDict,
+          translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
+          errorTextData: this.additionalErrors
+            ? this.additionalErrors.translateOptions
+            : null,
         })
       : '',
-    additionalErrors: this.additionalErrors,
+    additionalErrors: this.additionalErrors ? this.additionalErrors : null,
   });
 }

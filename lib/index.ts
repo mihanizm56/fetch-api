@@ -10,7 +10,6 @@ export {
   IRequestParams,
   ComplexRequestParams,
   SimpleRequestParams,
-  LanguageDictionary,
+  TranslateFunction,
   ModeCorsType,
-  GetterRequestBaseParamsType,
 } from './types/types';
