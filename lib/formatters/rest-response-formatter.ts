@@ -46,11 +46,9 @@ export class RestResponseFormatter extends ResponseFormatter {
           errorTextKey: this.errorText,
           translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
-          errorTextData: this.additionalErrors
-            ? this.additionalErrors.translateOptions
-            : null,
+          errorTextData: this.additionalErrors || null,
         })
       : '',
-    additionalErrors: this.additionalErrors ? this.additionalErrors : null,
+    additionalErrors: this.additionalErrors || null,
   });
 }

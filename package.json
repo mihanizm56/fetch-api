@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.3.0-beta.1",
+  "version": "3.3.0-beta.6",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,14 +9,14 @@
     "test:watch": "jest --watch",
     "test": "set CI=true && jest",
     "test:coverage": "jest --coverage",
-    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./lib -o ./dist",
+    "build": "rm -fr ./dist && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./lib -o ./dist",
     "lint": "npx eslint . --ext .ts --fix",
     "stop": "sudo kill $(sudo lsof -t -i:8080)",
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
     "save": "npm run commit && git push && npm version patch && git push && npm run pub",
-    "release": "npm publish --access=public",
-    "beta": "npm publish --tag beta --access=public",
+    "release": "npm run commit && git push && npm publish --access=public",
+    "beta": "npm run commit && git push && npm publish --tag beta --access=public",
     "size": "pkgfiles"
   },
   "repository": {

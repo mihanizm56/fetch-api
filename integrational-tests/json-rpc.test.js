@@ -34,13 +34,14 @@ describe('tests json-rpc request protocol', () => {
       expect(data).toEqual({
         additionalErrors: {
           err: 'Тестовая ошибка',
-          trData: { value1: '1', value2: '2' },
+          value1: '1',
+          value2: '2',
           trKey: 'test.key.tr',
         },
         data: {},
         error: true,
         errorText:
-          'trans func returns translation with key test.key.tr {"value1":"1","value2":"2"}',
+          'trans func returns translation with key test.key.tr {"err":"Тестовая ошибка","trKey":"test.key.tr","value1":"1","value2":"2"}',
       });
     });
 
@@ -50,13 +51,14 @@ describe('tests json-rpc request protocol', () => {
       expect(data).toEqual({
         additionalErrors: {
           err: 'Тестовая ошибка',
-          trData: { value1: '1', value2: '2' },
+          value1: '1',
+          value2: '2',
           trKey: 'test.key.tr',
         },
         data: {},
         error: true,
         errorText:
-          'trans func returns translation with key test.key.tr {"value1":"1","value2":"2"}',
+          'trans func returns translation with key test.key.tr {"err":"Тестовая ошибка","trKey":"test.key.tr","value1":"1","value2":"2"}',
       });
     });
 
@@ -68,7 +70,8 @@ describe('tests json-rpc request protocol', () => {
       expect(data).toEqual({
         additionalErrors: {
           err: 'Тестовая ошибка',
-          trData: { value1: '1', value2: '2' },
+          value1: '1',
+          value2: '2',
           trKey: 'test.key.tr',
         },
         data: {},

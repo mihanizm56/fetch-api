@@ -7,9 +7,7 @@ export type TranslateFunction = (
   options?: Record<string, any> | null,
 ) => string;
 
-export type AdditionalErrors = {
-  translateOptions: Record<string, any>;
-};
+export type AdditionalErrors = Record<string, any>;
 
 export interface IJSONPRCRequestParams extends IRequestParams {
   id: string;
@@ -90,7 +88,7 @@ export type JSONRPCErrorType = {
   data: {
     err: string;
     trKey: string;
-    trData?: Record<string, any>;
+    payload?: Record<string, any>;
   };
 };
 

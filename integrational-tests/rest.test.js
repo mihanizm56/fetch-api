@@ -109,11 +109,9 @@ describe('tests rest request protocol', () => {
 
       expect(data).toEqual({
         additionalErrors: {
-          translateOptions: {
-            foo: '1',
-            bar: '2',
-            baz: '3',
-          },
+          bar: '2',
+          baz: '3',
+          foo: '1',
           username: 'not valid data',
         },
         data: {},
@@ -136,7 +134,9 @@ describe('tests rest request protocol', () => {
 
       expect(data).toEqual({
         additionalErrors: {
-          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          bar: '2',
+          baz: '3',
+          foo: '1',
           username: 'not valid data',
         },
         data: {},
@@ -145,16 +145,15 @@ describe('tests rest request protocol', () => {
       });
     });
     test('post request', async () => {
+      // ///////////////////////////////////
       const data = await postNegativeRestRequest(postRestSchema);
 
       expect(data).toEqual({
-        additionalErrors: {
-          username: 'not valid data',
-        },
+        additionalErrors: { username: 'not valid data' },
         data: {},
         error: true,
         errorText:
-          'trans func returns translation with key test.error.key undefined',
+          'trans func returns translation with key test.error.key {"username":"not valid data"}',
       });
     });
     test('put request', async () => {
@@ -162,13 +161,15 @@ describe('tests rest request protocol', () => {
 
       expect(data).toEqual({
         additionalErrors: {
-          translateOptions: { bar: '2', baz: '3', foo: '1' },
           username: 'not valid data',
+          bar: '2',
+          baz: '3',
+          foo: '1',
         },
         data: {},
         error: true,
         errorText:
-          'trans func returns translation with key test.error.key {"foo":"1","bar":"2","baz":"3"}',
+          'trans func returns translation with key test.error.key {"username":"not valid data","foo":"1","bar":"2","baz":"3"}',
       });
     });
     test('patch request', async () => {
@@ -176,13 +177,15 @@ describe('tests rest request protocol', () => {
 
       expect(data).toEqual({
         additionalErrors: {
-          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          bar: '2',
+          baz: '3',
+          foo: '1',
           username: 'not valid data',
         },
         data: {},
         error: true,
         errorText:
-          'trans func returns translation with key test.error.key {"foo":"1","bar":"2","baz":"3"}',
+          'trans func returns translation with key test.error.key {"username":"not valid data","foo":"1","bar":"2","baz":"3"}',
       });
     });
     test('delete request', async () => {
@@ -190,13 +193,15 @@ describe('tests rest request protocol', () => {
 
       expect(data).toEqual({
         additionalErrors: {
-          translateOptions: { bar: '2', baz: '3', foo: '1' },
+          bar: '2',
+          baz: '3',
+          foo: '1',
           username: 'not valid data',
         },
         data: {},
         error: true,
         errorText:
-          'trans func returns translation with key test.error.key {"foo":"1","bar":"2","baz":"3"}',
+          'trans func returns translation with key test.error.key {"username":"not valid data","foo":"1","bar":"2","baz":"3"}',
       });
     });
   });

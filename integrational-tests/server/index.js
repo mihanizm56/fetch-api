@@ -21,11 +21,9 @@ const sendNegativeData = res =>
     errorText: 'test.error.key',
     additionalErrors: {
       username: 'not valid data',
-      translateOptions: {
-        foo: '1',
-        bar: '2',
-        baz: '3',
-      },
+      foo: '1',
+      bar: '2',
+      baz: '3',
     },
     data: {},
   });
@@ -67,10 +65,8 @@ const sendNegativeDataRPC = (res, id) =>
       data: {
         err: 'Тестовая ошибка',
         trKey: 'test.key.tr',
-        trData: {
-          value1: '1',
-          value2: '2',
-        },
+        value1: '1',
+        value2: '2',
       },
     },
   });

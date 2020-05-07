@@ -38,7 +38,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
             : this.error.data.trKey,
           translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
-          errorTextData: this.error.data.trData,
+          errorTextData: this.error.data,
         })
       : '',
     error: Boolean(this.error),

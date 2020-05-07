@@ -41,9 +41,7 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     errorDictionaryParams: ErrorResponseFormatterConstructorParams,
   ): IResponse => ({
     error: true,
-    errorText: new ErrorResponseFormatter().getFormattedErrorTextResponse(
-      errorDictionaryParams,
-    ),
+    errorText: this.getFormattedErrorTextResponse(errorDictionaryParams),
     data: {},
     additionalErrors: errorDictionaryParams.errorTextData || null,
   });
