@@ -1,18 +1,18 @@
 # @mihanizm56/fetch-api
 
-## Sollution for http/1.1 isomorphic fetch
+## Solution for http/1.1 isomorphic fetch
 
 ### Benefits:
 
-- Provides validation for responses (based on @hapi/joi Schema validation)
+- Provides validation for responses (based on @hapi/joi Schema validation and may use your own validation function)
 - Provides the ability to make rest-api and json-rpc protocol requests in One interface
 - Provides query-params serialize
 - Provides cancel-request if the timeout is higher than 60 seconds
 - Provides error catching (you dont need to use try/catch)
 - Provides the ability to match the exact error translation
 - Provides different kinds of the response formats to parse
-- Returns ALWAYS the hard prepared response structure
-- Works in browser and node environments
+- Returns ALWAYS the hard prepared response structure (data, error, errorText, additionalErrors)
+- Works in browser and node environments (>ie11)
 
 #### RestRequest input options:
 
@@ -23,13 +23,23 @@
 - parseType('json' | 'blob'): the type to parse the response (json by default)
 - queryParams(object): the object with the query parameters (they will be serialized automatically)
 - headers(object): the object with the headers
+- translateFunction(function): function that will be called with error text key and params (key, params)
+- isErrorTextStraightToOutput(boolean): flag not to prepare error text value - it <br/>
+  goes straight from backend ("errorText" if REST and "message" if JSON-RPC)
+- extraValidationCallback(function): callback that can be used for custom response <br/>
+  data validation or if you don't want to use @hapi/joi
 
 #### RestRequest output options:
 
 - error (boolean) - the flag of the response status
-- errorText (string) - the main error message from the backend
+- errorText (string) - the text error message from the backend
 - data (object) - the main data from the backend
-- additionalErrors (object) - the additional multiple errors from the backend
+- additionalErrors (object) - the additional error data from the backend
+
+## Features and recommendations
+- body will be serialized in JSON if body data NOT FormData
+- try to use .unknown() method with objects in Joi Schemas because your backend may be extended 
+and without this method the responce data may be not valid
 
 ## Examples of usage
 
@@ -50,6 +60,8 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const getContractsRequest = (): Promise<IResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
+    translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
+    isErrorTextStraightToOutput: true,
     responseSchema: Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
@@ -74,7 +86,7 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const createReviseRequest = (someData): Promise<IResponse> =>
   new RestRequest().postRequest({
     endpoint: "http://localhost:3000",
-    body: JSON.stringify(someData),
+    body: someData,
     mode: "cors",
     parseType: "blob",
     queryParams: {
