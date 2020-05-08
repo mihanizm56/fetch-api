@@ -213,7 +213,7 @@ describe('tests rest request protocol', () => {
         additionalErrors: null,
         data: {},
         error: true,
-        errorText: 'Request error',
+        errorText: 'network-error',
       });
     });
     test('post request', async () => {

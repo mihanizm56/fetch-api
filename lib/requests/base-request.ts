@@ -229,7 +229,7 @@ export class BaseRequest implements IBaseRequests {
         );
       })
       .catch((error) => {
-        console.error('get error in the request', error.message);
+        console.error('(fetch-api): get error in the request', error.message);
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
           translateFunction,

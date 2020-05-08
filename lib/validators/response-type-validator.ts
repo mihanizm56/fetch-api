@@ -13,7 +13,9 @@ interface IResponseFormatValidator {
 
   getIsJSONRPCFormatResponseValid: (params: IJSONRPCPureResponse) => boolean;
 
-  getIsSchemaResponseValid: (params: GetIsSchemaResponseValidParams) => boolean;
+  getIsSchemaResponseValid: (
+    params: GetIsSchemaResponseValidParams,
+  ) => { error: boolean; errorText: string };
 
   getCompareIds: ({ requestId, responceId }: GetCompareIdsParams) => boolean;
 
@@ -47,15 +49,18 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     data,
     error,
     schema,
-  }: GetIsSchemaResponseValidParams) => {
+  }: GetIsSchemaResponseValidParams): { error: boolean; errorText: string } => {
     // if the error flag is true
     if (error) {
-      return true;
+      return { error: false, errorText: '' };
     }
 
     const validationResult = schema.validate(data);
 
-    return !Boolean(validationResult.error);
+    return {
+      error: Boolean(validationResult.error),
+      errorText: validationResult.error,
+    };
   };
 
   public getCompareIds = ({ requestId, responceId }: GetCompareIdsParams) =>
@@ -64,7 +69,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   // todo fix any type
   public getRestFormatIsValid = ({ response, schema }: any) => {
     if (!Boolean(response)) {
-      console.error('response is empty');
+      console.error('(fetch-api): response is empty');
       return false;
     }
 
@@ -72,19 +77,23 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     // if the base format is not valid
     if (!isFormatValid) {
-      console.error('response base format is not valid');
+      console.error('(fetch-api): response base format is not valid');
       return false;
     }
 
-    const isSchemaRequestValid = this.getIsSchemaResponseValid({
+    const {
+      error: isSchemaError,
+      errorText: schemaErrorValue,
+    } = this.getIsSchemaResponseValid({
       data: response.data,
       error: response.error,
       schema,
     });
 
     // if the schema format is not valid
-    if (!isSchemaRequestValid) {
-      console.error('response schema format is not valid');
+    if (isSchemaError) {
+      console.error('(fetch-api): response schema format is not valid');
+      console.error('(fetch-api): error in schema', schemaErrorValue);
       return false;
     }
 
@@ -97,7 +106,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   // todo fix any type
   public getJSONRPCFormatIsValid = ({ response, schema, prevId }: any) => {
     if (!Boolean(response)) {
-      console.error('response is empty');
+      console.error('(fetch-api): response is empty');
       return false;
     }
 
@@ -108,7 +117,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     // if ids are not equal
     if (!idsAreEqual) {
-      console.error('request-response ids are not equal');
+      console.error('(fetch-api): request-response ids are not equal');
       return false;
     }
 
@@ -116,19 +125,23 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     // if the base format is not valid
     if (!isFormatValid) {
-      console.error('response base format is not valid');
+      console.error('(fetch-api): response base format is not valid');
       return false;
     }
 
-    const isSchemaRequestValid = this.getIsSchemaResponseValid({
+    const {
+      error: isSchemaError,
+      errorText: schemaErrorValue,
+    } = this.getIsSchemaResponseValid({
       data: response.result,
       error: Boolean(response.error),
       schema,
     });
 
     // if the schema format is not valid
-    if (!isSchemaRequestValid) {
-      console.error('response schema format is not valid');
+    if (isSchemaError) {
+      console.error('(fetch-api): response schema format is not valid');
+      console.error('(fetch-api): error in schema', schemaErrorValue);
       return false;
     }
 
