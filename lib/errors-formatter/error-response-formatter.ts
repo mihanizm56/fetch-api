@@ -2,7 +2,7 @@ import {
   IResponse,
   ErrorResponseFormatterConstructorParams,
 } from '@/types/types';
-import { DEFAULT_ERROR_TEXT } from '@/constants/shared';
+import { NETWORK_ERROR_KEY } from '@/constants/shared';
 
 interface IErrorResponseFormatter {
   getFormattedErrorResponse: (
@@ -34,7 +34,7 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
       'no translateFunction is provided and it is not straight output',
     );
 
-    return DEFAULT_ERROR_TEXT;
+    return NETWORK_ERROR_KEY;
   };
 
   getFormattedErrorResponse = (
