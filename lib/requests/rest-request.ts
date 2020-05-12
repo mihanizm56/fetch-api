@@ -54,12 +54,13 @@ export class RestRequest extends BaseRequest {
     });
 
   public getBlobRequest = (
-    requestParams: SimpleRequestParams
+    requestParams: Omit<SimpleRequestParams,'extraValidationCallback'>
   ) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
       parseType: parseTypesMap.blob,
-      requestProtocol: requestProtocolsMap.rest
+      requestProtocol: requestProtocolsMap.rest,
+      extraValidationCallback: () => true
     });
 }

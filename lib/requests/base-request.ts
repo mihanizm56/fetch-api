@@ -1,4 +1,4 @@
-import nodeFetch from 'node-fetch';
+import nodeFetch from "node-fetch";
 import {
   RequestRacerParams,
   ParseResponseParams,
@@ -9,21 +9,23 @@ import {
   GetIsomorphicFetchParamsType,
   GetIsomorphicFetchReturnsType,
   GetFetchBodyParamsType,
-} from '@/types/types';
+  GetPreparedResponseDataParams,
+  FormatResponseParamsType,
+} from "@/types/types";
 import {
   parseTypesMap,
   requestProtocolsMap,
   NETWORK_ERROR_KEY,
   TIMEOUT_ERROR_KEY,
-} from '@/constants/shared';
-import { StatusValidator } from '../validators/response-status-validator';
-import { FormatDataTypeValidator } from '../validators/response-type-validator';
-import { ErrorResponseFormatter } from '../errors-formatter/error-response-formatter';
-import { TIMEOUT_VALUE } from '../constants/timeout';
-import { jsonParser } from '../utils/parsers/json-parser';
-import { blobParser } from '../utils/parsers/blob-parser';
-import { objectToQueryString } from '../utils/object-to-query-string';
-import { FormatResponseFactory } from '@/formatters/format-response-factory';
+} from "@/constants/shared";
+import { StatusValidator } from "../validators/response-status-validator";
+import { FormatDataTypeValidator } from "../validators/response-type-validator";
+import { ErrorResponseFormatter } from "../errors-formatter/error-response-formatter";
+import { TIMEOUT_VALUE } from "../constants/timeout";
+import { jsonParser } from "../utils/parsers/json-parser";
+import { blobParser } from "../utils/parsers/blob-parser";
+import { objectToQueryString } from "../utils/object-to-query-string";
+import { FormatResponseFactory } from "@/formatters/format-response-factory";
 
 interface IBaseRequests {
   makeFetch: (
@@ -71,7 +73,7 @@ export class BaseRequest implements IBaseRequests {
     endpoint,
     fetchParams,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       const requestFetch = (nodeFetch.bind(
         // eslint-disable-line
         null,
@@ -115,7 +117,7 @@ export class BaseRequest implements IBaseRequests {
     version,
     id,
   }: GetFetchBodyParamsType) => {
-    if (method === 'GET') {
+    if (method === "GET") {
       return undefined;
     }
 
@@ -129,6 +131,29 @@ export class BaseRequest implements IBaseRequests {
       }
     }
   };
+
+  getPreparedResponseData = ({
+    respondedData,
+    translateFunction,
+    protocol: requestProtocol,
+    isErrorTextStraightToOutput,
+    isBlobGetRequest,
+  }: GetPreparedResponseDataParams): FormatResponseParamsType =>
+    isBlobGetRequest
+      ? {
+          data: respondedData,
+          translateFunction,
+          protocol: requestProtocol,
+          isErrorTextStraightToOutput,
+          isBlobGetRequest: true,
+        }
+      : {
+          ...respondedData,
+          translateFunction,
+          protocol: requestProtocol,
+          isErrorTextStraightToOutput,
+          isBlobGetRequest: false,
+        };
 
   makeFetch = <
     MakeFetchType extends IRequestParams &
@@ -206,14 +231,20 @@ export class BaseRequest implements IBaseRequests {
           });
 
           if (isFormatValid) {
-            // get the formatter func
-            const responseFormatter = new FormatResponseFactory().createFormatter(
+            // prepare data before to be formatted
+            const preparedData: FormatResponseParamsType = this.getPreparedResponseData(
               {
-                ...respondedData,
+                respondedData,
                 translateFunction,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
+                isBlobGetRequest: parseType === parseTypesMap.blob,
               }
+            );
+
+            // get the formatter func
+            const responseFormatter = new FormatResponseFactory().createFormatter(
+              preparedData
             );
 
             // format data
@@ -229,7 +260,7 @@ export class BaseRequest implements IBaseRequests {
         );
       })
       .catch((error) => {
-        console.error('(fetch-api): get error in the request', error.message);
+        console.error("(fetch-api): get error in the request", error.message);
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
           translateFunction,
@@ -263,7 +294,7 @@ export class BaseRequest implements IBaseRequests {
         );
 
         // if the window fetch
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           fetchController.abort();
         }
 
