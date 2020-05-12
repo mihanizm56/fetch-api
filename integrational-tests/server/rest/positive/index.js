@@ -9,7 +9,7 @@ const { positiveDeleteController } = require('../controllers/delete');
 const positiveRouter = express.Router();
 
 positiveRouter.get('/', positiveGetController);
-positiveRouter.get('/', positiveGetBlobController);
+positiveRouter.get('/blob', positiveGetBlobController);
 positiveRouter.post('/', positivePostController);
 positiveRouter.put('/', positivePutController);
 positiveRouter.patch('/', positivePatchController);
