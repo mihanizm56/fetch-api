@@ -20,7 +20,6 @@
 - responseSchema: the response Schema that parsed by @hapi/joi <br/>(you must use the @hapi/joi in your project and insert the response Schema into this field)
 - body(JSON | FormData): the request body
 - mode('cors' | 'no-cors'): the cors type
-- parseType('json' | 'blob'): the type to parse the response (json by default)
 - queryParams(object): the object with the query parameters (they will be serialized automatically)
 - headers(object): the object with the headers
 - translateFunction(function): function that will be called with error text key and params (key, params)
@@ -78,6 +77,20 @@ export const getContractsRequest = (): Promise<IResponse> =>
   });
 ```
 
+#### get request with blob parse
+
+```javascript
+import Joi from "@hapi/joi";
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+
+export const getPhotoRequest = (): Promise<IResponse> =>
+  new RestRequest().getBlobRequest({
+    endpoint: "http://localhost:3000",
+    translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
+    responseSchema: Joi.any()
+  });
+```
+
 #### post(put/patch/delete have the same format) request
 
 ```javascript
@@ -88,7 +101,6 @@ export const createReviseRequest = (someData): Promise<IResponse> =>
     endpoint: "http://localhost:3000",
     body: someData,
     mode: "cors",
-    parseType: "blob",
     queryParams: {
       id: "test_id_123",
     },
@@ -122,7 +134,6 @@ export const createItemsRequest = (someData): Promise<IResponse> =>
       method: 'some method',
       params: 123
     }
-    mode: "cors",
     queryParams: {
       id: "123"
     },

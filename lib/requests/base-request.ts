@@ -213,7 +213,7 @@ export class BaseRequest implements IBaseRequests {
             response,
             parseType,
             isResponseOk,
-          });
+          });          
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(

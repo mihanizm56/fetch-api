@@ -46,27 +46,28 @@ export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
   mode?: ModeCorsType;
-  method?: string;
+  method?: string; //
   endpoint: string;
-  parseType?: keyof typeof parseTypesMap;
+  parseType?: keyof typeof parseTypesMap; //
   queryParams?: { [key: string]: string };
   translateFunction?: TranslateFunction;
-  responseSchema: any;
+  responseSchema?: any;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
 }
 
 export type ComplexRequestParams = Omit<
   IRequestParams,
-  'method' | 'requestProtocol' | 'parseType'
+  'method' | 'parseType'
 > & {
   body: any;
+  responseSchema: any;
 };
 
 export type SimpleRequestParams = Omit<
   IRequestParams,
-  'method' | 'requestProtocol' | 'parseType'
->;
+  'method' | 'parseType'
+> & { responseSchema: any };
 
 export interface IResponse {
   error: boolean;

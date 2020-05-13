@@ -26,7 +26,9 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     }
 
     if (translateFunction) {
-      return translateFunction(errorTextKey, errorTextData);
+      return errorTextData
+        ? translateFunction(errorTextKey, errorTextData)
+        : translateFunction(errorTextKey);
     }
 
     // eslint-disable-next-line

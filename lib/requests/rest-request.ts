@@ -54,13 +54,14 @@ export class RestRequest extends BaseRequest {
     });
 
   public getBlobRequest = (
-    requestParams: Omit<SimpleRequestParams,'extraValidationCallback'>
+    requestParams: Omit<SimpleRequestParams,'extraValidationCallback' | 'responseSchema' | 'body' | 'isErrorTextStraightToOutput'>
   ) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
       parseType: parseTypesMap.blob,
       requestProtocol: requestProtocolsMap.rest,
-      extraValidationCallback: () => true
+      extraValidationCallback: () => true,
+      isErrorTextStraightToOutput: false,
     });
 }
