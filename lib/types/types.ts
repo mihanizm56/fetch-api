@@ -23,11 +23,13 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 export type FormatResponseRESTDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunction;
+  statusCode: number;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunction;
+  statusCode: number;
 } & IJSONRPCPureResponse;
 
 export type ResponseValidateType = {
@@ -74,6 +76,7 @@ export interface IResponse {
   errorText: string;
   data: Record<string, any> | null;
   additionalErrors: Record<string, any> | null;
+  code: number;
 }
 
 export interface IRESTPureResponse {
@@ -155,11 +158,12 @@ export type GetFetchBodyParamsType = {
 };
 
 export type GetPreparedResponseDataParams = {
-  respondedData: any;
+  responseData: any;
   translateFunction?: TranslateFunction;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;
   isBlobGetRequest: boolean;
+  statusCode: number;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
@@ -179,6 +183,7 @@ export type FormatResponseParamsType = {
   translateFunction?: TranslateFunction;
   isErrorTextStraightToOutput?: boolean;
   isBlobGetRequest: boolean;
+  statusCode: number;
   data: any | Blob;
 } & (IRESTPureResponse & IJSONRPCPureResponse);
 
@@ -188,3 +193,14 @@ export type GetFormatValidateMethodParams = {
 };
 
 export type IDType = string;
+
+export type GetPreparedPureRestResponseDataParams = {
+  isResponseStatusSuccess: boolean;
+  respondedData: any;
+  statusCode: number;
+};
+
+export type GetFormattedErrorTextResponseParams = {
+  errorDictionaryParams: ErrorResponseFormatterConstructorParams;
+  statusCode: number;
+};

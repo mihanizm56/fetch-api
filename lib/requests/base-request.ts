@@ -11,6 +11,7 @@ import {
   GetFetchBodyParamsType,
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
+  GetPreparedPureRestResponseDataParams,
 } from "@/types/types";
 import {
   parseTypesMap,
@@ -50,7 +51,7 @@ export class BaseRequest implements IBaseRequests {
     parseType,
     isResponseOk,
   }: ParseResponseParams) => {
-    // if not 200 then always get json format
+    // if not "not ok" status then always get json format
     if (!isResponseOk) {
       return jsonParser(response);
     }
@@ -97,6 +98,10 @@ export class BaseRequest implements IBaseRequests {
     };
   };
 
+  // get pure response status is "success"
+  getIsResponseStatusSuccess = (statusCode: number): boolean =>
+    statusCode < 400;
+
   // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
@@ -132,27 +137,46 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  getPreparedResponseData = ({
+  // get prepared pure rest response data TODO REFACTOR THIS FORMATTING!!!!!!
+  getPreparedPureRestResponseData = ({
+    isResponseStatusSuccess,
     respondedData,
+    statusCode,
+  }: GetPreparedPureRestResponseDataParams): IResponse => ({
+    error: !isResponseStatusSuccess,
+    errorText: isResponseStatusSuccess ? "" : respondedData.errorText,
+    data: isResponseStatusSuccess ? { ...respondedData } : {},
+    additionalErrors: isResponseStatusSuccess
+      ? null
+      : respondedData.additionalErrors,
+    code: statusCode,
+  });
+
+  // TODO REFACTOR THIS FORMATTING!!!!!!
+  getPreparedResponseData = ({
+    responseData,
     translateFunction,
     protocol: requestProtocol,
     isErrorTextStraightToOutput,
     isBlobGetRequest,
+    statusCode,
   }: GetPreparedResponseDataParams): FormatResponseParamsType =>
     isBlobGetRequest
       ? {
-          data: respondedData,
+          data: responseData,
           translateFunction,
           protocol: requestProtocol,
           isErrorTextStraightToOutput,
           isBlobGetRequest: true,
+          statusCode,
         }
       : {
-          ...respondedData,
+          ...responseData,
           translateFunction,
           protocol: requestProtocol,
           isErrorTextStraightToOutput,
           isBlobGetRequest: false,
+          statusCode,
         };
 
   makeFetch = <
@@ -202,18 +226,32 @@ export class BaseRequest implements IBaseRequests {
     const request = requestFetch()
       .then(async (response: any) => {
         const statusValidator = new StatusValidator();
-        const isValidStatus = statusValidator.getStatusIsFromWhiteList(
-          response.status
+        const statusCode = response.status;
+        const isResponseStatusSuccess: boolean = this.getIsResponseStatusSuccess(
+          statusCode
         );
-        const isResponseOk = response.ok;
+        const isValidStatus =
+          requestProtocol === "pureRest"
+            ? true
+            : statusValidator.getStatusIsFromWhiteList(statusCode);
 
         if (isValidStatus) {
           // any type because we did not know about data structure
           const respondedData: any = await this.parseResponseData({
             response,
             parseType,
-            isResponseOk,
-          });          
+            isResponseOk: isResponseStatusSuccess,
+          });
+
+          // if pure rest request - do the formatting of the response (PLEASE REFACTOR THIS AS SOON AS POSSIBLE!!!)
+          const responseData =
+            requestProtocol === requestProtocolsMap.pureRest
+              ? this.getPreparedPureRestResponseData({
+                  isResponseStatusSuccess,
+                  respondedData,
+                  statusCode,
+                })
+              : respondedData;
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
@@ -225,7 +263,7 @@ export class BaseRequest implements IBaseRequests {
 
           // get the full validation result
           const isFormatValid: boolean = formatDataTypeValidator({
-            response: respondedData,
+            response: responseData,
             schema: responseSchema,
             prevId: id,
           });
@@ -234,11 +272,12 @@ export class BaseRequest implements IBaseRequests {
             // prepare data before to be formatted
             const preparedData: FormatResponseParamsType = this.getPreparedResponseData(
               {
-                respondedData,
+                responseData,
                 translateFunction,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
                 isBlobGetRequest: parseType === parseTypesMap.blob,
+                statusCode,
               }
             );
 
@@ -263,9 +302,12 @@ export class BaseRequest implements IBaseRequests {
         console.error("(fetch-api): get error in the request", error.message);
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
-          translateFunction,
-          errorTextKey: error.message,
-          isErrorTextStraightToOutput,
+          errorDictionaryParams: {
+            translateFunction,
+            errorTextKey: error.message,
+            isErrorTextStraightToOutput,
+          },
+          statusCode: 500,
         });
       });
 
@@ -287,9 +329,12 @@ export class BaseRequest implements IBaseRequests {
       setTimeout(() => {
         const defaultError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
           {
-            translateFunction,
-            errorTextKey: TIMEOUT_ERROR_KEY,
-            isErrorTextStraightToOutput,
+            errorDictionaryParams: {
+              translateFunction,
+              errorTextKey: TIMEOUT_ERROR_KEY,
+              isErrorTextStraightToOutput,
+            },
+            statusCode: 500,
           }
         );
 

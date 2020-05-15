@@ -165,7 +165,7 @@ module.exports.negativeGetController = (req, res) => {
     });
   }
 
-  res.status(200).json({
+  res.status(401).json({
     error: true,
     errorText: 'test error key',
     data: {},

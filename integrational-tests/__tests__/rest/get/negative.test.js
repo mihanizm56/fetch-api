@@ -31,6 +31,7 @@ describe('get request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key not valid data and options undefined',
+      code: 400,
     });
   });
 
@@ -50,6 +51,7 @@ describe('get request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      code: 500,
     });
   });
 
@@ -69,6 +71,7 @@ describe('get request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      code: 500,
     });
   });
 
@@ -95,6 +98,7 @@ describe('get request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      code: 500,
     });
   });
 
@@ -118,6 +122,7 @@ describe('get request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      code: 500,
     });
   });
 
@@ -139,6 +144,7 @@ describe('get request (negative)', () => {
       data: {},
       error: true,
       errorText: 'test special key',
+      code: 400,
     });
   });
 
@@ -164,6 +170,7 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        code: 401,
       });
     });
 
@@ -192,6 +199,7 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        code: 400,
       });
     });
   });
@@ -214,6 +222,7 @@ describe('get request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        code: 500,
       });
     });
     test('error was not sent', async () => {
@@ -233,6 +242,7 @@ describe('get request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        code: 500,
       });
     });
     test('errorText was not sent', async () => {
@@ -252,6 +262,7 @@ describe('get request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        code: 500,
       });
     });
     test('additionalErrors was not sent', async () => {
@@ -271,6 +282,7 @@ describe('get request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        code: 500,
       });
     });
   });

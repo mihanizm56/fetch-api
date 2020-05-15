@@ -16,11 +16,14 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   isErrorTextStraightToOutput?: boolean;
 
+  statusCode: number;
+
   constructor({
     error,
     result,
     isErrorTextStraightToOutput,
     translateFunction,
+    statusCode,
   }: FormatResponseJSONRPCDataOptionsType) {
     super();
 
@@ -28,6 +31,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     this.error = error;
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
     this.translateFunction = translateFunction;
+    this.statusCode = statusCode;
   }
 
   getFormattedResponse = (): IResponse => ({
@@ -44,5 +48,6 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     error: Boolean(this.error),
     data: this.result || {},
     additionalErrors: this.error ? this.error.data : null,
+    code: this.statusCode,
   });
 }

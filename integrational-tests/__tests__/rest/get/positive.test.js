@@ -35,12 +35,14 @@ describe('get request (positive)', () => {
       errorText,
       error,
       additionalErrors,
+      code,
     } = await new RestRequest().getRequest(requestConfig);
 
     expect(data).toEqual({ bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' });
     expect(additionalErrors).toBeNull();
     expect(errorText).toEqual('');
     expect(error).toBeFalsy();
+    expect(code).toEqual(200);
   });
 
   test('headers are sent', async () => {
@@ -74,6 +76,7 @@ describe('get request (positive)', () => {
       },
       error: false,
       errorText: '',
+      code: 200,
     });
   });
 
@@ -108,6 +111,7 @@ describe('get request (positive)', () => {
       },
       error: false,
       errorText: '',
+      code: 200,
     });
   });
 
@@ -137,6 +141,7 @@ describe('get request (positive)', () => {
       data: { bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' },
       error: false,
       errorText: '',
+      code: 200,
     });
   });
 
@@ -169,6 +174,7 @@ describe('get request (positive)', () => {
       },
       error: false,
       errorText: '',
+      code: 200,
     });
   });
 });

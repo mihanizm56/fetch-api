@@ -28,12 +28,14 @@ describe('get-blob request', () => {
       errorText,
       error,
       additionalErrors,
+      code,
     } = await new RestRequest().getBlobRequest(requestConfig);
 
     expect(data).toBeDefined();
     expect(additionalErrors).toBeNull();
     expect(errorText).toEqual('');
     expect(error).toBeFalsy();
+    expect(code).toEqual(200);
   });
 
   test('negative response', async () => {
@@ -47,6 +49,7 @@ describe('get-blob request', () => {
       errorText,
       error,
       additionalErrors,
+      code,
     } = await new RestRequest().getBlobRequest(requestConfig);
 
     expect(data).toEqual({});
@@ -55,5 +58,6 @@ describe('get-blob request', () => {
       'translateFunction got key network-error and options undefined',
     );
     expect(error).toBeTruthy();
+    expect(code).toEqual(500);
   });
 });

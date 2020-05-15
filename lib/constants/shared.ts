@@ -6,6 +6,7 @@ export interface IParseTypesMap {
 export interface IRequestProtocolsMap {
   rest: 'rest';
   jsonRpc: 'jsonRpc';
+  pureRest: 'pureRest';
 }
 
 export const parseTypesMap: IParseTypesMap = {
@@ -13,9 +14,11 @@ export const parseTypesMap: IParseTypesMap = {
   blob: 'blob',
 };
 
+// todo fix similar
 export const requestProtocolsMap: IRequestProtocolsMap = {
   rest: 'rest',
   jsonRpc: 'jsonRpc',
+  pureRest: 'pureRest',
 };
 
 export const DEFAULT_ERROR_TEXT = 'network-error';

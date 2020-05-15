@@ -21,6 +21,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     id,
     isErrorTextStraightToOutput,
     isBlobGetRequest,
+    statusCode,
   }: FormatResponseParamsType): ResponseFormatter => {
     if (isBlobGetRequest) {
       return new BlobResponseFormatter(data);
@@ -34,6 +35,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           additionalErrors,
           translateFunction,
           isErrorTextStraightToOutput,
+          statusCode,
         })
       : new JSONRPCResponseFormatter({
           jsonrpc,
@@ -42,6 +44,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           result,
           translateFunction,
           isErrorTextStraightToOutput,
+          statusCode,
         });
   };
 }

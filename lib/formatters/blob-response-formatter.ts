@@ -14,5 +14,6 @@ export class BlobResponseFormatter extends ResponseFormatter {
     error: false,
     data: this.data,
     additionalErrors: null,
+    code: 200,
   });
 }

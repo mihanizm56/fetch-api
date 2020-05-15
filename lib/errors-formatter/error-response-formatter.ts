@@ -1,12 +1,13 @@
 import {
   IResponse,
   ErrorResponseFormatterConstructorParams,
+  GetFormattedErrorTextResponseParams,
 } from '@/types/types';
 import { NETWORK_ERROR_KEY } from '@/constants/shared';
 
 interface IErrorResponseFormatter {
   getFormattedErrorResponse: (
-    errorDictionaryParams: ErrorResponseFormatterConstructorParams,
+    errorDictionaryParams: GetFormattedErrorTextResponseParams,
   ) => IResponse;
 
   getFormattedErrorTextResponse: (
@@ -39,12 +40,14 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     return NETWORK_ERROR_KEY;
   };
 
-  getFormattedErrorResponse = (
-    errorDictionaryParams: ErrorResponseFormatterConstructorParams,
-  ): IResponse => ({
+  getFormattedErrorResponse = ({
+    errorDictionaryParams,
+    statusCode,
+  }: GetFormattedErrorTextResponseParams): IResponse => ({
     error: true,
     errorText: this.getFormattedErrorTextResponse(errorDictionaryParams),
     data: {},
     additionalErrors: errorDictionaryParams.errorTextData || null,
+    code: statusCode,
   });
 }

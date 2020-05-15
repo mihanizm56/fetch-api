@@ -20,6 +20,8 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   isErrorTextStraightToOutput?: boolean;
 
+  statusCode: number;
+
   constructor({
     error,
     translateFunction,
@@ -27,6 +29,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     additionalErrors,
     data,
     isErrorTextStraightToOutput,
+    statusCode,
   }: FormatResponseRESTDataOptionsType) {
     super();
 
@@ -36,6 +39,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     this.additionalErrors = additionalErrors;
     this.data = data;
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
+    this.statusCode = statusCode;
   }
 
   getFormattedResponse = (): IResponse => ({
@@ -50,5 +54,6 @@ export class RestResponseFormatter extends ResponseFormatter {
         })
       : '',
     additionalErrors: this.additionalErrors || null,
+    code: this.statusCode,
   });
 }
