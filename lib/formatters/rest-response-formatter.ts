@@ -44,7 +44,7 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   getFormattedResponse = (): IResponse => ({
     data: this.data || {},
-    error: this.error,
+    error: this.error || false,
     errorText: this.error
       ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
           errorTextKey: this.errorText,

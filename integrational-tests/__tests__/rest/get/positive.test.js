@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest } = require('../../../../dist');
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -43,6 +43,69 @@ describe('get request (positive)', () => {
     expect(errorText).toEqual('');
     expect(error).toBeFalsy();
     expect(code).toEqual(200);
+  });
+
+  describe('check PureRestRequest', () => {
+    test('simple response pure', async () => {
+      const responseSchema = Joi.object({
+        foo: Joi.string().required(),
+        bar: {
+          baz: Joi.number().required(),
+        },
+        delta: Joi.array().items(Joi.string()),
+      }).unknown();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+        responseSchema,
+      };
+
+      const response = await new PureRestRequest().getRequest(requestConfig);
+
+      expect(response).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: { bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' },
+        error: false,
+        errorText: '',
+      });
+    });
+
+    test('response pure with headers are sent', async () => {
+      const responseSchema = Joi.object({
+        foo: Joi.string().required(),
+        bar: {
+          baz: Joi.number().required(),
+        },
+        delta: Joi.array().items(Joi.string()),
+        specialheader: Joi.string().required(),
+      }).unknown();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+        responseSchema,
+        headers: {
+          specialheader: 'application/json',
+        },
+      };
+
+      const response = await new PureRestRequest().getRequest(requestConfig);
+
+      expect(response).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: {
+          bar: { baz: 0 },
+          delta: ['1', '2'],
+          foo: 'foo',
+          specialheader: 'application/json',
+        },
+        error: false,
+        errorText: '',
+      });
+    });
   });
 
   test('headers are sent', async () => {
@@ -116,16 +179,8 @@ describe('get request (positive)', () => {
   });
 
   test('extra validation callback returns "true" and was called', async () => {
-    const responseSchema = Joi.object({
-      foo: Joi.string().required(),
-      bar: {
-        baz: Joi.number().required(),
-      },
-      delta: Joi.array().items(Joi.string()),
-    }).unknown();
-
+    const responseSchema = Joi.any();
     const extraValidationCallback = jest.fn().mockReturnValue(true);
-
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/positive',

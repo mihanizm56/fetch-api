@@ -158,12 +158,13 @@ export type GetFetchBodyParamsType = {
 };
 
 export type GetPreparedResponseDataParams = {
-  responseData: any;
+  response: any;
   translateFunction?: TranslateFunction;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;
   isBlobGetRequest: boolean;
   statusCode: number;
+  isResponseStatusSuccess: boolean;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
@@ -185,7 +186,9 @@ export type FormatResponseParamsType = {
   isBlobGetRequest: boolean;
   statusCode: number;
   data: any | Blob;
-} & (IRESTPureResponse & IJSONRPCPureResponse);
+  error?: boolean | JSONRPCErrorType;
+} & (Partial<Omit<IRESTPureResponse, 'error'>> &
+  Partial<Omit<IJSONRPCPureResponse, 'error'>>);
 
 export type GetFormatValidateMethodParams = {
   protocol: keyof typeof requestProtocolsMap;
@@ -203,4 +206,11 @@ export type GetPreparedPureRestResponseDataParams = {
 export type GetFormattedErrorTextResponseParams = {
   errorDictionaryParams: ErrorResponseFormatterConstructorParams;
   statusCode: number;
+};
+
+export type FormatValidateParams = {
+  response: any;
+  schema: any;
+  prevId?: string;
+  isResponseStatusSuccess?: boolean;
 };

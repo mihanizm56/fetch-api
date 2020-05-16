@@ -1,5 +1,5 @@
 import { ResponseFormatter, FormatResponseParamsType } from '@/types/types';
-import { isRestRequest } from '../utils/is-rest-request';
+import { requestProtocolsMap } from '@/constants/shared';
 import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 import { RestResponseFormatter } from './rest-response-formatter';
 import { BlobResponseFormatter } from './blob-response-formatter';
@@ -14,11 +14,11 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     protocol,
     data,
     error,
-    errorText,
-    additionalErrors,
+    errorText = '',
+    additionalErrors = null,
     result,
-    jsonrpc,
-    id,
+    jsonrpc = '',
+    id = '',
     isErrorTextStraightToOutput,
     isBlobGetRequest,
     statusCode,
@@ -27,24 +27,28 @@ export class FormatResponseFactory implements IFormatResponseFactory {
       return new BlobResponseFormatter(data);
     }
 
-    return isRestRequest(protocol)
-      ? new RestResponseFormatter({
-          data,
-          error,
-          errorText,
-          additionalErrors,
-          translateFunction,
-          isErrorTextStraightToOutput,
-          statusCode,
-        })
-      : new JSONRPCResponseFormatter({
-          jsonrpc,
-          id,
-          error,
-          result,
-          translateFunction,
-          isErrorTextStraightToOutput,
-          statusCode,
-        });
+    if (protocol === requestProtocolsMap.jsonRpc) {
+      return new JSONRPCResponseFormatter({
+        // eslint-disable-next-line
+        // @ts-ignore
+        error,
+        jsonrpc,
+        id,
+        result,
+        translateFunction,
+        isErrorTextStraightToOutput,
+        statusCode,
+      });
+    }
+
+    return new RestResponseFormatter({
+      data,
+      error: Boolean(error), // because there may be no error (must be refactored)
+      errorText,
+      additionalErrors,
+      translateFunction,
+      isErrorTextStraightToOutput,
+      statusCode,
+    });
   };
 }

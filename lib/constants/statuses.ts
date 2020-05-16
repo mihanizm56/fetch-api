@@ -25,4 +25,5 @@ export const whitelistStatuses: IWhiteListStatusesHash = {
   409: true,
   410: true,
   411: true,
+  500: true,
 };

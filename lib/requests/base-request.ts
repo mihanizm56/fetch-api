@@ -79,7 +79,7 @@ export class BaseRequest implements IBaseRequests {
         // eslint-disable-line
         null,
         endpoint,
-        fetchParams
+        { ...fetchParams }
       ) as () => Promise<unknown>) as () => Promise<IResponse>;
 
       return { requestFetch };
@@ -154,30 +154,51 @@ export class BaseRequest implements IBaseRequests {
 
   // TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedResponseData = ({
-    responseData,
+    response,
     translateFunction,
-    protocol: requestProtocol,
+    protocol,
     isErrorTextStraightToOutput,
     isBlobGetRequest,
     statusCode,
-  }: GetPreparedResponseDataParams): FormatResponseParamsType =>
-    isBlobGetRequest
-      ? {
-          data: responseData,
-          translateFunction,
-          protocol: requestProtocol,
-          isErrorTextStraightToOutput,
-          isBlobGetRequest: true,
-          statusCode,
-        }
-      : {
-          ...responseData,
-          translateFunction,
-          protocol: requestProtocol,
-          isErrorTextStraightToOutput,
-          isBlobGetRequest: false,
-          statusCode,
-        };
+    isResponseStatusSuccess,
+  }: GetPreparedResponseDataParams): FormatResponseParamsType => {
+    if (isBlobGetRequest) {
+      return {
+        data: response,
+        translateFunction,
+        protocol,
+        isErrorTextStraightToOutput,
+        isBlobGetRequest: true,
+        statusCode,
+        error: false,
+        additionalErrors: null,
+        errorText: "",
+      };
+    } else if (protocol === requestProtocolsMap.pureRest) {
+      return {
+        error: !isResponseStatusSuccess,
+        errorText: isResponseStatusSuccess ? "" : response.errorText,
+        data: isResponseStatusSuccess ? { ...response } : {},
+        additionalErrors: isResponseStatusSuccess
+          ? null
+          : response.additionalErrors,
+        statusCode,
+        translateFunction,
+        protocol,
+        isErrorTextStraightToOutput,
+        isBlobGetRequest,
+      };
+    } else {
+      return {
+        ...response,
+        translateFunction,
+        protocol,
+        isErrorTextStraightToOutput,
+        isBlobGetRequest: false,
+        statusCode,
+      };
+    }
+  };
 
   makeFetch = <
     MakeFetchType extends IRequestParams &
@@ -230,10 +251,9 @@ export class BaseRequest implements IBaseRequests {
         const isResponseStatusSuccess: boolean = this.getIsResponseStatusSuccess(
           statusCode
         );
-        const isValidStatus =
-          requestProtocol === "pureRest"
-            ? true
-            : statusValidator.getStatusIsFromWhiteList(statusCode);
+        const isValidStatus = statusValidator.getStatusIsFromWhiteList(
+          statusCode
+        );
 
         if (isValidStatus) {
           // any type because we did not know about data structure
@@ -242,16 +262,6 @@ export class BaseRequest implements IBaseRequests {
             parseType,
             isResponseOk: isResponseStatusSuccess,
           });
-
-          // if pure rest request - do the formatting of the response (PLEASE REFACTOR THIS AS SOON AS POSSIBLE!!!)
-          const responseData =
-            requestProtocol === requestProtocolsMap.pureRest
-              ? this.getPreparedPureRestResponseData({
-                  isResponseStatusSuccess,
-                  respondedData,
-                  statusCode,
-                })
-              : respondedData;
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
@@ -263,27 +273,24 @@ export class BaseRequest implements IBaseRequests {
 
           // get the full validation result
           const isFormatValid: boolean = formatDataTypeValidator({
-            response: responseData,
+            response: respondedData,
             schema: responseSchema,
             prevId: id,
+            isResponseStatusSuccess,
           });
 
           if (isFormatValid) {
-            // prepare data before to be formatted
-            const preparedData: FormatResponseParamsType = this.getPreparedResponseData(
-              {
-                responseData,
+            // get the formatter func
+            const responseFormatter = new FormatResponseFactory().createFormatter(
+              this.getPreparedResponseData({
+                response: respondedData,
                 translateFunction,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
                 isBlobGetRequest: parseType === parseTypesMap.blob,
                 statusCode,
-              }
-            );
-
-            // get the formatter func
-            const responseFormatter = new FormatResponseFactory().createFormatter(
-              preparedData
+                isResponseStatusSuccess,
+              })
             );
 
             // format data

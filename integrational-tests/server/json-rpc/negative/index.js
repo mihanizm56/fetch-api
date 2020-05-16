@@ -1,8 +1,8 @@
-const express = require('express');
-const { negativeController } = require('../controllers');
+const express = require("express");
+const { negativeRPCController } = require("../controllers/negative");
 
 const negativeRouter = express.Router();
 
-negativeRouter.post('/', negativeController);
+negativeRouter.post("/", negativeRPCController);
 
 module.exports.negativeRouter = negativeRouter;

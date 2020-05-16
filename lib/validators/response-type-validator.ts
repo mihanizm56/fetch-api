@@ -5,8 +5,13 @@ import {
   GetFormatValidateMethodParams,
   IJSONRPCPureResponse,
   IDType,
+  FormatValidateParams,
 } from '@/types/types';
 import { requestProtocolsMap } from '@/constants/shared';
+
+export type FormatValidateParamsMehod = (
+  options: FormatValidateParams,
+) => boolean;
 
 interface IResponseFormatValidator {
   getIsRestFormatResponseValid: (response: IRESTPureResponse) => boolean;
@@ -148,10 +153,39 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     return true;
   };
 
+  public getPureRestFormatIsValid = ({
+    response,
+    schema,
+    isResponseStatusSuccess,
+  }: FormatValidateParams) => {
+    if (!Boolean(response)) {
+      console.error('(fetch-api): response is empty');
+      return false;
+    }
+
+    const {
+      error: isSchemaError,
+      errorText: schemaErrorValue,
+    } = this.getIsSchemaResponseValid({
+      data: response,
+      error: !isResponseStatusSuccess,
+      schema,
+    });
+
+    // if the schema format is not valid
+    if (isSchemaError) {
+      console.error('(fetch-api): response schema format is not valid');
+      console.error('(fetch-api): error in schema', schemaErrorValue);
+      return false;
+    }
+
+    return true;
+  };
+
   getFormatValidateMethod = ({
     protocol,
     extraValidationCallback,
-  }: GetFormatValidateMethodParams) => {
+  }: GetFormatValidateMethodParams): FormatValidateParamsMehod => {
     // if there is an extra callback for validations
     if (extraValidationCallback) {
       return extraValidationCallback;
@@ -163,6 +197,9 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
       case requestProtocolsMap.jsonRpc:
         return this.getJSONRPCFormatIsValid;
+
+      case requestProtocolsMap.pureRest:
+        return this.getPureRestFormatIsValid;
 
       default:
         return this.getRestFormatIsValid;
