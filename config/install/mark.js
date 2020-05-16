@@ -6,9 +6,13 @@ const main = async () => {
   console.log(
     "If you like @mihanizm/fetch-api - please rate me in Github !!!!".red.bold
       .underline
-  ); // outputs green text
+  );
 
-  await sleep(3000);
+  await sleep(1000);
+
+  console.log("https://github.com/mihanizm56/fetch-api".red.bold.underline);
+
+  await sleep(2000);
 };
 
 main();
