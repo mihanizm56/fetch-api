@@ -1,6 +1,6 @@
 var colors = require("colors");
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(() => {}, ms));
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
 
 const main = async () => {
   console.log(
@@ -10,7 +10,7 @@ const main = async () => {
 
   await sleep(1000);
 
-  console.log("https://github.com/mihanizm56/fetch-api".red.bold.underline);
+  console.log("https://github.com/mihanizm56/fetch-api".red);
 
   await sleep(2000);
 };
