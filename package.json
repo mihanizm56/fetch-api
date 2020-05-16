@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.3.2-beta.1",
+  "version": "3.3.2-beta.2",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -71,7 +71,8 @@
     "typescript-transform-paths": "1.1.14"
   },
   "files": [
-    "dist"
+    "dist",
+    "config/install"
   ],
   "browser": false,
   "config": {
