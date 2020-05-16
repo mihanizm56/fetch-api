@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.3.2-beta.2",
+  "version": "3.3.2-beta.3",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,7 +34,8 @@
     "@hapi/joi": "17.1.1",
     "node-fetch": "2.6.0",
     "@types/joi": "14.3.4",
-    "@types/node-fetch": "2.5.5"
+    "@types/node-fetch": "2.5.5",
+    "colors": "1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.2.0",
@@ -45,7 +46,6 @@
     "@typescript-eslint/parser": "2.5.0",
     "babel-jest": "25.2.6",
     "body-parser": "1.19.0",
-    "colors": "1.4.0",
     "commitizen": "4.0.4",
     "cz-customizable": "6.2.0",
     "eslint": "6.8.0",
