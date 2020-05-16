@@ -13,8 +13,10 @@
 - Provides different kinds of the response formats to parse
 - Returns ALWAYS the hard prepared response structure (data, error, errorText, additionalErrors)
 - Works in browser and node environments (>ie11)
+- Provides two main classes for REST API - RestRequest and PureRestReques. <br/> The difference is in
+  hard-structured responce format or not (both interfaces are the same)
 
-#### RestRequest input options:
+#### Request input options:
 
 - endpoint(string): the request url
 - responseSchema: the response Schema that parsed by @hapi/joi <br/>(you must use the @hapi/joi in your project and insert the response Schema into this field)
@@ -28,17 +30,19 @@
 - extraValidationCallback(function): callback that can be used for custom response <br/>
   data validation or if you don't want to use @hapi/joi
 
-#### RestRequest output options:
+#### Request output options:
 
 - error (boolean) - the flag of the response status
 - errorText (string) - the text error message from the backend
 - data (object) - the main data from the backend
 - additionalErrors (object) - the additional error data from the backend
+- code (number) - status-code from backend
 
 ## Features and recommendations
+
 - body will be serialized in JSON if body data NOT FormData
-- try to use .unknown() method with objects in Joi Schemas because your backend may be extended 
-and without this method the responce data may be not valid
+- try to use .unknown() method with objects in Joi Schemas because your backend may be extended
+  and without this method the responce data may be not valid
 
 ## Examples of usage
 
@@ -88,6 +92,33 @@ export const getPhotoRequest = (): Promise<IResponse> =>
     endpoint: "http://localhost:3000",
     translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
     responseSchema: Joi.any()
+  });
+```
+
+#### get PURE REST request
+
+```javascript
+import Joi from "@hapi/joi";
+import { PureRestRequest, IResponse } from "@mihanizm56/fetch-api";
+
+export const getContractsRequest = (): Promise<IResponse> =>
+  new PureRestRequest().getRequest({
+    endpoint: "http://localhost:3000",
+    translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
+    isErrorTextStraightToOutput: true,
+    responseSchema: Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().required(),
+      info: Joi.object({
+        count: Joi.number().required(),
+        killers: Joi.array().items(
+          Joi.object({
+            username: Joi.string().required(),
+            count: Joi.number().required(),
+          }).unknown()
+        ),
+      }).unknown(),
+    }).unknown(),
   });
 ```
 
