@@ -1,11 +1,11 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.3.2-beta.0",
+  "version": "3.3.2-beta.1",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "install": "",
+    "install": "node config/install/mark.js",
     "server": "node ./integrational-tests/server/index.js",
     "test:watch": "jest --watch",
     "test": "set CI=true && jest",
