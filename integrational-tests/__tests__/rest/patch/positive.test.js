@@ -15,9 +15,9 @@ describe("patch request (positive)", () => {
   test("simple response without body", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
     }).unknown();
 
     const requestConfig = {
@@ -40,9 +40,9 @@ describe("patch request (positive)", () => {
   test("simple response with body", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       bodyparam: Joi.string().required(),
     }).unknown();
 
@@ -69,9 +69,9 @@ describe("patch request (positive)", () => {
   test("simple response with query params", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       queryparam: Joi.string().required(),
     }).unknown();
 
@@ -98,9 +98,9 @@ describe("patch request (positive)", () => {
   test("simple response with headers", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       specialheader: Joi.string().required(),
     }).unknown();
 
@@ -176,9 +176,9 @@ describe("patch request (positive)", () => {
     test("simple response", async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
-        bar: {
+        bar: Joi.object({
           baz: Joi.number().required(),
-        },
+        }).required(),
       }).unknown();
 
       const requestConfig = {
@@ -201,9 +201,9 @@ describe("patch request (positive)", () => {
     test("response with body", async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
-        bar: {
+        bar: Joi.object({
           baz: Joi.number().required(),
-        },
+        }).required(),
         bodyparam: Joi.string().required(),
       }).unknown();
 
@@ -260,9 +260,9 @@ describe("patch request (positive)", () => {
     test("response with headers", async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
-        bar: {
+        bar: Joi.object({
           baz: Joi.number().required(),
-        },
+        }).required(),
         specialheader: Joi.string().required(),
       }).unknown();
 

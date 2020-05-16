@@ -99,9 +99,9 @@ describe("get request (negative)", () => {
   test("response with not valid schema", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       delta: Joi.array().items(Joi.string()),
     }).unknown();
 
@@ -198,9 +198,9 @@ describe("get request (negative)", () => {
     test("simple pure response with not valid schema", async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
-        bar: {
+        bar: Joi.object({
           baz: Joi.number().required(),
-        },
+        }).required(),
         alt: Joi.number().required(),
       });
       const translateFunction = jest

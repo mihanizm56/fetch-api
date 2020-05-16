@@ -1,32 +1,32 @@
-const Joi = require('@hapi/joi');
-const { RestRequest, PureRestRequest } = require('../../../../dist');
+const Joi = require("@hapi/joi");
+const { RestRequest, PureRestRequest } = require("../../../../dist");
 
 const requestBaseConfig = {
-  mode: 'cors',
+  mode: "cors",
   queryParams: {
-    foo: 'bar',
+    foo: "bar",
   },
   translateFunction: (key, options) =>
     `translateFunction got key ${key} and options ${options}`,
 };
 
-describe('get request (positive)', () => {
+describe("get request (positive)", () => {
   beforeEach(() => {
     delete global.window;
   });
 
-  test('simple response', async () => {
+  test("simple response", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       delta: Joi.array().items(Joi.string()),
     }).unknown();
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: "http://127.0.0.1:8080/rest/positive",
       responseSchema,
     };
 
@@ -38,26 +38,26 @@ describe('get request (positive)', () => {
       code,
     } = await new RestRequest().getRequest(requestConfig);
 
-    expect(data).toEqual({ bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' });
+    expect(data).toEqual({ bar: { baz: 0 }, delta: ["1", "2"], foo: "foo" });
     expect(additionalErrors).toBeNull();
-    expect(errorText).toEqual('');
+    expect(errorText).toEqual("");
     expect(error).toBeFalsy();
     expect(code).toEqual(200);
   });
 
-  describe('check PureRestRequest', () => {
-    test('simple response pure', async () => {
+  describe("check PureRestRequest", () => {
+    test("simple response pure", async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
-        bar: {
+        bar: Joi.object({
           baz: Joi.number().required(),
-        },
+        }).required(),
         delta: Joi.array().items(Joi.string()),
       }).unknown();
 
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+        endpoint: "http://127.0.0.1:8080/rest/positive?pureresponse=true",
         responseSchema,
       };
 
@@ -66,28 +66,28 @@ describe('get request (positive)', () => {
       expect(response).toEqual({
         additionalErrors: null,
         code: 200,
-        data: { bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' },
+        data: { bar: { baz: 0 }, delta: ["1", "2"], foo: "foo" },
         error: false,
-        errorText: '',
+        errorText: "",
       });
     });
 
-    test('response pure with headers are sent', async () => {
+    test("response pure with headers are sent", async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
-        bar: {
+        bar: Joi.object({
           baz: Joi.number().required(),
-        },
+        }).required(),
         delta: Joi.array().items(Joi.string()),
         specialheader: Joi.string().required(),
       }).unknown();
 
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+        endpoint: "http://127.0.0.1:8080/rest/positive?pureresponse=true",
         responseSchema,
         headers: {
-          specialheader: 'application/json',
+          specialheader: "application/json",
         },
       };
 
@@ -98,32 +98,32 @@ describe('get request (positive)', () => {
         code: 200,
         data: {
           bar: { baz: 0 },
-          delta: ['1', '2'],
-          foo: 'foo',
-          specialheader: 'application/json',
+          delta: ["1", "2"],
+          foo: "foo",
+          specialheader: "application/json",
         },
         error: false,
-        errorText: '',
+        errorText: "",
       });
     });
   });
 
-  test('headers are sent', async () => {
+  test("headers are sent", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       delta: Joi.array().items(Joi.string()),
       specialheader: Joi.string().required(),
     }).unknown();
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: "http://127.0.0.1:8080/rest/positive",
       responseSchema,
       headers: {
-        specialheader: 'application/json',
+        specialheader: "application/json",
       },
     };
 
@@ -133,32 +133,32 @@ describe('get request (positive)', () => {
       additionalErrors: null,
       data: {
         bar: { baz: 0 },
-        delta: ['1', '2'],
-        foo: 'foo',
-        specialheader: 'application/json',
+        delta: ["1", "2"],
+        foo: "foo",
+        specialheader: "application/json",
       },
       error: false,
-      errorText: '',
+      errorText: "",
       code: 200,
     });
   });
 
-  test('query parameters are sent', async () => {
+  test("query parameters are sent", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
       delta: Joi.array().items(Joi.string()),
       specialparameter: Joi.string().required(),
     }).unknown();
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: "http://127.0.0.1:8080/rest/positive",
       responseSchema,
       queryParams: {
-        specialparameter: 'test-parameter',
+        specialparameter: "test-parameter",
       },
     };
 
@@ -168,12 +168,12 @@ describe('get request (positive)', () => {
       additionalErrors: null,
       data: {
         bar: { baz: 0 },
-        delta: ['1', '2'],
-        foo: 'foo',
-        specialparameter: 'test-parameter',
+        delta: ["1", "2"],
+        foo: "foo",
+        specialparameter: "test-parameter",
       },
       error: false,
-      errorText: '',
+      errorText: "",
       code: 200,
     });
   });
@@ -183,7 +183,7 @@ describe('get request (positive)', () => {
     const extraValidationCallback = jest.fn().mockReturnValue(true);
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: "http://127.0.0.1:8080/rest/positive",
       responseSchema,
       extraValidationCallback,
     };
@@ -193,27 +193,27 @@ describe('get request (positive)', () => {
     expect(extraValidationCallback).toHaveBeenCalled();
     expect(data).toEqual({
       additionalErrors: null,
-      data: { bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' },
+      data: { bar: { baz: 0 }, delta: ["1", "2"], foo: "foo" },
       error: false,
-      errorText: '',
+      errorText: "",
       code: 200,
     });
   });
 
-  test('schema was extended and is still valid', async () => {
+  test("schema was extended and is still valid", async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-      bar: {
+      bar: Joi.object({
         baz: Joi.number().required(),
-      },
+      }).required(),
     }).unknown();
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: "http://127.0.0.1:8080/rest/positive",
       responseSchema,
       queryParams: {
-        specialparameter: 'test-parameter',
+        specialparameter: "test-parameter",
       },
     };
 
@@ -223,12 +223,12 @@ describe('get request (positive)', () => {
       additionalErrors: null,
       data: {
         bar: { baz: 0 },
-        delta: ['1', '2'],
-        foo: 'foo',
-        specialparameter: 'test-parameter',
+        delta: ["1", "2"],
+        foo: "foo",
+        specialparameter: "test-parameter",
       },
       error: false,
-      errorText: '',
+      errorText: "",
       code: 200,
     });
   });
