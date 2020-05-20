@@ -183,7 +183,7 @@ export class BaseRequest implements IBaseRequests {
       return {
         error: !isResponseStatusSuccess,
         errorText: isResponseStatusSuccess ? "" : response.errorText,
-        data: isResponseStatusSuccess ? { ...response } : {},
+        data: isResponseStatusSuccess ? response : {},
         additionalErrors: isResponseStatusSuccess
           ? null
           : response.additionalErrors,

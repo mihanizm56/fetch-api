@@ -6,12 +6,29 @@ const mockPositiveData = {
   delta: ['1', '2'],
 };
 
+const mockArrayData = [
+  {
+    username: 'username1',
+    count: 1,
+  },
+  {
+    username: 'username2',
+    count: 2,
+  },
+];
+
 module.exports.positiveGetController = (req, res) => {
-  const { specialparameter, pureresponse, isempty } = req.query;
+  const { specialparameter, pureresponse, isempty, getsimplearray } = req.query;
   const { specialheader } = req.headers;
 
-  if (isempty && pureresponse) {
-    return res.status(204).send();
+  if (pureresponse) {
+    if (getsimplearray) {
+      return res.status(200).json(mockArrayData);
+    }
+
+    if (isempty) {
+      return res.status(204).send();
+    }
   }
 
   if (specialheader) {

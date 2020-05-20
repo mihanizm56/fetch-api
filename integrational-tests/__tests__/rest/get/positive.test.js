@@ -261,5 +261,42 @@ describe('get request (positive)', () => {
         code: 204,
       });
     });
+    test('get simple array', async () => {
+      const responseSchema = Joi.array().items(
+        Joi.object({
+          username: Joi.string().required(),
+          count: Joi.number().required(),
+        }).unknown(),
+      );
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/positive',
+        responseSchema,
+        queryParams: {
+          getsimplearray: true,
+          pureresponse: true,
+        },
+      };
+
+      const data = await new PureRestRequest().getRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: [
+          {
+            username: 'username1',
+            count: 1,
+          },
+          {
+            username: 'username2',
+            count: 2,
+          },
+        ],
+        error: false,
+        errorText: '',
+        code: 200,
+      });
+    });
   });
 });
