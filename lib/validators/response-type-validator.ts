@@ -157,7 +157,12 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     response,
     schema,
     isResponseStatusSuccess,
+    isStatusEmpty,
   }: FormatValidateParams) => {
+    if (isStatusEmpty) {
+      return true;
+    }
+
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
       return false;

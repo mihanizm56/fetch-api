@@ -10,48 +10,48 @@ module.exports.negativeRPCController = (req, res) => {
   const { notsameversion, notsameid, notparsederror } = req.query;
 
   if (notsameversion) {
-    return sendErrorDataRPC(400, "1.0", res, id, {
+    return sendErrorDataRPC(400, '1.0', res, id, {
       code: 401,
-      message: "Тестовая ошибка 1",
+      message: 'Тестовая ошибка 1',
       data: {
-        err: "Тестовая ошибка 1 err",
-        trKey: "test key 1",
-        param1: "test param 1",
+        err: 'Тестовая ошибка 1 err',
+        trKey: 'test key 1',
+        param1: 'test param 1',
       },
     });
   }
 
   if (notsameid) {
-    return sendErrorDataRPC(400, "2.0", res, "12345_12123", {
+    return sendErrorDataRPC(400, '2.0', res, '12345_12123', {
       code: 403,
-      message: "Тестовая ошибка 2",
+      message: 'Тестовая ошибка 2',
       data: {
-        err: "Тестовая ошибка 2 err",
-        trKey: "test key 2",
-        param2: "test param 2",
+        err: 'Тестовая ошибка 2 err',
+        trKey: 'test key 2',
+        param2: 'test param 2',
       },
     });
   }
 
   if (notparsederror) {
-    return sendErrorDataRPC(400, "2.0", res, "12345_12123", {
+    return sendErrorDataRPC(400, '2.0', res, '12345_12123', {
       code: 501,
-      message: "Тестовая ошибка 3",
+      message: 'Тестовая ошибка 3',
       data: {
-        err: "Тестовая ошибка 3 err",
-        trKey: "test key 3",
-        param3: "test param 3",
+        err: 'Тестовая ошибка 3 err',
+        trKey: 'test key 3',
+        param3: 'test param 3',
       },
     });
   }
 
-  return sendErrorDataRPC(500, "2.0", res, id, {
+  return sendErrorDataRPC(500, '2.0', res, id, {
     code: 500,
-    message: "Тестовая ошибка 4",
+    message: 'Тестовая ошибка 4',
     data: {
-      err: "Тестовая ошибка 4 err",
-      trKey: "test key 4",
-      param4: "test param 4",
+      err: 'Тестовая ошибка 4 err',
+      trKey: 'test key 4',
+      param4: 'test param 4',
     },
   });
 };

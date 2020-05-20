@@ -1,14 +1,18 @@
 const mockPositiveData = {
-  foo: "foo",
+  foo: 'foo',
   bar: {
     baz: 0,
   },
-  delta: ["1", "2"],
+  delta: ['1', '2'],
 };
 
 module.exports.positiveGetController = (req, res) => {
-  const { specialparameter, pureresponse } = req.query;
+  const { specialparameter, pureresponse, isempty } = req.query;
   const { specialheader } = req.headers;
+
+  if (isempty && pureresponse) {
+    return res.status(204).send();
+  }
 
   if (specialheader) {
     if (pureresponse) {
@@ -20,7 +24,7 @@ module.exports.positiveGetController = (req, res) => {
 
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, specialheader: req.headers.specialheader },
       additionalErrors: null,
     });
@@ -29,7 +33,7 @@ module.exports.positiveGetController = (req, res) => {
   if (specialparameter) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: {
         ...mockPositiveData,
         specialparameter: req.query.specialparameter,
@@ -44,7 +48,7 @@ module.exports.positiveGetController = (req, res) => {
 
   res.status(200).json({
     error: false,
-    errorText: "",
+    errorText: '',
     data: mockPositiveData,
     additionalErrors: null,
   });

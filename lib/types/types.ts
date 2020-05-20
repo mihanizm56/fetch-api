@@ -117,6 +117,7 @@ export type ParseResponseParams = {
   response: IRESTPureResponse | IJSONRPCPureResponse;
   parseType?: keyof typeof parseTypesMap;
   isResponseOk: boolean;
+  isStatusEmpty: boolean;
 };
 
 export type FormattedEndpointParams = {
@@ -213,4 +214,5 @@ export type FormatValidateParams = {
   schema: any;
   prevId?: string;
   isResponseStatusSuccess?: boolean;
+  isStatusEmpty?: boolean;
 };

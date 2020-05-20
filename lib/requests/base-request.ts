@@ -50,8 +50,13 @@ export class BaseRequest implements IBaseRequests {
     response,
     parseType,
     isResponseOk,
+    isStatusEmpty
   }: ParseResponseParams) => {
     // if not "not ok" status then always get json format
+    if(isStatusEmpty){
+      return {}
+    }
+
     if (!isResponseOk) {
       return jsonParser(response);
     }
@@ -248,6 +253,7 @@ export class BaseRequest implements IBaseRequests {
       .then(async (response: any) => {
         const statusValidator = new StatusValidator();
         const statusCode = response.status;
+        const isStatusEmpty = statusCode === 204;
         const isResponseStatusSuccess: boolean = this.getIsResponseStatusSuccess(
           statusCode
         );
@@ -261,6 +267,7 @@ export class BaseRequest implements IBaseRequests {
             response,
             parseType,
             isResponseOk: isResponseStatusSuccess,
+            isStatusEmpty
           });
 
           // validate the format of the request
@@ -277,6 +284,7 @@ export class BaseRequest implements IBaseRequests {
             schema: responseSchema,
             prevId: id,
             isResponseStatusSuccess,
+            isStatusEmpty
           });
 
           if (isFormatValid) {
