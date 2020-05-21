@@ -25,8 +25,10 @@ import { ErrorResponseFormatter } from "../errors-formatter/error-response-forma
 import { TIMEOUT_VALUE } from "../constants/timeout";
 import { jsonParser } from "../utils/parsers/json-parser";
 import { blobParser } from "../utils/parsers/blob-parser";
+import { textParser } from "../utils/parsers/text-parser";
 import { objectToQueryString } from "../utils/object-to-query-string";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
+import { isFormData } from "@/utils/is-form-data";
 
 interface IBaseRequests {
   makeFetch: (
@@ -43,6 +45,14 @@ interface IBaseRequests {
   getIsomorphicFetch: (
     params: GetIsomorphicFetchParamsType
   ) => GetIsomorphicFetchReturnsType;
+}
+
+
+type GetFormattedHeadersParamsType = {
+  body:JSON|FormData,
+  headers?:{
+    [key:string]:any;
+  }
 }
 
 export class BaseRequest implements IBaseRequests {
@@ -67,6 +77,9 @@ export class BaseRequest implements IBaseRequests {
 
       case parseTypesMap.blob:
         return blobParser(response);
+
+      case parseTypesMap.text:
+        return textParser(response);
 
       // default parse to json
       default:
@@ -134,13 +147,21 @@ export class BaseRequest implements IBaseRequests {
     if (requestProtocol === requestProtocolsMap.jsonRpc) {
       return JSON.stringify({ ...body, ...version, id });
     } else {
-      if (body instanceof FormData) {
+      if (isFormData(body)) {
         return body;
       } else {
         return JSON.stringify(body);
       }
     }
   };
+
+  getFormattedHeaders = ({body,headers}:GetFormattedHeadersParamsType) => isFormData(body) ? ({
+    "Content-type":"multipart/form-data",
+    ...headers
+  }):({
+    "Content-type":"application/json",
+    ...headers
+  })
 
   // get prepared pure rest response data TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedPureRestResponseData = ({
@@ -163,23 +184,25 @@ export class BaseRequest implements IBaseRequests {
     translateFunction,
     protocol,
     isErrorTextStraightToOutput,
-    isBlobGetRequest,
     statusCode,
     isResponseStatusSuccess,
+    parseType
   }: GetPreparedResponseDataParams): FormatResponseParamsType => {
-    if (isBlobGetRequest) {
+    if (parseType === 'blob' || parseType === 'text') {
       return {
         data: response,
         translateFunction,
         protocol,
         isErrorTextStraightToOutput,
-        isBlobGetRequest: true,
+        parseType,
         statusCode,
         error: false,
         additionalErrors: null,
         errorText: "",
       };
-    } else if (protocol === requestProtocolsMap.pureRest) {
+    } 
+
+    if (protocol === requestProtocolsMap.pureRest) {
       return {
         error: !isResponseStatusSuccess,
         errorText: isResponseStatusSuccess ? "" : response.errorText,
@@ -191,18 +214,18 @@ export class BaseRequest implements IBaseRequests {
         translateFunction,
         protocol,
         isErrorTextStraightToOutput,
-        isBlobGetRequest,
+        parseType,
       };
-    } else {
-      return {
-        ...response,
-        translateFunction,
-        protocol,
-        isErrorTextStraightToOutput,
-        isBlobGetRequest: false,
-        statusCode,
-      };
-    }
+    } 
+
+    return {
+      ...response,
+      translateFunction,
+      protocol,
+      isErrorTextStraightToOutput,
+      isBlobGetRequest: false,
+      statusCode,
+    };
   };
 
   makeFetch = <
@@ -218,7 +241,7 @@ export class BaseRequest implements IBaseRequests {
     mode,
     method,
     endpoint,
-    parseType,
+    parseType=parseTypesMap.json,
     queryParams,
     responseSchema,
     requestProtocol,
@@ -230,6 +253,11 @@ export class BaseRequest implements IBaseRequests {
       endpoint,
       queryParams,
     });
+
+    const formattedHeaders = this.getFormattedHeaders({
+      body,
+      headers
+    })
 
     const fetchBody = this.getFetchBody({
       requestProtocol,
@@ -244,7 +272,7 @@ export class BaseRequest implements IBaseRequests {
       fetchParams: {
         body: fetchBody,
         mode,
-        headers,
+        headers:formattedHeaders,
         method,
       },
     });
@@ -259,7 +287,7 @@ export class BaseRequest implements IBaseRequests {
         );
         const isValidStatus = statusValidator.getStatusIsFromWhiteList(
           statusCode
-        );
+        );        
 
         if (isValidStatus) {
           // any type because we did not know about data structure
@@ -295,7 +323,7 @@ export class BaseRequest implements IBaseRequests {
                 translateFunction,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
-                isBlobGetRequest: parseType === parseTypesMap.blob,
+                parseType,
                 statusCode,
                 isResponseStatusSuccess,
               })

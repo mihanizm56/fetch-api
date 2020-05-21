@@ -1,6 +1,7 @@
 export interface IParseTypesMap {
   json: 'json';
   blob: 'blob';
+  text: 'text';
 }
 
 export interface IRequestProtocolsMap {
@@ -12,6 +13,7 @@ export interface IRequestProtocolsMap {
 export const parseTypesMap: IParseTypesMap = {
   json: 'json',
   blob: 'blob',
+  text: 'text',
 };
 
 // todo fix similar

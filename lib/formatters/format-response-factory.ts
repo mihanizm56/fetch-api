@@ -1,8 +1,9 @@
 import { ResponseFormatter, FormatResponseParamsType } from '@/types/types';
-import { requestProtocolsMap } from '@/constants/shared';
+import { requestProtocolsMap, parseTypesMap } from '@/constants/shared';
 import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 import { RestResponseFormatter } from './rest-response-formatter';
 import { BlobResponseFormatter } from './blob-response-formatter';
+import { TextResponseFormatter } from './text-response-formatter';
 
 export interface IFormatResponseFactory {
   createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
@@ -20,11 +21,15 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     jsonrpc = '',
     id = '',
     isErrorTextStraightToOutput,
-    isBlobGetRequest,
+    parseType,
     statusCode,
   }: FormatResponseParamsType): ResponseFormatter => {
-    if (isBlobGetRequest) {
+    if (parseType === parseTypesMap.blob) {
       return new BlobResponseFormatter(data);
+    }
+
+    if (parseType === parseTypesMap.text) {
+      return new TextResponseFormatter(data);
     }
 
     if (protocol === requestProtocolsMap.jsonRpc) {

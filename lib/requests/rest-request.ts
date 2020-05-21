@@ -1,7 +1,5 @@
 import {
   IRequestParams,
-  ComplexRequestParams,
-  SimpleRequestParams,
 } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
@@ -20,31 +18,23 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest,
     });
 
-  public postRequest = (requestParams: ComplexRequestParams) =>
+  public postRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "POST",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.rest,
     });
 
-  public putRequest = (requestParams: ComplexRequestParams) =>
+  public putRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "PUT",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.rest,
     });
 
-  public patchRequest = (requestParams: ComplexRequestParams) =>
+  public patchRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
       headers: {
@@ -56,13 +46,9 @@ export class RestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.rest,
     });
 
-  public deleteRequest = (requestParams: SimpleRequestParams) =>
+  public deleteRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "DELETE",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.rest,
@@ -70,7 +56,7 @@ export class RestRequest extends BaseRequest {
 
   public getBlobRequest = (
     requestParams: Omit<
-      SimpleRequestParams,
+      IRequestParams,
       | "extraValidationCallback"
       | "responseSchema"
       | "body"
@@ -85,4 +71,22 @@ export class RestRequest extends BaseRequest {
       extraValidationCallback: () => true,
       isErrorTextStraightToOutput: false,
     });
+
+  public getTextRequest = (
+      requestParams: Omit<
+        IRequestParams,
+        | "extraValidationCallback"
+        | "responseSchema"
+        | "body"
+        | "isErrorTextStraightToOutput"
+      >
+    ) =>
+      this.makeFetch({
+        ...requestParams,
+        method: "GET",
+        parseType: parseTypesMap.blob,
+        requestProtocol: requestProtocolsMap.rest,
+        extraValidationCallback: () => true,
+        isErrorTextStraightToOutput: false,
+      });
 }

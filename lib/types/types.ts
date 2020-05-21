@@ -58,23 +58,10 @@ export interface IRequestParams {
   extraValidationCallback?: ExtraValidationCallback;
 }
 
-export type ComplexRequestParams = Omit<
-  IRequestParams,
-  'method' | 'parseType'
-> & {
-  body: any;
-  responseSchema: any;
-};
-
-export type SimpleRequestParams = Omit<
-  IRequestParams,
-  'method' | 'parseType'
-> & { responseSchema: any };
-
 export interface IResponse {
   error: boolean;
   errorText: string;
-  data: Record<string, any> | null;
+  data: Record<string, any> | null | Blob | string;
   additionalErrors: Record<string, any> | null;
   code: number;
 }
@@ -163,7 +150,7 @@ export type GetPreparedResponseDataParams = {
   translateFunction?: TranslateFunction;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;
-  isBlobGetRequest: boolean;
+  parseType: keyof typeof parseTypesMap;
   statusCode: number;
   isResponseStatusSuccess: boolean;
 };
@@ -181,12 +168,12 @@ export abstract class ResponseFormatter {
 }
 
 export type FormatResponseParamsType = {
+  parseType: keyof typeof parseTypesMap;
   protocol: keyof typeof requestProtocolsMap;
   translateFunction?: TranslateFunction;
   isErrorTextStraightToOutput?: boolean;
-  isBlobGetRequest: boolean;
   statusCode: number;
-  data: any | Blob;
+  data: any | Blob | string;
   error?: boolean | JSONRPCErrorType;
 } & (Partial<Omit<IRESTPureResponse, 'error'>> &
   Partial<Omit<IJSONRPCPureResponse, 'error'>>);

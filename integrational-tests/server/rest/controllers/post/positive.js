@@ -1,14 +1,25 @@
 const mockPositiveData = {
-  foo: "foo",
+  foo: 'foo',
   bar: {
     baz: 0,
   },
 };
 
 module.exports.positivePostController = (req, res) => {
-  const { specialparameter, queryparam, pureresponse } = req.query;
+  const { queryparam, pureresponse, getcontenttype } = req.query;
   const { specialheader } = req.headers;
   const { bodyparam } = req.body;
+
+  if (getcontenttype) {
+    return res.status(200).json({
+      additionalErrors: null,
+      data: {
+        headerValue: req.headers['content-type'],
+      },
+      error: false,
+      errorText: '',
+    });
+  }
 
   if (pureresponse) {
     if (bodyparam) {
@@ -21,7 +32,7 @@ module.exports.positivePostController = (req, res) => {
   if (bodyparam) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, bodyparam },
       additionalErrors: null,
     });
@@ -30,7 +41,7 @@ module.exports.positivePostController = (req, res) => {
   if (queryparam) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, queryparam },
       additionalErrors: null,
     });
@@ -46,7 +57,7 @@ module.exports.positivePostController = (req, res) => {
 
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, specialheader: req.headers.specialheader },
       additionalErrors: null,
     });
@@ -54,7 +65,7 @@ module.exports.positivePostController = (req, res) => {
 
   res.status(200).json({
     error: false,
-    errorText: "",
+    errorText: '',
     data: mockPositiveData,
     additionalErrors: null,
   });

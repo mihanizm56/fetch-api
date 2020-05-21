@@ -1,7 +1,5 @@
 import {
   IRequestParams,
-  ComplexRequestParams,
-  SimpleRequestParams,
 } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
@@ -20,49 +18,33 @@ export class PureRestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public postRequest = (requestParams: ComplexRequestParams) =>
+  public postRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "POST",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public putRequest = (requestParams: ComplexRequestParams) =>
+  public putRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "PUT",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public patchRequest = (requestParams: ComplexRequestParams) =>
+  public patchRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "PATCH",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public deleteRequest = (requestParams: SimpleRequestParams) =>
+  public deleteRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "DELETE",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
