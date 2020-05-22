@@ -155,13 +155,13 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  getFormattedHeaders = ({body,headers}:GetFormattedHeadersParamsType) => isFormData(body) ? ({
-    "Content-type":"multipart/form-data",
-    ...headers
-  }):({
-    "Content-type":"application/json",
-    ...headers
-  })
+  getFormattedHeaders = ({body,headers}:GetFormattedHeadersParamsType) => 
+    isFormData(body) 
+      ? headers
+      : ({
+        "Content-type":"application/json",
+        ...headers
+      })
 
   // get prepared pure rest response data TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedPureRestResponseData = ({
