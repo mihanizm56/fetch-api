@@ -241,7 +241,7 @@ export class BaseRequest implements IBaseRequests {
     mode,
     method,
     endpoint,
-    parseType=parseTypesMap.json,
+    parseType = parseTypesMap.json,
     queryParams,
     responseSchema,
     requestProtocol,

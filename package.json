@@ -8,7 +8,7 @@
     "install": "node config/install/mark.js",
     "server": "node ./integrational-tests/server/index.js",
     "test:watch": "jest --watch",
-    "test": "set CI=true && jest",
+    "test": "npm run build && set CI=true && jest",
     "test:coverage": "jest --coverage",
     "build": "rm -fr ./dist && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./lib -o ./dist",
     "lint": "npx eslint ./lib --ext .ts --fix",
