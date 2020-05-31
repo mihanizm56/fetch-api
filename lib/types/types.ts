@@ -185,12 +185,6 @@ export type GetFormatValidateMethodParams = {
 
 export type IDType = string;
 
-export type GetPreparedPureRestResponseDataParams = {
-  isResponseStatusSuccess: boolean;
-  respondedData: any;
-  statusCode: number;
-};
-
 export type GetFormattedErrorTextResponseParams = {
   errorDictionaryParams: ErrorResponseFormatterConstructorParams;
   statusCode: number;
@@ -203,3 +197,10 @@ export type FormatValidateParams = {
   isResponseStatusSuccess?: boolean;
   isStatusEmpty?: boolean;
 };
+
+export type GetPureRestErrorTextParamsType = {
+  response: any;
+  isResponseStatusSuccess: boolean;
+};
+
+export type GetPureRestAdditionalErrorsParamsType = GetPureRestErrorTextParamsType;

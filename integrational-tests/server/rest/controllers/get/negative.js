@@ -17,7 +17,7 @@ module.exports.negativeGetController = (req, res) => {
   if (notvaliddata) {
     return res.status(400).json({
       error: true,
-      errorText: "not valid data",
+      errorText: 'not valid data',
       data: null,
       additionalErrors: null,
     });
@@ -26,7 +26,7 @@ module.exports.negativeGetController = (req, res) => {
   if (internalerror) {
     return res.status(501).json({
       error: true,
-      errorText: "internal server error",
+      errorText: 'internal server error',
       data: null,
       additionalErrors: null,
     });
@@ -35,7 +35,7 @@ module.exports.negativeGetController = (req, res) => {
   if (notfound) {
     return res.status(404).json({
       error: true,
-      errorText: "not found",
+      errorText: 'not found',
       data: null,
       additionalErrors: null,
     });
@@ -44,13 +44,13 @@ module.exports.negativeGetController = (req, res) => {
   if (pureresponse) {
     if (straighterror) {
       return res.status(400).json({
-        errorText: "straighterror",
+        errorText: 'straighterror',
         additionalErrors: { parameterText: 1 },
       });
     }
 
     return res.status(403).json({
-      errorText: "text",
+      errorText: 'text',
       additionalErrors: { parameter: 1 },
     });
   }
@@ -58,13 +58,13 @@ module.exports.negativeGetController = (req, res) => {
   if (notvalidschema) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: {
-        foo: "bar",
+        foo: 'bar',
         bar: {
-          baz: "not valid-string",
+          baz: 'not valid-string',
         },
-        delta: ["1", "2"],
+        delta: ['1', '2'],
       },
       additionalErrors: null,
     });
@@ -73,13 +73,13 @@ module.exports.negativeGetController = (req, res) => {
   if (notvalidstructuredata) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       response: {
-        foo: "bar",
+        foo: 'bar',
         bar: {
-          baz: "not valid-string",
+          baz: 'not valid-string',
         },
-        delta: ["1", "2"],
+        delta: ['1', '2'],
       },
       additionalErrors: null,
     });
@@ -87,13 +87,13 @@ module.exports.negativeGetController = (req, res) => {
 
   if (notvalidstructureerror) {
     return res.status(200).json({
-      errorText: "",
+      errorText: '',
       data: {
-        foo: "bar",
+        foo: 'bar',
         bar: {
-          baz: "not valid-string",
+          baz: 'not valid-string',
         },
-        delta: ["1", "2"],
+        delta: ['1', '2'],
       },
       additionalErrors: null,
     });
@@ -103,11 +103,11 @@ module.exports.negativeGetController = (req, res) => {
     return res.status(200).json({
       error: false,
       data: {
-        foo: "bar",
+        foo: 'bar',
         bar: {
-          baz: "not valid-string",
+          baz: 'not valid-string',
         },
-        delta: ["1", "2"],
+        delta: ['1', '2'],
       },
       additionalErrors: null,
     });
@@ -116,13 +116,13 @@ module.exports.negativeGetController = (req, res) => {
   if (notvalidstructureadditionalerrors) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: {
-        foo: "bar",
+        foo: 'bar',
         bar: {
-          baz: "not valid-string",
+          baz: 'not valid-string',
         },
-        delta: ["1", "2"],
+        delta: ['1', '2'],
       },
     });
   }
@@ -130,10 +130,10 @@ module.exports.negativeGetController = (req, res) => {
   if (errorwithadditionalerrors) {
     return res.status(400).json({
       error: true,
-      errorText: "test special key",
+      errorText: 'test special key',
       data: null,
       additionalErrors: {
-        foo: "bar",
+        foo: 'bar',
         baz: 1,
       },
     });
@@ -142,14 +142,14 @@ module.exports.negativeGetController = (req, res) => {
   if (notvalidbasestructure) {
     return res.status(400).json({
       error: true,
-      errorText: "test special key",
+      errorText: 'test special key',
       data: null,
     });
   }
 
   res.status(401).json({
     error: true,
-    errorText: "test error key",
+    errorText: 'test error key',
     data: {},
     additionalErrors: null,
   });

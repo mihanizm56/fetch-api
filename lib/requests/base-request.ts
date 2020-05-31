@@ -1,4 +1,5 @@
 import nodeFetch from "node-fetch";
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 import {
   RequestRacerParams,
   ParseResponseParams,
@@ -11,7 +12,8 @@ import {
   GetFetchBodyParamsType,
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
-  GetPreparedPureRestResponseDataParams,
+  GetPureRestErrorTextParamsType,
+  GetPureRestAdditionalErrorsParamsType
 } from "@/types/types";
 import {
   parseTypesMap,
@@ -163,20 +165,52 @@ export class BaseRequest implements IBaseRequests {
         ...headers
       })
 
-  // get prepared pure rest response data TODO REFACTOR THIS FORMATTING!!!!!!
-  getPreparedPureRestResponseData = ({
-    isResponseStatusSuccess,
-    respondedData,
-    statusCode,
-  }: GetPreparedPureRestResponseDataParams): IResponse => ({
-    error: !isResponseStatusSuccess,
-    errorText: isResponseStatusSuccess ? "" : respondedData.errorText,
-    data: isResponseStatusSuccess ? { ...respondedData } : {},
-    additionalErrors: isResponseStatusSuccess
-      ? null
-      : respondedData.additionalErrors,
-    code: statusCode,
-  });
+  getPureRestErrorText = ({
+    response,
+    isResponseStatusSuccess
+  }: GetPureRestErrorTextParamsType) => {
+    const { error, errorText } = response;
+
+
+    // console.log('///////////////////////',);
+    // console.log('errorText',errorText);
+    // console.log('error',error);
+    // console.log('isResponseStatusSuccess',isResponseStatusSuccess);
+    // console.log("typeof errorText === 'string'",typeof errorText === 'string');
+    // console.log("typeof error === 'string'",typeof error === 'string');
+
+    if(isResponseStatusSuccess){
+      return ''
+    }
+
+    if(typeof errorText === 'string'){
+      return errorText;
+    }
+
+    if(typeof error === 'string'){
+      return error;
+    }
+
+    return '';
+  }
+
+  getPureRestAdditionalErrors = ({
+    response,
+    isResponseStatusSuccess
+  }: GetPureRestAdditionalErrorsParamsType) => {
+    const { additionalErrors, errorText, ...restResponce } = response;
+
+    if(isResponseStatusSuccess){
+      return null;
+    }
+
+    if(additionalErrors) {
+      return additionalErrors;
+    }
+
+    // if backend wont give us a special field for error parameters
+    return restResponce;
+  }
 
   // TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedResponseData = ({
@@ -203,13 +237,17 @@ export class BaseRequest implements IBaseRequests {
     } 
 
     if (protocol === requestProtocolsMap.pureRest) {
+      const error = !isResponseStatusSuccess
+      const errorText = this.getPureRestErrorText({response, isResponseStatusSuccess});
+      const data = isResponseStatusSuccess ? response : {};
+      const additionalErrors = this.getPureRestAdditionalErrors({response, isResponseStatusSuccess})
+
+
       return {
-        error: !isResponseStatusSuccess,
-        errorText: isResponseStatusSuccess ? "" : response.errorText,
-        data: isResponseStatusSuccess ? response : {},
-        additionalErrors: isResponseStatusSuccess
-          ? null
-          : response.additionalErrors,
+        error,
+        errorText, 
+        data,
+        additionalErrors, 
         statusCode,
         translateFunction,
         protocol,

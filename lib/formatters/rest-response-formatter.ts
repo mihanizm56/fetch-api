@@ -50,10 +50,10 @@ export class RestResponseFormatter extends ResponseFormatter {
           errorTextKey: this.errorText,
           translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
-          errorTextData: this.additionalErrors || null,
+          errorTextData: this.additionalErrors,
         })
       : '',
-    additionalErrors: this.additionalErrors || null,
+    additionalErrors: this.additionalErrors,
     code: this.statusCode,
   });
 }

@@ -1,25 +1,25 @@
-const Joi = require("@hapi/joi");
-const { RestRequest, PureRestRequest } = require("../../../../dist");
+const Joi = require('@hapi/joi');
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
-  mode: "cors",
+  mode: 'cors',
   queryParams: {
-    foo: "bar",
+    foo: 'bar',
   },
   translateFunction: (key, options) =>
     `translateFunction got key ${key} and options ${options}`,
 };
 
-describe("get request (negative)", () => {
+describe('get request (negative)', () => {
   beforeEach(() => {
     delete global.window;
   });
 
-  test("simple response with 400 error", async () => {
+  test('simple response with 400 error', async () => {
     const responseSchema = Joi.any();
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/negative?notvaliddata=true",
+      endpoint: 'http://127.0.0.1:8080/rest/negative?notvaliddata=true',
       responseSchema,
     };
 
@@ -30,16 +30,16 @@ describe("get request (negative)", () => {
       data: {},
       error: true,
       errorText:
-        "translateFunction got key not valid data and options undefined",
+        'translateFunction got key not valid data and options undefined',
       code: 400,
     });
   });
 
-  test("simple response with 404 error", async () => {
+  test('simple response with 404 error', async () => {
     const responseSchema = Joi.any();
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/negative?notfound=true",
+      endpoint: 'http://127.0.0.1:8080/rest/negative?notfound=true',
       responseSchema,
     };
 
@@ -50,16 +50,16 @@ describe("get request (negative)", () => {
       data: {},
       error: true,
       errorText:
-        "translateFunction got key network-error and options undefined",
+        'translateFunction got key network-error and options undefined',
       code: 500,
     });
   });
 
-  test("simple response with 500 error", async () => {
+  test('simple response with 500 error', async () => {
     const responseSchema = Joi.any();
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/negative?internalerror=true",
+      endpoint: 'http://127.0.0.1:8080/rest/negative?internalerror=true',
       responseSchema,
     };
 
@@ -70,17 +70,17 @@ describe("get request (negative)", () => {
       data: {},
       error: true,
       errorText:
-        "translateFunction got key network-error and options undefined",
+        'translateFunction got key network-error and options undefined',
       code: 500,
     });
   });
 
-  test("response with not valid base format", async () => {
+  test('response with not valid base format', async () => {
     const responseSchema = Joi.any();
     const requestConfig = {
       ...requestBaseConfig,
       endpoint:
-        "http://127.0.0.1:8080/rest/negative?notvalidbasestructure=true",
+        'http://127.0.0.1:8080/rest/negative?notvalidbasestructure=true',
       responseSchema,
     };
 
@@ -91,12 +91,12 @@ describe("get request (negative)", () => {
       data: {},
       error: true,
       errorText:
-        "translateFunction got key network-error and options undefined",
+        'translateFunction got key network-error and options undefined',
       code: 500,
     });
   });
 
-  test("response with not valid schema", async () => {
+  test('response with not valid schema', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -107,7 +107,7 @@ describe("get request (negative)", () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/negative?notvalidschema=true",
+      endpoint: 'http://127.0.0.1:8080/rest/negative?notvalidschema=true',
       responseSchema,
     };
 
@@ -118,18 +118,18 @@ describe("get request (negative)", () => {
       data: {},
       error: true,
       errorText:
-        "translateFunction got key network-error and options undefined",
+        'translateFunction got key network-error and options undefined',
       code: 500,
     });
   });
 
-  test("extra validation callback test returns false", async () => {
+  test('extra validation callback test returns false', async () => {
     const responseSchema = Joi.any();
     const extraValidationCallback = jest.fn().mockReturnValue(false);
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       extraValidationCallback,
     };
@@ -142,18 +142,18 @@ describe("get request (negative)", () => {
       data: {},
       error: true,
       errorText:
-        "translateFunction got key network-error and options undefined",
+        'translateFunction got key network-error and options undefined',
       code: 500,
     });
   });
 
-  test("straight error output parameter is set", async () => {
+  test('straight error output parameter is set', async () => {
     const responseSchema = Joi.any();
 
     const requestConfig = {
       ...requestBaseConfig,
       endpoint:
-        "http://127.0.0.1:8080/rest/negative?errorwithadditionalerrors=true",
+        'http://127.0.0.1:8080/rest/negative?errorwithadditionalerrors=true',
       responseSchema,
       isErrorTextStraightToOutput: true,
     };
@@ -161,41 +161,41 @@ describe("get request (negative)", () => {
     const data = await new RestRequest().getRequest(requestConfig);
 
     expect(data).toEqual({
-      additionalErrors: { baz: 1, foo: "bar" },
+      additionalErrors: { baz: 1, foo: 'bar' },
       data: {},
       error: true,
-      errorText: "test special key",
+      errorText: 'test special key',
       code: 400,
     });
   });
 
-  describe("check PureRestRequest", () => {
-    test("simple pure response with 403 error", async () => {
+  describe('check PureRestRequest', () => {
+    test('simple pure response with 403 error', async () => {
       const responseSchema = Joi.any();
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/negative?pureresponse=true",
+        endpoint: 'http://127.0.0.1:8080/rest/negative?pureresponse=true',
         responseSchema,
         translateFunction,
       };
 
       const response = await new PureRestRequest().getRequest(requestConfig);
 
-      expect(translateFunction).toHaveBeenCalledWith("text", { parameter: 1 });
+      expect(translateFunction).toHaveBeenCalledWith('text', { parameter: 1 });
       expect(translateFunction).toHaveBeenCalledTimes(1);
       expect(response).toEqual({
         additionalErrors: { parameter: 1 },
         code: 403,
         data: {},
         error: true,
-        errorText: "test value from translateFunction",
+        errorText: 'test value from translateFunction',
       });
     });
 
-    test("simple pure response with not valid schema", async () => {
+    test('simple pure response with not valid schema', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         bar: Joi.object({
@@ -205,36 +205,36 @@ describe("get request (negative)", () => {
       });
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive",
+        endpoint: 'http://127.0.0.1:8080/rest/positive',
         responseSchema,
         translateFunction,
       };
 
       const response = await new PureRestRequest().getRequest(requestConfig);
 
-      expect(translateFunction).toHaveBeenCalledWith("network-error");
+      expect(translateFunction).toHaveBeenCalledWith('network-error');
       expect(translateFunction).toHaveBeenCalledTimes(1);
       expect(response).toEqual({
         additionalErrors: null,
         code: 500,
         data: {},
         error: true,
-        errorText: "test value from translateFunction",
+        errorText: 'test value from translateFunction',
       });
     });
 
-    test("simple pure response with straight output", async () => {
+    test('simple pure response with straight output', async () => {
       const responseSchema = Joi.any();
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
         endpoint:
-          "http://127.0.0.1:8080/rest/negative?pureresponse=true&straighterror=true",
+          'http://127.0.0.1:8080/rest/negative?pureresponse=true&straighterror=true',
         responseSchema,
         translateFunction,
         isErrorTextStraightToOutput: true,
@@ -248,18 +248,18 @@ describe("get request (negative)", () => {
         code: 400,
         data: {},
         error: true,
-        errorText: "straighterror",
+        errorText: 'straighterror',
       });
     });
 
-    test("simple pure response with extra validation callback", async () => {
+    test('simple pure response with extra validation callback', async () => {
       const responseSchema = Joi.any();
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive",
+        endpoint: 'http://127.0.0.1:8080/rest/positive',
         responseSchema,
         translateFunction,
         extraValidationCallback: jest.fn().mockReturnValue(false),
@@ -267,25 +267,25 @@ describe("get request (negative)", () => {
 
       const response = await new PureRestRequest().getRequest(requestConfig);
 
-      expect(translateFunction).toHaveBeenCalledWith("network-error");
+      expect(translateFunction).toHaveBeenCalledWith('network-error');
       expect(translateFunction).toHaveBeenCalledTimes(1);
       expect(response).toEqual({
         additionalErrors: null,
         code: 500,
         data: {},
         error: true,
-        errorText: "test value from translateFunction",
+        errorText: 'test value from translateFunction',
       });
     });
 
-    test("simple pure response with extra validation callback", async () => {
+    test('simple pure response with extra validation callback', async () => {
       const responseSchema = Joi.any();
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive",
+        endpoint: 'http://127.0.0.1:8080/rest/positive',
         responseSchema,
         translateFunction,
         extraValidationCallback: jest.fn().mockReturnValue(false),
@@ -293,81 +293,81 @@ describe("get request (negative)", () => {
 
       const response = await new PureRestRequest().getRequest(requestConfig);
 
-      expect(translateFunction).toHaveBeenCalledWith("network-error");
+      expect(translateFunction).toHaveBeenCalledWith('network-error');
       expect(translateFunction).toHaveBeenCalledTimes(1);
       expect(response).toEqual({
         additionalErrors: null,
         code: 500,
         data: {},
         error: true,
-        errorText: "test value from translateFunction",
+        errorText: 'test value from translateFunction',
       });
     });
   });
 
-  describe("check translateFunction got valid params", () => {
-    test("translateFunction got valid key", async () => {
+  describe('check translateFunction got valid params', () => {
+    test('translateFunction got valid key', async () => {
       const responseSchema = Joi.any();
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/negative",
+        endpoint: 'http://127.0.0.1:8080/rest/negative',
         responseSchema,
         translateFunction,
       };
 
       const data = await new RestRequest().getRequest(requestConfig);
 
-      expect(translateFunction).toHaveBeenCalledWith("test error key");
+      expect(translateFunction).toHaveBeenCalledWith('test error key');
       expect(translateFunction).toHaveBeenCalledTimes(1);
       expect(data).toEqual({
         additionalErrors: null,
         data: {},
         error: true,
-        errorText: "test value from translateFunction",
+        errorText: 'test value from translateFunction',
         code: 401,
       });
     });
 
-    test("translateFunction got valid key and options", async () => {
+    test('translateFunction got valid key and options', async () => {
       const responseSchema = Joi.any();
       const translateFunction = jest
         .fn()
-        .mockReturnValue("test value from translateFunction");
+        .mockReturnValue('test value from translateFunction');
       const requestConfig = {
         ...requestBaseConfig,
         endpoint:
-          "http://127.0.0.1:8080/rest/negative?errorwithadditionalerrors=true",
+          'http://127.0.0.1:8080/rest/negative?errorwithadditionalerrors=true',
         responseSchema,
         translateFunction,
       };
 
       const data = await new RestRequest().getRequest(requestConfig);
 
-      expect(translateFunction).toHaveBeenCalledWith("test special key", {
+      expect(translateFunction).toHaveBeenCalledWith('test special key', {
         baz: 1,
-        foo: "bar",
+        foo: 'bar',
       });
       expect(translateFunction).toHaveBeenCalledTimes(1);
       expect(data).toEqual({
-        additionalErrors: { baz: 1, foo: "bar" },
+        additionalErrors: { baz: 1, foo: 'bar' },
         data: {},
         error: true,
-        errorText: "test value from translateFunction",
+        errorText: 'test value from translateFunction',
         code: 400,
       });
     });
   });
 
-  describe("response with not valid response structure", () => {
-    test("data was not sent", async () => {
+  describe('response with not valid response structure', () => {
+    test('data was not sent', async () => {
       const responseSchema = Joi.any();
       const requestConfig = {
         ...requestBaseConfig,
         endpoint:
-          "http://127.0.0.1:8080/rest/negative?notvalidstructuredata=true",
+          'http://127.0.0.1:8080/rest/negative?notvalidstructuredata=true',
         responseSchema,
       };
 
@@ -378,16 +378,16 @@ describe("get request (negative)", () => {
         data: {},
         error: true,
         errorText:
-          "translateFunction got key network-error and options undefined",
+          'translateFunction got key network-error and options undefined',
         code: 500,
       });
     });
-    test("error was not sent", async () => {
+    test('error was not sent', async () => {
       const responseSchema = Joi.any();
       const requestConfig = {
         ...requestBaseConfig,
         endpoint:
-          "http://127.0.0.1:8080/rest/negative?notvalidstructureerror=true",
+          'http://127.0.0.1:8080/rest/negative?notvalidstructureerror=true',
         responseSchema,
       };
 
@@ -398,16 +398,16 @@ describe("get request (negative)", () => {
         data: {},
         error: true,
         errorText:
-          "translateFunction got key network-error and options undefined",
+          'translateFunction got key network-error and options undefined',
         code: 500,
       });
     });
-    test("errorText was not sent", async () => {
+    test('errorText was not sent', async () => {
       const responseSchema = Joi.any();
       const requestConfig = {
         ...requestBaseConfig,
         endpoint:
-          "http://127.0.0.1:8080/rest/negative?notvalidstructureerrortext=true",
+          'http://127.0.0.1:8080/rest/negative?notvalidstructureerrortext=true',
         responseSchema,
       };
 
@@ -418,16 +418,16 @@ describe("get request (negative)", () => {
         data: {},
         error: true,
         errorText:
-          "translateFunction got key network-error and options undefined",
+          'translateFunction got key network-error and options undefined',
         code: 500,
       });
     });
-    test("additionalErrors was not sent", async () => {
+    test('additionalErrors was not sent', async () => {
       const responseSchema = Joi.any();
       const requestConfig = {
         ...requestBaseConfig,
         endpoint:
-          "http://127.0.0.1:8080/rest/negative?notvalidstructureadditionalerrors=true",
+          'http://127.0.0.1:8080/rest/negative?notvalidstructureadditionalerrors=true',
         responseSchema,
       };
 
@@ -438,7 +438,7 @@ describe("get request (negative)", () => {
         data: {},
         error: true,
         errorText:
-          "translateFunction got key network-error and options undefined",
+          'translateFunction got key network-error and options undefined',
         code: 500,
       });
     });
