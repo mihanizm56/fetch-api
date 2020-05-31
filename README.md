@@ -12,7 +12,7 @@
 - Provides the ability to match the exact error translation
 - Provides different kinds of the response formats to parse
 - Returns ALWAYS the hard prepared response structure (data, error, errorText, additionalErrors)
-- Works in browser and node environments (>ie11)
+- Works in modern browsers and ie11
 - Provides two main classes for REST API - RestRequest and PureRestReques. <br/> The difference is in
   hard-structured responce format or not (both interfaces are the same)
 
