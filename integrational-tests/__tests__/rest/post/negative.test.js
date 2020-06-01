@@ -58,6 +58,47 @@ describe('get request (negative)', () => {
     });
   });
 
+  test('simple pure response with error when text error is provided in "error" field', async () => {
+    const responseSchema = Joi.any();
+    const requestConfig = {
+      ...requestBaseConfig,
+      endpoint:
+        'http://127.0.0.1:8080/rest/negative?errorastext=true&pureresponse=true',
+      responseSchema,
+    };
+
+    const response = await new PureRestRequest().postRequest(requestConfig);
+
+    expect(response).toEqual({
+      additionalErrors: { error: 'text in error' },
+      code: 403,
+      data: {},
+      error: true,
+      errorText:
+        'translateFunction got key text in error and options [object Object]',
+    });
+  });
+
+  test('simple pure response with error when text error is provided in "error" field but errorText is string and empty', async () => {
+    const responseSchema = Joi.any();
+    const requestConfig = {
+      ...requestBaseConfig,
+      endpoint:
+        'http://127.0.0.1:8080/rest/negative?errorastext=true&pureresponse=true&errortextexist=true',
+      responseSchema,
+    };
+
+    const response = await new PureRestRequest().postRequest(requestConfig);
+
+    expect(response).toEqual({
+      additionalErrors: { error: 'empty test error in errorText' },
+      code: 403,
+      data: {},
+      error: true,
+      errorText: 'translateFunction got key  and options [object Object]',
+    });
+  });
+
   test('simple response with 500 error (not parsed)', async () => {
     const responseSchema = Joi.any();
     const requestConfig = {

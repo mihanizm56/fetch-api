@@ -8,6 +8,8 @@ module.exports.negativeDeleteController = (req, res) => {
     notsenterror,
     notsenterrortext,
     straighterror,
+    errorastext,
+    errortextexist,
   } = req.query;
   if (pureresponse) {
     if (internalerror) {
@@ -27,6 +29,19 @@ module.exports.negativeDeleteController = (req, res) => {
       return res.status(400).json({
         errorText: 'test errors with additional params',
         additionalErrors: { foo: 1 },
+      });
+    }
+
+    if (errorastext) {
+      if (errortextexist) {
+        return res.status(403).json({
+          error: 'empty test error in errorText',
+          errorText: '',
+        });
+      }
+
+      return res.status(403).json({
+        error: 'text in error',
       });
     }
 

@@ -12,6 +12,8 @@ module.exports.negativeGetController = (req, res) => {
     errorwithadditionalerrors,
     pureresponse,
     straighterror,
+    errorastext,
+    errortextexist,
   } = req.query;
 
   if (notvaliddata) {
@@ -46,6 +48,26 @@ module.exports.negativeGetController = (req, res) => {
       return res.status(400).json({
         errorText: 'straighterror',
         additionalErrors: { parameterText: 1 },
+      });
+    }
+
+    if (errorastext) {
+      if (errortextexist) {
+        return res.status(403).json({
+          error: 'empty test error in errorText',
+          errorText: '',
+        });
+      }
+
+      return res.status(403).json({
+        error: 'text in error',
+      });
+    }
+
+    if (errorastext) {
+      return res.status(403).json({
+        error: 'text',
+        additionalErrors: { parameter: 1 },
       });
     }
 
