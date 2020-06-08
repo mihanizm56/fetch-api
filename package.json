@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.3.5",
+  "version": "3.3.6",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -35,8 +35,7 @@
     "node-fetch": "2.6.0",
     "@types/joi": "14.3.4",
     "@types/node-fetch": "2.5.5",
-    "colors": "1.4.0",
-    "abortcontroller-polyfill": "1.4.0"
+    "colors": "1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.2.0",

@@ -44,6 +44,14 @@
 - try to use .unknown() method with objects in Joi Schemas because your backend may be extended
   and without this method the responce data may be not valid
 
+## !!! Attention !!!
+### If you need to support ie11 - please add the following polyfills
+
+```javascript
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
+import 'whatwg-fetch';
+```
+
 ## Examples of usage
 
 ### REST API

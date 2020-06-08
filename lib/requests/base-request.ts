@@ -1,5 +1,4 @@
 import nodeFetch from "node-fetch";
-import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 import {
   RequestRacerParams,
   ParseResponseParams,
