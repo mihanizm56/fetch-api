@@ -48,14 +48,15 @@ export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
   mode?: ModeCorsType;
-  method?: string; //
+  method?: string;
   endpoint: string;
-  parseType?: keyof typeof parseTypesMap; //
+  parseType?: keyof typeof parseTypesMap;
   queryParams?: { [key: string]: string };
   translateFunction?: TranslateFunction;
   responseSchema?: any;
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
+  customTimeout?: number;
 }
 
 export interface IResponse {
@@ -98,6 +99,7 @@ export type RequestRacerParams = {
   requestId?: string | number;
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunction;
+  customTimeout?: number;
 };
 
 export type ParseResponseParams = {

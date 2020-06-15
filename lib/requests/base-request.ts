@@ -170,14 +170,6 @@ export class BaseRequest implements IBaseRequests {
   }: GetPureRestErrorTextParamsType) => {
     const { error, errorText } = response;
 
-
-    // console.log('///////////////////////',);
-    // console.log('errorText',errorText);
-    // console.log('error',error);
-    // console.log('isResponseStatusSuccess',isResponseStatusSuccess);
-    // console.log("typeof errorText === 'string'",typeof errorText === 'string');
-    // console.log("typeof error === 'string'",typeof error === 'string');
-
     if(isResponseStatusSuccess){
       return ''
     }
@@ -285,6 +277,7 @@ export class BaseRequest implements IBaseRequests {
     isErrorTextStraightToOutput,
     extraValidationCallback,
     translateFunction,
+    customTimeout
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -396,6 +389,7 @@ export class BaseRequest implements IBaseRequests {
       fetchController,
       translateFunction,
       isErrorTextStraightToOutput,
+      customTimeout
     });
   };
 
@@ -404,6 +398,7 @@ export class BaseRequest implements IBaseRequests {
     fetchController,
     translateFunction,
     isErrorTextStraightToOutput,
+    customTimeout
   }: RequestRacerParams): Promise<IResponse> => {
     const timeoutException: Promise<IResponse> = new Promise((resolve) =>
       setTimeout(() => {
@@ -424,7 +419,7 @@ export class BaseRequest implements IBaseRequests {
         }
 
         resolve(defaultError);
-      }, TIMEOUT_VALUE)
+      }, customTimeout || TIMEOUT_VALUE)
     );
 
     return Promise.race([request, timeoutException]);
