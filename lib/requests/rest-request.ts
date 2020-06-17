@@ -37,10 +37,6 @@ export class RestRequest extends BaseRequest {
   public patchRequest = (requestParams: IRequestParams) =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "Content-type": "application/json",
-      },
       method: "PATCH",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.rest,

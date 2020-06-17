@@ -12,10 +12,6 @@ export class JSONRPCRequest extends BaseRequest {
   ): Promise<IResponse> =>
     this.makeFetch({
       ...requestParams,
-      headers: {
-        ...requestParams.headers,
-        "content-type": "application/json"
-      },
       id: uniqueId("json-rpc_"),
       version: {
         jsonrpc: "2.0"
