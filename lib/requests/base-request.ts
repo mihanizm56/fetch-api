@@ -365,10 +365,10 @@ export class BaseRequest implements IBaseRequests {
             return formattedResponseData;
           }
 
-
-
-          console.log('TEST');
-          
+          // if not valid responce - TODO REFACTOR - this is a temp sollution!
+          throw new Error(
+            isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY
+          );
         }
 
         // if not status from the whitelist - throw error with default error
