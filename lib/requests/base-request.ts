@@ -364,6 +364,11 @@ export class BaseRequest implements IBaseRequests {
 
             return formattedResponseData;
           }
+
+
+
+          console.log('TEST');
+          
         }
 
         // if not status from the whitelist - throw error with default error
