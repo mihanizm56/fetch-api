@@ -15,6 +15,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
+    "strictFunctionTypes": false,
     "baseUrl": "./",
     "paths": {
       "@/*": [

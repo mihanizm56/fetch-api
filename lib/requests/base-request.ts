@@ -31,6 +31,18 @@ import { objectToQueryString } from "../utils/object-to-query-string";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
 
+type GetFormattedHeadersParamsType = {
+  body:JSON|FormData,
+  headers?:{
+    [key:string]:any;
+  }
+}
+
+type AbortListenersParamsType = {
+  fetchController: AbortController;
+  abortSectionId?: string;
+}
+
 interface IBaseRequests {
   makeFetch: (
     values: IRequestParams &
@@ -46,14 +58,8 @@ interface IBaseRequests {
   getIsomorphicFetch: (
     params: GetIsomorphicFetchParamsType
   ) => GetIsomorphicFetchReturnsType;
-}
 
-
-type GetFormattedHeadersParamsType = {
-  body:JSON|FormData,
-  headers?:{
-    [key:string]:any;
-  }
+  addAbortListenerToRequest:(params:AbortListenersParamsType) => void;
 }
 
 export class BaseRequest implements IBaseRequests {
@@ -88,10 +94,19 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
+  addAbortListenerToRequest = ({fetchController, abortSectionId}: AbortListenersParamsType) => 
+    document.addEventListener('@fetch-api/CRITICAL_LOADING_FAIL', 
+      (event: CustomEvent) => {
+        if (event.detail && event.detail.abortSectionId === abortSectionId) {
+          fetchController.abort()
+        }
+    })
+
   // get an isomorfic fetch
   getIsomorphicFetch = ({
     endpoint,
     fetchParams,
+    abortSectionId
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
     if (typeof window === "undefined") {
       const requestFetch = (nodeFetch.bind(
@@ -105,6 +120,8 @@ export class BaseRequest implements IBaseRequests {
     }
 
     const fetchController = new AbortController();
+
+    this.addAbortListenerToRequest({abortSectionId,fetchController})
 
     const requestFetch = (window.fetch.bind(null, endpoint, {
       ...fetchParams,
@@ -277,7 +294,8 @@ export class BaseRequest implements IBaseRequests {
     isErrorTextStraightToOutput,
     extraValidationCallback,
     translateFunction,
-    customTimeout
+    customTimeout,
+    abortSectionId
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -299,6 +317,7 @@ export class BaseRequest implements IBaseRequests {
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
+      abortSectionId,
       fetchParams: {
         body: fetchBody,
         mode,
@@ -364,11 +383,6 @@ export class BaseRequest implements IBaseRequests {
 
             return formattedResponseData;
           }
-
-          // if not valid responce - TODO REFACTOR - this is a temp sollution!
-          throw new Error(
-            isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY
-          );
         }
 
         // if not status from the whitelist - throw error with default error

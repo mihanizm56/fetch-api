@@ -57,6 +57,7 @@ export interface IRequestParams {
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallback;
   customTimeout?: number;
+  abortSectionId?: string;
 }
 
 export interface IResponse {
@@ -137,6 +138,7 @@ export type GetIsomorphicFetchParamsType = {
     IRequestParams & Partial<IJSONPRCRequestParams>,
     'headers' | 'body' | 'mode' | 'method'
   >;
+  abortSectionId?: string;
 };
 
 export type GetFetchBodyParamsType = {
