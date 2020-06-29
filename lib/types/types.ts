@@ -58,6 +58,7 @@ export interface IRequestParams {
   extraValidationCallback?: ExtraValidationCallback;
   customTimeout?: number;
   abortSectionId?: string;
+  eventNameToCancelTheRequest?: string;
 }
 
 export interface IResponse {
@@ -133,6 +134,7 @@ export type GetIsomorphicFetchReturnsType = {
 };
 
 export type GetIsomorphicFetchParamsType = {
+  eventNameToCancelTheRequest?: string;
   endpoint: string;
   fetchParams: Pick<
     IRequestParams & Partial<IJSONPRCRequestParams>,
