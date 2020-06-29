@@ -40,7 +40,7 @@ type GetFormattedHeadersParamsType = {
 
 type AbortListenersParamsType = {
   fetchController: AbortController;
-  abortSectionId: string;
+  abortRequestId: string;
   eventNameToCancelTheRequest: string;
 }
 
@@ -95,10 +95,10 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  addAbortListenerToRequest = ({fetchController, abortSectionId, eventNameToCancelTheRequest}: AbortListenersParamsType) => 
+  addAbortListenerToRequest = ({fetchController, abortRequestId, eventNameToCancelTheRequest}: AbortListenersParamsType) => 
     document.addEventListener(eventNameToCancelTheRequest, 
       (event: CustomEvent) => {
-        if (event.detail && event.detail.abortSectionId === abortSectionId) {
+        if (event.detail && event.detail.abortRequestId === abortRequestId) {
           fetchController.abort()
         }
     })
@@ -107,7 +107,7 @@ export class BaseRequest implements IBaseRequests {
   getIsomorphicFetch = ({
     endpoint,
     fetchParams,
-    abortSectionId,
+    abortRequestId,
     eventNameToCancelTheRequest
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
     if (typeof window === "undefined") {
@@ -124,9 +124,9 @@ export class BaseRequest implements IBaseRequests {
     const fetchController = new AbortController();
 
     // set the cancel request listener
-    if(eventNameToCancelTheRequest && abortSectionId){
+    if(eventNameToCancelTheRequest && abortRequestId){
       this.addAbortListenerToRequest({
-        abortSectionId,
+        abortRequestId,
         fetchController,
         eventNameToCancelTheRequest
       })
@@ -305,7 +305,7 @@ export class BaseRequest implements IBaseRequests {
     translateFunction,
     customTimeout,
     eventNameToCancelTheRequest,
-    abortSectionId
+    abortRequestId
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -327,7 +327,7 @@ export class BaseRequest implements IBaseRequests {
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
-      abortSectionId,
+      abortRequestId,
       eventNameToCancelTheRequest,
       fetchParams: {
         body: fetchBody,
