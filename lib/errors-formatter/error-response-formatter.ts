@@ -3,7 +3,7 @@ import {
   ErrorResponseFormatterConstructorParams,
   GetFormattedErrorTextResponseParams,
 } from '@/types/types';
-import { NETWORK_ERROR_KEY } from '@/constants/shared';
+import { NETWORK_ERROR_KEY, ABORTED_ERROR_TEXT } from '@/constants/shared';
 
 interface IErrorResponseFormatter {
   getFormattedErrorResponse: (
@@ -45,7 +45,10 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     statusCode,
   }: GetFormattedErrorTextResponseParams): IResponse => ({
     error: true,
-    errorText: this.getFormattedErrorTextResponse(errorDictionaryParams),
+    errorText:
+      errorDictionaryParams.errorTextKey === ABORTED_ERROR_TEXT
+        ? errorDictionaryParams.errorTextKey
+        : this.getFormattedErrorTextResponse(errorDictionaryParams),
     data: {},
     additionalErrors: errorDictionaryParams.errorTextData || null,
     code: statusCode,
