@@ -11,3 +11,4 @@ export {
   TranslateFunction,
   ModeCorsType,
 } from './types/types';
+export { ABORT_REQUEST_EVENT_NAME } from './constants/shared'
