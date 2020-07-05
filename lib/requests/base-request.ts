@@ -97,7 +97,9 @@ export class BaseRequest implements IBaseRequests {
 
   addAbortListenerToRequest = ({fetchController, abortRequestId}: AbortListenersParamsType) => 
     document.addEventListener(ABORT_REQUEST_EVENT_NAME, 
-      (event: CustomEvent) => {
+      function listener(event: CustomEvent) {
+        document.removeEventListener(ABORT_REQUEST_EVENT_NAME,listener)
+
         if (event.detail && event.detail.abortRequestId === abortRequestId) {
           fetchController.abort()
         }

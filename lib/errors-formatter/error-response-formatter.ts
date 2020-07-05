@@ -3,7 +3,12 @@ import {
   ErrorResponseFormatterConstructorParams,
   GetFormattedErrorTextResponseParams,
 } from '@/types/types';
-import { NETWORK_ERROR_KEY, ABORTED_ERROR_TEXT } from '@/constants/shared';
+import {
+  NETWORK_ERROR_KEY,
+  ABORTED_ERROR_TEXT_CHROME,
+  ABORTED_ERROR_TEXT_SAFARI,
+  ABORTED_ERROR_TEXT_MOZILLA,
+} from '@/constants/shared';
 
 interface IErrorResponseFormatter {
   getFormattedErrorResponse: (
@@ -43,14 +48,20 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
   getFormattedErrorResponse = ({
     errorDictionaryParams,
     statusCode,
-  }: GetFormattedErrorTextResponseParams): IResponse => ({
-    error: true,
-    errorText:
-      errorDictionaryParams.errorTextKey === ABORTED_ERROR_TEXT
+  }: GetFormattedErrorTextResponseParams): IResponse => {
+    const isAbortError =
+      errorDictionaryParams.errorTextKey === ABORTED_ERROR_TEXT_CHROME ||
+      errorDictionaryParams.errorTextKey === ABORTED_ERROR_TEXT_MOZILLA ||
+      errorDictionaryParams.errorTextKey === ABORTED_ERROR_TEXT_SAFARI;
+
+    return {
+      error: true,
+      errorText: isAbortError
         ? errorDictionaryParams.errorTextKey
         : this.getFormattedErrorTextResponse(errorDictionaryParams),
-    data: {},
-    additionalErrors: errorDictionaryParams.errorTextData || null,
-    code: statusCode,
-  });
+      data: {},
+      additionalErrors: errorDictionaryParams.errorTextData || null,
+      code: statusCode,
+    };
+  };
 }
