@@ -18,8 +18,22 @@ const mockArrayData = [
 ];
 
 module.exports.positiveGetController = (req, res) => {
-  const { specialparameter, pureresponse, isempty, getsimplearray } = req.query;
+  const {
+    specialqueryparamBoolean,
+    specialqueryparamNumber,
+    specialqueryparamString,
+    specialqueryparamArray,
+    pureresponse,
+    isempty,
+    getsimplearray,
+  } = req.query;
   const { specialheader } = req.headers;
+
+  const areQueryParamsForCheckExist =
+    specialqueryparamBoolean &&
+    specialqueryparamNumber &&
+    specialqueryparamString &&
+    specialqueryparamArray;
 
   if (pureresponse) {
     if (getsimplearray) {
@@ -47,13 +61,16 @@ module.exports.positiveGetController = (req, res) => {
     });
   }
 
-  if (specialparameter) {
+  if (areQueryParamsForCheckExist) {
     return res.status(200).json({
       error: false,
       errorText: '',
       data: {
         ...mockPositiveData,
-        specialparameter: req.query.specialparameter,
+        specialqueryparamBoolean,
+        specialqueryparamNumber,
+        specialqueryparamString,
+        specialqueryparamArray,
       },
       additionalErrors: null,
     });

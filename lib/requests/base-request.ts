@@ -100,7 +100,7 @@ export class BaseRequest implements IBaseRequests {
       function listener(event: CustomEvent) {
         document.removeEventListener(ABORT_REQUEST_EVENT_NAME,listener)
 
-        if (event.detail && event.detail.abortRequestId === abortRequestId) {
+        if (event.detail && event.detail.id === abortRequestId) {
           fetchController.abort()
         }
     })
@@ -151,9 +151,12 @@ export class BaseRequest implements IBaseRequests {
   getFormattedEndpoint = ({
     endpoint,
     queryParams,
+    arrayFormat
   }: FormattedEndpointParams): string => {
     if(queryParams){
-      return `${endpoint}?${queryString.stringify(queryParams)}`;
+      return `${endpoint}?${queryString.stringify(queryParams,{
+        arrayFormat: arrayFormat || 'none'
+      })}`;
     }
 
     return endpoint;
@@ -304,11 +307,13 @@ export class BaseRequest implements IBaseRequests {
     extraValidationCallback,
     translateFunction,
     customTimeout,
-    abortRequestId
+    abortRequestId,
+    arrayFormat
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
       queryParams,
+      arrayFormat
     });
 
     const formattedHeaders = this.getFormattedHeaders({

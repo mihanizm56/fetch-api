@@ -143,38 +143,44 @@ describe('get request (positive)', () => {
     });
   });
 
-  test('query parameters are sent', async () => {
+  test('set queryParams full check', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
         baz: Joi.number().required(),
       }).required(),
       delta: Joi.array().items(Joi.string()),
-      specialparameter: Joi.string().required(),
+      specialqueryparamBoolean: Joi.boolean().required(),
+      specialqueryparamNumber: Joi.number().required(),
+      specialqueryparamString: Joi.string().required(),
+      specialqueryparamArray: Joi.array().items(Joi.string()),
     }).unknown();
 
-    const requestConfig = {
-      ...requestBaseConfig,
+    const data = await new RestRequest().getRequest({
       endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       queryParams: {
-        specialparameter: 'test-parameter',
+        specialqueryparamBoolean: true,
+        specialqueryparamNumber: 10,
+        specialqueryparamString: '10',
+        specialqueryparamArray: [0, '0', 1, '1'],
       },
-    };
-
-    const data = await new RestRequest().getRequest(requestConfig);
+    });
 
     expect(data).toEqual({
       additionalErrors: null,
+      code: 200,
       data: {
         bar: { baz: 0 },
         delta: ['1', '2'],
         foo: 'foo',
-        specialparameter: 'test-parameter',
+        specialqueryparamArray: ['0', '0', '1', '1'],
+        specialqueryparamBoolean: 'true',
+        specialqueryparamNumber: '10',
+        specialqueryparamString: '10',
       },
       error: false,
       errorText: '',
-      code: 200,
     });
   });
 
@@ -212,9 +218,6 @@ describe('get request (positive)', () => {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
-      queryParams: {
-        specialparameter: 'test-parameter',
-      },
     };
 
     const data = await new RestRequest().getRequest(requestConfig);
@@ -225,7 +228,6 @@ describe('get request (positive)', () => {
         bar: { baz: 0 },
         delta: ['1', '2'],
         foo: 'foo',
-        specialparameter: 'test-parameter',
       },
       error: false,
       errorText: '',

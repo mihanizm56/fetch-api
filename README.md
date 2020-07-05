@@ -6,8 +6,9 @@
 
 - Provides validation for responses (based on @hapi/joi Schema validation and may use your own validation function)
 - Provides the ability to make rest-api and json-rpc protocol requests in One interface
-- Provides query-params serialize
-- Provides cancel-request if the timeout is higher than 60 seconds
+- Provides query-params serialize (booleans,strings,numbers,arrays of numbers or strings and variable serialize options for different backend services)
+https://www.npmjs.com/package/query-string is used
+- Provides cancel-request if the timeout is higher than timeout value (60 seconds by default) 
 - Provides error catching (you dont need to use try/catch)
 - Provides the ability to match the exact error translation
 - Provides different kinds of the response formats to parse
@@ -15,6 +16,7 @@
 - Works in modern browsers and ie11
 - Provides two main classes for REST API - RestRequest and PureRestReques. <br/> The difference is in
   hard-structured responce format or not (both interfaces are the same)
+- Provides the ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
 
 #### Request input options:
 
@@ -175,7 +177,9 @@ export const createItemsRequest = (someData): Promise<IResponse> =>
       params: 123
     }
     queryParams: {
-      id: "123"
+      stringId: "123"
+      someArray: ['1', 1, '2', 2],
+      numberId: 100
     },
     responseSchema: Joi.object({
       items: Joi.array().items(
@@ -194,5 +198,29 @@ export const createItemsRequest = (someData): Promise<IResponse> =>
 ```javascript
 const { error, errorText, data, additionalErrors } = await createItemsRequest(
   someData
+);
+```
+
+#### Cancelling the request
+
+```javascript
+import { RestRequest, IResponse, ABORT_REQUEST_EVENT_NAME } from "@mihanizm56/fetch-api";
+
+export const createReviseRequest = (someData): Promise<IResponse> =>
+  new RestRequest().postRequest({
+    endpoint: "http://localhost:3000",
+    body: someData,
+    abortRequestId: '1',
+    responseSchema: Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+    }).unknown(),
+  });
+);
+
+document.dispatchEvent(
+  new CustomEvent(ABORT_REQUEST_EVENT_NAME, {
+    detail: { id: '1' },
+  }),
 );
 ```

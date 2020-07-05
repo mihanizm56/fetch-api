@@ -1,21 +1,21 @@
-const Joi = require("@hapi/joi");
-const { JSONRPCRequest } = require("../../../dist");
+const Joi = require('@hapi/joi');
+const { JSONRPCRequest } = require('../../../dist');
 
 const requestBaseConfig = {
-  mode: "cors",
+  mode: 'cors',
   queryParams: {
-    foo: "bar",
+    foo: 'bar',
   },
   translateFunction: (key, options) =>
     `translateFunction got key ${key} and options ${options}`,
 };
 
-describe("JSON-PRC request (negative)", () => {
+describe('JSON-PRC request (negative)', () => {
   beforeEach(() => {
     delete global.window;
   });
 
-  test("simple response", async () => {
+  test('simple response', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -24,12 +24,12 @@ describe("JSON-PRC request (negative)", () => {
     }).unknown();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/positive",
+      endpoint: 'http://localhost:8080/json-rpc/positive',
       responseSchema,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
     });
@@ -37,12 +37,12 @@ describe("JSON-PRC request (negative)", () => {
     expect(data).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo" },
+      data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
-  test("set headers", async () => {
+  test('set headers', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -52,15 +52,15 @@ describe("JSON-PRC request (negative)", () => {
     }).unknown();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/positive",
+      endpoint: 'http://localhost:8080/json-rpc/positive',
       responseSchema,
       headers: {
-        specialheader: "specialheader",
+        specialheader: 'specialheader',
       },
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
     });
@@ -68,28 +68,36 @@ describe("JSON-PRC request (negative)", () => {
     expect(data).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo", specialheader: "specialheader" },
+      data: { bar: { baz: 0 }, foo: 'foo', specialheader: 'specialheader' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
-  test("set queryParams", async () => {
+  test('set queryParams full check', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
         baz: Joi.number().required(),
       }).required(),
-      specialqueryparam: Joi.string().required(),
+      specialqueryparamBoolean: Joi.boolean().required(),
+      specialqueryparamNumber: Joi.number().required(),
+      specialqueryparamString: Joi.string().required(),
+      specialqueryparamArray: Joi.array().items(Joi.string()),
     }).unknown();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint:
-        "http://localhost:8080/json-rpc/positive?specialqueryparam=true",
+      endpoint: 'http://localhost:8080/json-rpc/positive',
       responseSchema,
+      queryParams: {
+        specialqueryparamBoolean: true,
+        specialqueryparamNumber: 10,
+        specialqueryparamString: '10',
+        specialqueryparamArray: [0, '0', 1, '1'],
+      },
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
     });
@@ -99,14 +107,17 @@ describe("JSON-PRC request (negative)", () => {
       code: 200,
       data: {
         bar: { baz: 0 },
-        foo: "foo",
-        specialqueryparam: "specialqueryparam",
+        foo: 'foo',
+        specialqueryparamArray: ['0', '0', '1', '1'],
+        specialqueryparamBoolean: 'true',
+        specialqueryparamNumber: '10',
+        specialqueryparamString: '10',
       },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
-  test("set extra validation callback and this returns true", async () => {
+  test('set extra validation callback and this returns true', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       notValidSchema: Joi.object({
@@ -118,13 +129,13 @@ describe("JSON-PRC request (negative)", () => {
     const extraValidationCallback = jest.fn().mockReturnValue(true);
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/positive",
+      endpoint: 'http://localhost:8080/json-rpc/positive',
       responseSchema,
       extraValidationCallback,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
     });
@@ -134,10 +145,10 @@ describe("JSON-PRC request (negative)", () => {
       code: 200,
       data: {
         bar: { baz: 0 },
-        foo: "foo",
+        foo: 'foo',
       },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 });

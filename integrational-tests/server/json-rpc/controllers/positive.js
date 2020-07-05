@@ -1,5 +1,5 @@
 const mockPositiveData = {
-  foo: "foo",
+  foo: 'foo',
   bar: {
     baz: 0,
   },
@@ -7,7 +7,7 @@ const mockPositiveData = {
 
 const sendSuccessDataRPC = (code, res, id, data) =>
   res.status(code).json({
-    jsonrpc: "2.0",
+    jsonrpc: '2.0',
     id,
     result: data,
   });
@@ -15,7 +15,18 @@ const sendSuccessDataRPC = (code, res, id, data) =>
 module.exports.positiveRPCController = (req, res) => {
   const { id } = req.body;
   const { specialheader } = req.headers;
-  const { specialqueryparam } = req.query;
+  const {
+    specialqueryparamBoolean,
+    specialqueryparamNumber,
+    specialqueryparamString,
+    specialqueryparamArray,
+  } = req.query;
+
+  const areQueryParamsForCheckExist =
+    specialqueryparamBoolean &&
+    specialqueryparamNumber &&
+    specialqueryparamString &&
+    specialqueryparamArray;
 
   if (specialheader) {
     return sendSuccessDataRPC(200, res, id, {
@@ -24,10 +35,13 @@ module.exports.positiveRPCController = (req, res) => {
     });
   }
 
-  if (specialqueryparam) {
+  if (areQueryParamsForCheckExist) {
     return sendSuccessDataRPC(200, res, id, {
       ...mockPositiveData,
-      specialqueryparam: "specialqueryparam",
+      specialqueryparamBoolean,
+      specialqueryparamNumber,
+      specialqueryparamString,
+      specialqueryparamArray,
     });
   }
 

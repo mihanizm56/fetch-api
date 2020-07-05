@@ -58,6 +58,7 @@ export interface IRequestParams {
   extraValidationCallback?: ExtraValidationCallback;
   customTimeout?: number;
   abortRequestId?: string;
+  arrayFormat?: ArrayFormatType;
 }
 
 export interface IResponse {
@@ -93,7 +94,7 @@ export interface IJSONRPCPureResponse {
 }
 
 export type QueryParamsType = {
-  [key: string]: string | number | Record<string, any> | Array<any>;
+  [key: string]: string | number | Array<any> | boolean;
 };
 
 export type RequestRacerParams = {
@@ -112,9 +113,12 @@ export type ParseResponseParams = {
   isStatusEmpty: boolean;
 };
 
+export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
+
 export type FormattedEndpointParams = {
   endpoint: string;
   queryParams?: QueryParamsType;
+  arrayFormat?: ArrayFormatType;
 };
 
 export type ErrorResponseFormatterConstructorParams = {
