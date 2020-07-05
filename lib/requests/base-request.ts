@@ -28,7 +28,7 @@ import { TIMEOUT_VALUE } from "../constants/timeout";
 import { jsonParser } from "../utils/parsers/json-parser";
 import { blobParser } from "../utils/parsers/blob-parser";
 import { textParser } from "../utils/parsers/text-parser";
-import { objectToQueryString } from "../utils/object-to-query-string";
+import queryString from "query-string";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
 
@@ -152,11 +152,11 @@ export class BaseRequest implements IBaseRequests {
     endpoint,
     queryParams,
   }: FormattedEndpointParams): string => {
-    if (!Boolean(queryParams)) {
-      return endpoint;
+    if(queryParams){
+      return `${endpoint}?${queryString.stringify(queryParams)}`;
     }
 
-    return `${endpoint}?${objectToQueryString(queryParams)}`;
+    return endpoint;
   };
 
   // get formatted fetch body in needed

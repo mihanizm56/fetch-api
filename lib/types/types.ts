@@ -51,7 +51,7 @@ export interface IRequestParams {
   method?: string;
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
-  queryParams?: { [key: string]: string };
+  queryParams?: QueryParamsType;
   translateFunction?: TranslateFunction;
   responseSchema?: any;
   isErrorTextStraightToOutput?: boolean;
@@ -92,7 +92,9 @@ export interface IJSONRPCPureResponse {
   id: string | number;
 }
 
-export type QueryParamsType = { [key: string]: string | number };
+export type QueryParamsType = {
+  [key: string]: string | number | Record<string, any> | Array<any>;
+};
 
 export type RequestRacerParams = {
   request: Promise<IResponse>;

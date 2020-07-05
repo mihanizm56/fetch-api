@@ -1,6 +1,6 @@
 import { QueryParamsType } from '@/types/types';
 
-export const objectToQueryString = (queryParams?: QueryParamsType): string =>
+export const objectToQueryString = (queryParams?: any): string =>
   queryParams
     ? Object.keys(queryParams).reduce(
         (acc, queryParamKey, index, queryParamsArray) => {
