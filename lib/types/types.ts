@@ -82,7 +82,7 @@ export type JSONRPCErrorType = {
   data: {
     err: string;
     trKey: string;
-    payload?: Record<string, any>;
+    errors?: Record<string, any>;
   };
 };
 

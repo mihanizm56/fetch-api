@@ -34,6 +34,9 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     this.statusCode = statusCode;
   }
 
+  // eslint-disable-next-line
+  getAdditionalErrors = (error?: JSONRPCErrorType) => error?.data ?? null;
+
   getFormattedResponse = (): IResponse => ({
     errorText: this.error
       ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
@@ -47,7 +50,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
       : '',
     error: Boolean(this.error),
     data: this.result || {},
-    additionalErrors: this.error ? this.error.data : null,
+    additionalErrors: this.getAdditionalErrors(this.error),
     code: this.statusCode,
   });
 }
