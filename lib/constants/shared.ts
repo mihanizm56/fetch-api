@@ -23,7 +23,6 @@ export const requestProtocolsMap: IRequestProtocolsMap = {
   pureRest: 'pureRest',
 };
 
-export const DEFAULT_ERROR_TEXT = 'network-error';
 export const TIMEOUT_ERROR_KEY = 'timeout-error';
 export const NETWORK_ERROR_KEY = 'network-error';
 export const ABORTED_ERROR_TEXT_CHROME = 'The user aborted a request.';
