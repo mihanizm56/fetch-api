@@ -8,13 +8,12 @@ export class PureRestRequest extends BaseRequest {
   public getRequest = (
     requestParams: Omit<
       IRequestParams,
-      "method" | "requestProtocol" | "body" | "parseType"
+      "method" | "requestProtocol" | "body"
     >
   ) =>
     this.makeFetch({
       ...requestParams,
       method: "GET",
-      parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 

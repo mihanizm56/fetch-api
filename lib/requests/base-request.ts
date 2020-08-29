@@ -359,7 +359,7 @@ export class BaseRequest implements IBaseRequests {
             parseType,
             isResponseOk: isResponseStatusSuccess,
             isStatusEmpty
-          });
+          });          
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
