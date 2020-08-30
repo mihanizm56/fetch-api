@@ -44,6 +44,14 @@ export type ExtraValidationCallback = ({
   prevId,
 }: ResponseValidateType) => boolean;
 
+export type CacheType =
+  | 'default'
+  | 'force-cache'
+  | 'no-cache'
+  | 'no-store'
+  | 'only-if-cached'
+  | 'reload';
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
@@ -59,6 +67,7 @@ export interface IRequestParams {
   customTimeout?: number;
   abortRequestId?: string;
   arrayFormat?: ArrayFormatType;
+  cache: CacheType;
 }
 
 export interface IResponse {
