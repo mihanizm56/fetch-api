@@ -67,7 +67,7 @@ export interface IRequestParams {
   customTimeout?: number;
   abortRequestId?: string;
   arrayFormat?: ArrayFormatType;
-  cache: CacheType;
+  cache?: CacheType;
 }
 
 export interface IResponse {
