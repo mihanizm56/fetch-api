@@ -51,6 +51,7 @@ export class RestResponseFormatter extends ResponseFormatter {
           translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
           errorTextData: this.additionalErrors,
+          statusCode: this.statusCode,
         })
       : '',
     additionalErrors: this.additionalErrors,

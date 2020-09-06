@@ -1,6 +1,6 @@
-const path = require("path");
+const path = require('path');
 
-const filepath = path.join(__dirname, "photo.jpg");
+const filepath = path.join(__dirname, 'photo.jpg');
 
 module.exports.positiveGetBlobController = (req, res) => {
   const params = req.query;
@@ -11,5 +11,5 @@ module.exports.positiveGetBlobController = (req, res) => {
 module.exports.negativeGetBlobController = (req, res) => {
   const params = req.query;
 
-  res.status(404).send();
+  res.status(500).send();
 };

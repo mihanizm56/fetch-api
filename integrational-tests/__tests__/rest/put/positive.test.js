@@ -1,18 +1,18 @@
-const Joi = require("@hapi/joi");
-const { RestRequest, PureRestRequest } = require("../../../../dist");
+const Joi = require('@hapi/joi');
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
-  mode: "cors",
+  mode: 'cors',
   translateFunction: (key, options) =>
     `translateFunction got key ${key} and options ${options}`,
 };
 
-describe("put request (positive)", () => {
+describe('put request (positive)', () => {
   beforeEach(() => {
     delete global.window;
   });
 
-  test("simple response without body", async () => {
+  test('simple response without body', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -22,7 +22,7 @@ describe("put request (positive)", () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
     };
 
@@ -31,13 +31,13 @@ describe("put request (positive)", () => {
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo" },
+      data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 
-  test("simple response with body", async () => {
+  test('simple response with body', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -48,10 +48,10 @@ describe("put request (positive)", () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       body: {
-        bodyparam: "bodyparam",
+        bodyparam: 'bodyparam',
       },
     };
 
@@ -60,13 +60,13 @@ describe("put request (positive)", () => {
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo", bodyparam: "bodyparam" },
+      data: { bar: { baz: 0 }, foo: 'foo', bodyparam: 'bodyparam' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 
-  test("simple response with query params", async () => {
+  test('simple response with query params', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -77,10 +77,10 @@ describe("put request (positive)", () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       queryParams: {
-        queryparam: "queryparam",
+        queryparam: 'queryparam',
       },
     };
 
@@ -89,13 +89,13 @@ describe("put request (positive)", () => {
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo", queryparam: "queryparam" },
+      data: { bar: { baz: 0 }, foo: 'foo', queryparam: 'queryparam' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 
-  test("simple response with headers", async () => {
+  test('simple response with headers', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       bar: Joi.object({
@@ -106,10 +106,10 @@ describe("put request (positive)", () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       headers: {
-        specialheader: "specialheader",
+        specialheader: 'specialheader',
       },
     };
 
@@ -118,9 +118,9 @@ describe("put request (positive)", () => {
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo", specialheader: "specialheader" },
+      data: { bar: { baz: 0 }, foo: 'foo', specialheader: 'specialheader' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 
@@ -131,7 +131,7 @@ describe("put request (positive)", () => {
     const extraValidationCallback = jest.fn().mockReturnValue(true);
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       extraValidationCallback,
     };
@@ -141,23 +141,23 @@ describe("put request (positive)", () => {
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo" },
+      data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 
-  test("schema was extended and is still valid", async () => {
+  test('schema was extended and is still valid', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
     }).unknown();
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: "http://127.0.0.1:8080/rest/positive",
+      endpoint: 'http://127.0.0.1:8080/rest/positive',
       responseSchema,
       queryParams: {
-        queryparam: "queryparam",
+        queryparam: 'queryparam',
       },
     };
 
@@ -166,14 +166,14 @@ describe("put request (positive)", () => {
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: { bar: { baz: 0 }, foo: "foo", queryparam: "queryparam" },
+      data: { bar: { baz: 0 }, foo: 'foo', queryparam: 'queryparam' },
       error: false,
-      errorText: "",
+      errorText: '',
     });
   });
 
-  describe("check PureRestRequest", () => {
-    test("simple response", async () => {
+  describe('check PureRestRequest', () => {
+    test('simple response', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         bar: Joi.object({
@@ -183,7 +183,7 @@ describe("put request (positive)", () => {
 
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive?pureresponse=true",
+        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
         responseSchema,
       };
 
@@ -192,13 +192,13 @@ describe("put request (positive)", () => {
       expect(response).toEqual({
         additionalErrors: null,
         code: 200,
-        data: { bar: { baz: 0 }, foo: "foo" },
+        data: { bar: { baz: 0 }, foo: 'foo' },
         error: false,
-        errorText: "",
+        errorText: '',
       });
     });
 
-    test("response with body", async () => {
+    test('response with body', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         bar: Joi.object({
@@ -209,10 +209,10 @@ describe("put request (positive)", () => {
 
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive?pureresponse=true",
+        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
         responseSchema,
         body: {
-          bodyparam: "bodyparam",
+          bodyparam: 'bodyparam',
         },
       };
 
@@ -221,9 +221,9 @@ describe("put request (positive)", () => {
       expect(response).toEqual({
         additionalErrors: null,
         code: 200,
-        data: { bar: { baz: 0 }, foo: "foo", bodyparam: "bodyparam" },
+        data: { bar: { baz: 0 }, foo: 'foo', bodyparam: 'bodyparam' },
         error: false,
-        errorText: "",
+        errorText: '',
       });
     });
 
@@ -238,10 +238,10 @@ describe("put request (positive)", () => {
 
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive?pureresponse=true",
+        endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
         responseSchema,
         body: {
-          bodyparam: "bodyparam",
+          bodyparam: 'bodyparam',
         },
         extraValidationCallback,
       };
@@ -251,13 +251,13 @@ describe("put request (positive)", () => {
       expect(response).toEqual({
         additionalErrors: null,
         code: 200,
-        data: { bar: { baz: 0 }, foo: "foo", bodyparam: "bodyparam" },
+        data: { bar: { baz: 0 }, foo: 'foo', bodyparam: 'bodyparam' },
         error: false,
-        errorText: "",
+        errorText: '',
       });
     });
 
-    test("response with headers", async () => {
+    test('response with headers', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         bar: Joi.object({
@@ -268,10 +268,10 @@ describe("put request (positive)", () => {
 
       const requestConfig = {
         ...requestBaseConfig,
-        endpoint: "http://127.0.0.1:8080/rest/positive",
+        endpoint: 'http://127.0.0.1:8080/rest/positive',
         responseSchema,
         headers: {
-          specialheader: "specialheader",
+          specialheader: 'specialheader',
         },
       };
 
@@ -280,9 +280,9 @@ describe("put request (positive)", () => {
       expect(response).toEqual({
         additionalErrors: null,
         code: 200,
-        data: { bar: { baz: 0 }, foo: "foo", specialheader: "specialheader" },
+        data: { bar: { baz: 0 }, foo: 'foo', specialheader: 'specialheader' },
         error: false,
-        errorText: "",
+        errorText: '',
       });
     });
   });

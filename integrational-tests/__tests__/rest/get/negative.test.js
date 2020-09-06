@@ -49,9 +49,8 @@ describe('get request (negative)', () => {
       additionalErrors: null,
       data: {},
       error: true,
-      errorText:
-        'translateFunction got key network-error and options undefined',
-      code: 500,
+      errorText: 'not-found-error',
+      code: 404,
     });
   });
 

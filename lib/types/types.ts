@@ -120,6 +120,7 @@ export type ParseResponseParams = {
   parseType?: keyof typeof parseTypesMap;
   isResponseOk: boolean;
   isStatusEmpty: boolean;
+  isNotFound: boolean;
 };
 
 export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
@@ -135,6 +136,7 @@ export type ErrorResponseFormatterConstructorParams = {
   isErrorTextStraightToOutput?: boolean;
   errorTextData?: Record<string, any> | null;
   translateFunction?: TranslateFunction;
+  statusCode: number;
 };
 
 export type FormatDataTypeValidatorParamsType = {

@@ -8,6 +8,7 @@ import {
   ABORTED_ERROR_TEXT_CHROME,
   ABORTED_ERROR_TEXT_SAFARI,
   ABORTED_ERROR_TEXT_MOZILLA,
+  NOT_FOUND_ERROR_KEY,
 } from '@/constants/shared';
 
 interface IErrorResponseFormatter {
@@ -26,9 +27,14 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     isErrorTextStraightToOutput,
     errorTextData,
     translateFunction,
+    statusCode,
   }: ErrorResponseFormatterConstructorParams): string => {
     if (isErrorTextStraightToOutput) {
       return errorTextKey;
+    }
+
+    if (statusCode === 404) {
+      return NOT_FOUND_ERROR_KEY;
     }
 
     if (translateFunction) {

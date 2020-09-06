@@ -46,6 +46,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
           translateFunction: this.translateFunction,
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
           errorTextData: this.error.data,
+          statusCode:this.statusCode
         })
       : '',
     error: Boolean(this.error),

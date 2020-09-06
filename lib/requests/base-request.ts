@@ -1,4 +1,5 @@
 import nodeFetch from "node-fetch";
+import queryString from "query-string";
 import {
   RequestRacerParams,
   ParseResponseParams,
@@ -20,6 +21,7 @@ import {
   NETWORK_ERROR_KEY,
   TIMEOUT_ERROR_KEY,
   ABORT_REQUEST_EVENT_NAME,
+  NOT_FOUND_ERROR_KEY,
 } from "@/constants/shared";
 import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
@@ -28,7 +30,6 @@ import { TIMEOUT_VALUE } from "../constants/timeout";
 import { jsonParser } from "../utils/parsers/json-parser";
 import { blobParser } from "../utils/parsers/blob-parser";
 import { textParser } from "../utils/parsers/text-parser";
-import queryString from "query-string";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
 
@@ -64,34 +65,51 @@ interface IBaseRequests {
 }
 
 export class BaseRequest implements IBaseRequests {
-  parseResponseData = ({
+  parseResponseData = async({
     response,
     parseType,
     isResponseOk,
-    isStatusEmpty
+    isStatusEmpty,
+    isNotFound
   }: ParseResponseParams) => {
-    // if not "not ok" status then always get json format
-    if(isStatusEmpty){
-      return {}
-    }
+    try {
+      if(isStatusEmpty){
+        return {}
+      }
+  
+      if(isNotFound){        
+        try {
+          return await jsonParser(response)
+        } catch {
+          return {
+            error: true,
+            errorText: NOT_FOUND_ERROR_KEY,
+            data: null,
+            additionalErrors: null
+          }
+        }
+      }
 
-    if (!isResponseOk) {
-      return jsonParser(response);
-    }
-
-    switch (parseType) {
-      case parseTypesMap.json:
-        return jsonParser(response);
-
-      case parseTypesMap.blob:
-        return blobParser(response);
-
-      case parseTypesMap.text:
-        return textParser(response);
-
-      // default parse to json
-      default:
-        return jsonParser(response);
+      // if not "not ok" status then always get json format
+      if (!isResponseOk) {
+        return await jsonParser(response);
+      }
+  
+      if(parseType === parseTypesMap.json){
+        return await jsonParser(response);
+      }
+  
+      if(parseType === parseTypesMap.blob){
+        return await blobParser(response);
+      }
+  
+      if(parseType === parseTypesMap.text){
+        return await textParser(response);
+      }
+    } catch (error) {
+      console.error('(fetch-api): can not parse the response',error);
+      
+      throw new Error(NETWORK_ERROR_KEY)
     }
   };
 
@@ -262,7 +280,6 @@ export class BaseRequest implements IBaseRequests {
       const data = isResponseStatusSuccess ? response : {};
       const additionalErrors = this.getPureRestAdditionalErrors({response, isResponseStatusSuccess})
 
-
       return {
         error,
         errorText, 
@@ -345,12 +362,13 @@ export class BaseRequest implements IBaseRequests {
         const statusValidator = new StatusValidator();
         const statusCode = response.status;
         const isStatusEmpty = statusCode === 204;
+        const isNotFound = statusCode === 404;
         const isResponseStatusSuccess: boolean = this.getIsResponseStatusSuccess(
           statusCode
         );
         const isValidStatus = statusValidator.getStatusIsFromWhiteList(
           statusCode
-        );        
+        );
 
         if (isValidStatus) {
           // any type because we did not know about data structure
@@ -358,8 +376,9 @@ export class BaseRequest implements IBaseRequests {
             response,
             parseType,
             isResponseOk: isResponseStatusSuccess,
-            isStatusEmpty
-          });          
+            isStatusEmpty,
+            isNotFound
+          });
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
@@ -412,6 +431,7 @@ export class BaseRequest implements IBaseRequests {
             translateFunction,
             errorTextKey: error.message,
             isErrorTextStraightToOutput,
+            statusCode: 500
           },
           statusCode: 500,
         });
@@ -441,6 +461,7 @@ export class BaseRequest implements IBaseRequests {
               translateFunction,
               errorTextKey: TIMEOUT_ERROR_KEY,
               isErrorTextStraightToOutput,
+              statusCode: 500
             },
             statusCode: 500,
           }

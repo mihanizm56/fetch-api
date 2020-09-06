@@ -25,6 +25,7 @@ export const requestProtocolsMap: IRequestProtocolsMap = {
 
 export const TIMEOUT_ERROR_KEY = 'timeout-error';
 export const NETWORK_ERROR_KEY = 'network-error';
+export const NOT_FOUND_ERROR_KEY = 'not-found-error';
 export const ABORTED_ERROR_TEXT_CHROME = 'The user aborted a request.';
 export const ABORTED_ERROR_TEXT_MOZILLA = 'The operation was aborted. ';
 export const ABORTED_ERROR_TEXT_SAFARI = 'Fetch is aborted';
