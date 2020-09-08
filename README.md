@@ -193,6 +193,44 @@ export const createItemsRequest = (someData): Promise<IResponse> =>
   });
 ```
 
+### JSON-RPC API (with batching)
+
+```javascript
+import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";
+import Joi from '@hapi/joi'
+
+const responseSchemaObjectOne = Joi.object({
+  foo: Joi.string().required(),
+}).unknown();
+
+const responseSchemaObjectTwo = Joi.object({
+  foo: Joi.string().required(),
+}).unknown();
+
+export const createItemsRequest = (someData): Promise<IResponse> =>
+  new JSONRPCRequest().makeRequest({
+    endpoint:
+      'http://localhost:8080/json-rpc/positive?batch=true&twoSchemas=true',
+    body: [
+      { method: 'listCountries', params: {} },
+      { method: 'listCountries', params: {} },
+    ],
+    isBatchRequest: true,
+    responseSchema: [responseSchemaObjectOne, responseSchemaObjectTwo],
+  });
+```
+
+#### Please, be careful. The response will be the object:
+```javascript
+{
+  error: boolean,
+  data: Array<IResponse>,
+  additionalErrors: null,
+  errorText: string,
+  code: number
+}
+```
+
 #### The usage of the request api
 
 ```javascript

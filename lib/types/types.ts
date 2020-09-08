@@ -87,6 +87,8 @@ export interface IResponse {
   code: number;
 }
 
+export type BatchResponseType = Array<IResponse>;
+
 export interface IRESTPureResponse {
   error: boolean;
   errorText: string;

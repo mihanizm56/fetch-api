@@ -213,10 +213,7 @@ describe('JSON-PRC request (negative)', () => {
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
           'http://localhost:8080/json-rpc/negative?batch=true&simpleNegative=true',
-        body: [
-          { method: 'listCountries', params: {} },
-          { method: 'listCountries', params: {} },
-        ],
+        body: [{ method: 'listCountries', params: {} }],
         isBatchRequest: true,
         responseSchema: [responseSchemaObjectOne],
       });
