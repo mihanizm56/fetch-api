@@ -1,5 +1,6 @@
 import nodeFetch from "node-fetch";
 import queryString from "query-string";
+import { uniqueId } from "@/utils/unique-id";
 import {
   RequestRacerParams,
   ParseResponseParams,
@@ -187,19 +188,25 @@ export class BaseRequest implements IBaseRequests {
     method,
     version,
     id,
+    isBatchRequest
   }: GetFetchBodyParamsType) => {
     if (method === "GET") {
       return undefined;
     }
 
     if (requestProtocol === requestProtocolsMap.jsonRpc) {
-      return JSON.stringify({ ...body, ...version, id });
-    } else {
-      if (isFormData(body)) {
-        return body;
-      } else {
-        return JSON.stringify(body);
+      if(isBatchRequest){
+        return JSON.stringify(body)
       }
+
+      return JSON.stringify({ ...body, ...version, id });
+    }  
+
+
+    if (isFormData(body)) {
+      return body;
+    } else {
+      return JSON.stringify(body);
     }
   };
 
@@ -258,8 +265,11 @@ export class BaseRequest implements IBaseRequests {
     isErrorTextStraightToOutput,
     statusCode,
     isResponseStatusSuccess,
-    parseType
-  }: GetPreparedResponseDataParams): FormatResponseParamsType => {
+    parseType,
+    isBatchRequest,
+    responseSchema,
+    body
+  }: GetPreparedResponseDataParams): FormatResponseParamsType => {    
     if (parseType === 'blob' || parseType === 'text') {
       return {
         data: response,
@@ -293,6 +303,20 @@ export class BaseRequest implements IBaseRequests {
       };
     } 
 
+    if(isBatchRequest){
+      return {
+        translateFunction,
+        protocol,
+        isErrorTextStraightToOutput,
+        statusCode,
+        parseType:parseTypesMap.json,
+        data:response,
+        isBatchRequest,
+        responseSchema,
+        body
+      }
+    }
+
     return {
       ...response,
       translateFunction,
@@ -325,7 +349,8 @@ export class BaseRequest implements IBaseRequests {
     translateFunction,
     customTimeout,
     abortRequestId,
-    arrayFormat
+    arrayFormat,
+    isBatchRequest
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -344,6 +369,7 @@ export class BaseRequest implements IBaseRequests {
       version,
       method,
       id,
+      isBatchRequest
     });
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
@@ -394,7 +420,8 @@ export class BaseRequest implements IBaseRequests {
             schema: responseSchema,
             prevId: id,
             isResponseStatusSuccess,
-            isStatusEmpty
+            isStatusEmpty,
+            isBatchRequest
           });
 
           if (isFormatValid) {
@@ -408,6 +435,9 @@ export class BaseRequest implements IBaseRequests {
                 parseType,
                 statusCode,
                 isResponseStatusSuccess,
+                isBatchRequest,
+                responseSchema,
+                body
               })
             );
 
@@ -417,6 +447,9 @@ export class BaseRequest implements IBaseRequests {
             return formattedResponseData;
           }
         }
+
+
+        
 
         // if not status from the whitelist - throw error with default error
         throw new Error(

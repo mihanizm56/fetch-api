@@ -1,59 +1,59 @@
-const Joi = require("@hapi/joi");
-const { JSONRPCRequest } = require("../../../dist");
+const Joi = require('@hapi/joi');
+const { JSONRPCRequest } = require('../../../dist');
 
 const requestBaseConfig = {
-  mode: "cors",
+  mode: 'cors',
   queryParams: {
-    foo: "bar",
+    foo: 'bar',
   },
   translateFunction: (key, options) =>
     `translateFunction got key ${key} and options ${options}`,
 };
 
-describe("JSON-PRC request (negative)", () => {
+describe('JSON-PRC request (negative)', () => {
   beforeEach(() => {
     delete global.window;
   });
 
-  test("simple response error 400", async () => {
+  test('simple response error 400', async () => {
     const responseSchema = Joi.any();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/negative",
+      endpoint: 'http://localhost:8080/json-rpc/negative',
       responseSchema,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          test: "123",
+          test: '123',
         },
       },
     });
 
     expect(data).toEqual({
       additionalErrors: {
-        err: "Тестовая ошибка 4 err",
-        trKey: "test key 4",
-        param4: "test param 4",
+        err: 'Тестовая ошибка 4 err',
+        trKey: 'test key 4',
+        param4: 'test param 4',
       },
       code: 500,
       data: {},
       error: true,
-      errorText: "network-error",
+      errorText: 'network-error',
     });
   });
-  test("simple response error 501 (not parsed)", async () => {
+  test('simple response error 501 (not parsed)', async () => {
     const responseSchema = Joi.any();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/negative",
+      endpoint: 'http://localhost:8080/json-rpc/negative',
       responseSchema,
       queryParams: {
         notparsederror: true,
       },
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          test: "123",
+          test: '123',
         },
       },
     });
@@ -63,23 +63,23 @@ describe("JSON-PRC request (negative)", () => {
       code: 500,
       data: {},
       error: true,
-      errorText: "network-error",
+      errorText: 'network-error',
     });
   });
 
-  test("test if ids of request and response are not the same", async () => {
+  test('test if ids of request and response are not the same', async () => {
     const responseSchema = Joi.any();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/negative",
+      endpoint: 'http://localhost:8080/json-rpc/negative',
       responseSchema,
       queryParams: {
         notsameid: true,
       },
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          test: "123",
+          test: '123',
         },
       },
     });
@@ -89,11 +89,11 @@ describe("JSON-PRC request (negative)", () => {
       code: 500,
       data: {},
       error: true,
-      errorText: "network-error",
+      errorText: 'network-error',
     });
   });
 
-  test("test if schema not valid", async () => {
+  test('test if schema not valid', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
       notValidField: Joi.object({
@@ -102,12 +102,12 @@ describe("JSON-PRC request (negative)", () => {
     }).unknown();
 
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/positive",
+      endpoint: 'http://localhost:8080/json-rpc/positive',
       responseSchema,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
     });
@@ -117,18 +117,18 @@ describe("JSON-PRC request (negative)", () => {
       code: 500,
       data: {},
       error: true,
-      errorText: "network-error",
+      errorText: 'network-error',
     });
   });
-  test("test get straight error", async () => {
+  test('test get straight error', async () => {
     const responseSchema = Joi.any();
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/negative",
+      endpoint: 'http://localhost:8080/json-rpc/negative',
       responseSchema,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
       isErrorTextStraightToOutput: true,
@@ -136,26 +136,26 @@ describe("JSON-PRC request (negative)", () => {
 
     expect(data).toEqual({
       additionalErrors: {
-        err: "Тестовая ошибка 4 err",
-        trKey: "test key 4",
-        param4: "test param 4",
+        err: 'Тестовая ошибка 4 err',
+        trKey: 'test key 4',
+        param4: 'test param 4',
       },
       code: 500,
       data: {},
       error: true,
-      errorText: "Тестовая ошибка 4",
+      errorText: 'Тестовая ошибка 4',
     });
   });
-  test("set extra validation callback and this returns false", async () => {
+  test('set extra validation callback and this returns false', async () => {
     const responseSchema = Joi.any();
     const extraValidationCallback = jest.fn().mockReturnValue(false);
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/positive",
+      endpoint: 'http://localhost:8080/json-rpc/positive',
       responseSchema,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
       extraValidationCallback,
@@ -166,42 +166,232 @@ describe("JSON-PRC request (negative)", () => {
       code: 500,
       data: {},
       error: true,
-      errorText: "network-error",
+      errorText: 'network-error',
     });
   });
-  test("test errors translation", async () => {
+  test('test errors translation', async () => {
     const responseSchema = Joi.any();
     const translateFunction = jest
       .fn()
-      .mockReturnValue("test value from translateFunction");
+      .mockReturnValue('test value from translateFunction');
     const data = await new JSONRPCRequest().makeRequest({
-      endpoint: "http://localhost:8080/json-rpc/negative",
+      endpoint: 'http://localhost:8080/json-rpc/negative',
       responseSchema,
       body: {
-        method: "test_method",
+        method: 'test_method',
         options: {
-          foo: "bar",
+          foo: 'bar',
         },
       },
       translateFunction,
     });
 
-    expect(translateFunction).toHaveBeenCalledWith("test key 4", {
-      err: "Тестовая ошибка 4 err",
-      trKey: "test key 4",
-      param4: "test param 4",
+    expect(translateFunction).toHaveBeenCalledWith('test key 4', {
+      err: 'Тестовая ошибка 4 err',
+      trKey: 'test key 4',
+      param4: 'test param 4',
     });
     expect(translateFunction).toHaveBeenCalledTimes(1);
     expect(data).toEqual({
       additionalErrors: {
-        err: "Тестовая ошибка 4 err",
-        trKey: "test key 4",
-        param4: "test param 4",
+        err: 'Тестовая ошибка 4 err',
+        trKey: 'test key 4',
+        param4: 'test param 4',
       },
       code: 500,
       data: {},
       error: true,
-      errorText: "test value from translateFunction",
+      errorText: 'test value from translateFunction',
+    });
+  });
+  describe('JSON-PRC batching (negative)', () => {
+    test('test simply answer code not from whitelist', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/negative?batch=true&simpleNegative=true',
+        body: [
+          { method: 'listCountries', params: {} },
+          { method: 'listCountries', params: {} },
+        ],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 500,
+        data: {},
+        error: true,
+        errorText: 'network-error',
+      });
+    });
+    test('test not correct one schema', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+      const responseSchemaObjectTwo = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/negative?batch=true&oneSchemaNegative=true',
+        body: [
+          { method: 'listCountries', params: {} },
+          { method: 'listCountries', params: {} },
+        ],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne, responseSchemaObjectTwo],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: [
+          {
+            additionalErrors: null,
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            code: 500,
+          },
+          {
+            additionalErrors: null,
+            code: 200,
+            data: {
+              foo: '123',
+            },
+            errorText: '',
+            error: false,
+          },
+        ],
+        error: false,
+        errorText: '',
+      });
+    });
+    test('test not correct all (two) schemas', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+      const responseSchemaObjectTwo = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/negative?batch=true&twoSchemaNegative=true',
+        body: [
+          { method: 'listCountries', params: {} },
+          { method: 'listCountries', params: {} },
+        ],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne, responseSchemaObjectTwo],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: [
+          {
+            additionalErrors: null,
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            code: 500,
+          },
+          {
+            additionalErrors: null,
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            code: 500,
+          },
+        ],
+        error: false,
+        errorText: '',
+      });
+    });
+    test('test get backend error in one item response', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/negative?batch=true&simpleOneResponseError=true',
+        body: [{ method: 'listCountries', params: {} }],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: [
+          {
+            additionalErrors: {
+              trKey: 'test',
+            },
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            code: 500,
+          },
+        ],
+        error: false,
+        errorText: '',
+      });
+    });
+    test('test get backend error in two items response', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+
+      const responseSchemaObjectTwo = Joi.object({
+        foo: Joi.string().required(),
+      }).unknown();
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/negative?batch=true&simpleTwoResponseError=true',
+        body: [
+          { method: 'listCountries', params: {} },
+          { method: 'listCountries', params: {} },
+        ],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne, responseSchemaObjectTwo],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: [
+          {
+            additionalErrors: {
+              trKey: 'test',
+            },
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            code: 500,
+          },
+          {
+            additionalErrors: {
+              trKey: 'test',
+            },
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            code: 500,
+          },
+        ],
+        error: false,
+        errorText: '',
+      });
     });
   });
 });

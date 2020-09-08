@@ -1,9 +1,17 @@
-import { IJSONPRCRequestParams, IResponse } from "@/types/types";
+import { IJSONPRCRequestParams, IResponse, IJSONPRCRequestFormattedBodyParams, IJSONPRCRequestBodyParams } from "@/types/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
 import { uniqueId } from "@/utils/unique-id";
 
 export class JSONRPCRequest extends BaseRequest {
+  getEnrichedBody = (
+    body: Array<IJSONPRCRequestBodyParams>
+    ):Array<IJSONPRCRequestFormattedBodyParams> => body.map(bodyRequestData => ({
+    ...bodyRequestData,
+    id: uniqueId("json-rpc_"),
+    jsonrpc: "2.0"
+  }))
+
   public makeRequest = (
     requestParams: Omit<
       IJSONPRCRequestParams,
@@ -18,6 +26,12 @@ export class JSONRPCRequest extends BaseRequest {
       },
       method: "POST",
       parseType: parseTypesMap.json,
-      requestProtocol: requestProtocolsMap.jsonRpc
+      requestProtocol: requestProtocolsMap.jsonRpc,
+      body: 
+        requestParams.isBatchRequest && 
+        requestParams.body && 
+        requestParams.body instanceof Array
+        ? this.getEnrichedBody(requestParams.body) 
+        : requestParams.body
     });
 }

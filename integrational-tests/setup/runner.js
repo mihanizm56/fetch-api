@@ -21,7 +21,8 @@ app.use('/json-rpc', rpcRootRouter);
 
 module.exports = async () => {
   const server = app.listen(PORT, () =>
-    console.info(`mock server started on port ${PORT}`),);
+    console.info(`mock server started on port ${PORT}`),
+  );
 
   global.server = server;
 };

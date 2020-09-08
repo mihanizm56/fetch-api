@@ -4,6 +4,7 @@ import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 import { RestResponseFormatter } from './rest-response-formatter';
 import { BlobResponseFormatter } from './blob-response-formatter';
 import { TextResponseFormatter } from './text-response-formatter';
+import { JSONRPCBatchResponseFormatter } from './jsonrpc-batch-response-formatter';
 
 export interface IFormatResponseFactory {
   createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
@@ -23,6 +24,9 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     isErrorTextStraightToOutput,
     parseType,
     statusCode,
+    isBatchRequest,
+    body,
+    responseSchema,
   }: FormatResponseParamsType): ResponseFormatter => {
     if (parseType === parseTypesMap.blob) {
       return new BlobResponseFormatter(data);
@@ -33,6 +37,17 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     }
 
     if (protocol === requestProtocolsMap.jsonRpc) {
+      if (isBatchRequest && data instanceof Array) {
+        return new JSONRPCBatchResponseFormatter({
+          data,
+          translateFunction,
+          isErrorTextStraightToOutput,
+          statusCode,
+          body,
+          responseSchema,
+        });
+      }
+
       return new JSONRPCResponseFormatter({
         // eslint-disable-next-line
         // @ts-ignore

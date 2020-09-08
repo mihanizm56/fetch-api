@@ -9,15 +9,24 @@ export type TranslateFunction = (
 
 export type AdditionalErrors = Record<string, any>;
 
+export type IJSONPRCRequestBodyParams = {
+  method?: string;
+  params?: string | number | Array<any> | Record<string, any>;
+};
+
+export type IJSONPRCRequestFormattedBodyParams = IJSONPRCRequestBodyParams & {
+  id: string;
+  jsonrpc: string;
+};
+
 export interface IJSONPRCRequestParams extends IRequestParams {
   id: string;
   version: {
     jsonrpc: string;
   };
-  body?: {
-    method?: string;
-    params?: string | number | Array<any> | Record<string, any>;
-  };
+  body?: IJSONPRCRequestBodyParams | Array<IJSONPRCRequestBodyParams>;
+  isBatchRequest?: boolean;
+  responseSchema?: any | Array<any>;
 }
 
 export type FormatResponseRESTDataOptionsType = {
@@ -164,6 +173,7 @@ export type GetFetchBodyParamsType = {
   method: string;
   version?: { jsonrpc: string };
   id?: string;
+  isBatchRequest?: boolean;
 };
 
 export type GetPreparedResponseDataParams = {
@@ -174,6 +184,9 @@ export type GetPreparedResponseDataParams = {
   parseType: keyof typeof parseTypesMap;
   statusCode: number;
   isResponseStatusSuccess: boolean;
+  isBatchRequest?: boolean;
+  responseSchema?: any;
+  body?: Array<IJSONPRCRequestFormattedBodyParams>;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
@@ -194,8 +207,11 @@ export type FormatResponseParamsType = {
   translateFunction?: TranslateFunction;
   isErrorTextStraightToOutput?: boolean;
   statusCode: number;
-  data: any | Blob | string;
+  data: any | Blob | string | Array<IJSONRPCPureResponse>;
   error?: boolean | JSONRPCErrorType;
+  isBatchRequest?: boolean;
+  responseSchema?: Array<any>;
+  body?: Array<IJSONPRCRequestFormattedBodyParams>;
 } & (Partial<Omit<IRESTPureResponse, 'error'>> &
   Partial<Omit<IJSONRPCPureResponse, 'error'>>);
 
@@ -217,6 +233,7 @@ export type FormatValidateParams = {
   prevId?: string;
   isResponseStatusSuccess?: boolean;
   isStatusEmpty?: boolean;
+  isBatchRequest?: boolean;
 };
 
 export type GetPureRestErrorTextParamsType = {

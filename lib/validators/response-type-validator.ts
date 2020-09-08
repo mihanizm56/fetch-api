@@ -109,7 +109,17 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     prev === curr;
 
   // todo fix any type
-  public getJSONRPCFormatIsValid = ({ response, schema, prevId }: any) => {
+  public getJSONRPCFormatIsValid = ({
+    response,
+    schema,
+    prevId,
+    isBatchRequest,
+  }: any) => {
+    // return true because all validation will be prepared in Formatter
+    if (isBatchRequest) {
+      return true;
+    }
+
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
       return false;
