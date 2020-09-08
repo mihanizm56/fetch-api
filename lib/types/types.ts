@@ -25,7 +25,6 @@ export interface IJSONPRCRequestParams extends IRequestParams {
     jsonrpc: string;
   };
   body?: IJSONPRCRequestBodyParams | Array<IJSONPRCRequestBodyParams>;
-  isBatchRequest?: boolean;
   responseSchema?: any | Array<any>;
 }
 
@@ -77,6 +76,7 @@ export interface IRequestParams {
   abortRequestId?: string;
   arrayFormat?: ArrayFormatType;
   cache?: CacheType;
+  isBatchRequest?: boolean;
 }
 
 export interface IResponse {
