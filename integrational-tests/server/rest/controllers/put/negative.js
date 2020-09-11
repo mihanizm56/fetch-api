@@ -10,7 +10,22 @@ module.exports.negativePutController = (req, res) => {
     straighterror,
     errortextexist,
     errorastext,
+    notfoundwithoutbody,
+    notfoundwithbody,
   } = req.query;
+
+  if (notfoundwithoutbody) {
+    return res.status(404).end();
+  }
+
+  if (notfoundwithbody) {
+    return res.status(404).json({
+      data: null,
+      errorText: 'not found',
+      error: true,
+      additionalErrors: { foo: 'bar' },
+    });
+  }
 
   if (pureresponse) {
     if (internalerror) {

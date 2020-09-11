@@ -146,6 +146,51 @@ describe('put request (negative)', () => {
     });
   });
 
+  describe('test 404 error', () => {
+    test('check 404 error without body', async () => {
+      const responseSchema = Joi.any();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/rest/negative?notfoundwithoutbody=true',
+        responseSchema,
+        body: {},
+      };
+
+      const data = await new RestRequest().putRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText: 'not-found-error',
+        code: 404,
+      });
+    });
+
+    test('check 404 error with body', async () => {
+      const responseSchema = Joi.any();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/negative?notfoundwithbody=true',
+        responseSchema,
+        body: {},
+      };
+
+      const data = await new RestRequest().putRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: { foo: 'bar' },
+        error: true,
+        errorText: 'not-found-error',
+        code: 404,
+        data: {},
+      });
+    });
+  });
+
   describe('check PureRestRequest', () => {
     test('simple pure response with 403 error', async () => {
       const responseSchema = Joi.any();

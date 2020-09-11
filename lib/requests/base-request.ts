@@ -448,9 +448,6 @@ export class BaseRequest implements IBaseRequests {
           }
         }
 
-
-        
-
         // if not status from the whitelist - throw error with default error
         throw new Error(
           isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY

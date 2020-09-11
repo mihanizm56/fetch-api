@@ -135,14 +135,59 @@ describe('patch request (negative)', () => {
       isErrorTextStraightToOutput: true,
     };
 
-    const data = await new RestRequest().getRequest(requestConfig);
+    const data = await new RestRequest().patchRequest(requestConfig);
 
     expect(data).toEqual({
-      additionalErrors: { baz: 1, foo: 'bar' },
-      code: 400,
+      code: 402,
       data: {},
       error: true,
-      errorText: 'test special key',
+      errorText: 'test errors with additional params',
+      additionalErrors: { parameter: 1 },
+    });
+  });
+
+  describe('test 404 error', () => {
+    test('check 404 error without body', async () => {
+      const responseSchema = Joi.any();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/rest/negative?notfoundwithoutbody=true',
+        responseSchema,
+        body: {},
+      };
+
+      const data = await new RestRequest().patchRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText: 'not-found-error',
+        code: 404,
+      });
+    });
+
+    test('check 404 error with body', async () => {
+      const responseSchema = Joi.any();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/negative?notfoundwithbody=true',
+        responseSchema,
+        body: {},
+      };
+
+      const data = await new RestRequest().patchRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: { foo: 'bar' },
+        error: true,
+        errorText: 'not-found-error',
+        code: 404,
+        data: {},
+      });
     });
   });
 

@@ -10,7 +10,22 @@ module.exports.negativeDeleteController = (req, res) => {
     straighterror,
     errorastext,
     errortextexist,
+    notfoundwithoutbody,
+    notfoundwithbody,
   } = req.query;
+  if (notfoundwithoutbody) {
+    return res.status(404).end();
+  }
+
+  if (notfoundwithbody) {
+    return res.status(404).json({
+      data: null,
+      errorText: 'not found',
+      error: true,
+      additionalErrors: { foo: 'bar' },
+    });
+  }
+
   if (pureresponse) {
     if (internalerror) {
       return res.status(501).json({
