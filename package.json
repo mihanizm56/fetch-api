@@ -35,7 +35,7 @@
     "@types/joi": "14.3.4",
     "@types/node-fetch": "2.5.5",
     "colors": "1.4.0",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "query-string": "6.13.1"
   },
   "devDependencies": {
