@@ -1,6 +1,6 @@
 # @mihanizm56/fetch-api
 
-## Solution for an easy isomorphic fetch
+## Solution for the isomorphic fetch
 
 ### Benefits:
 
