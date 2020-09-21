@@ -1,6 +1,6 @@
 # @mihanizm56/fetch-api
 
-## Solution for http/1.1 isomorphic fetch
+## Solution for an easy isomorphic fetch
 
 ### Benefits:
 
@@ -121,9 +121,11 @@ export const getContractsRequest = (): Promise<IResponse> =>
       onLoaded: (total) => console.log(total) 
       // onLoaded callback will be called after 
       // the whole response will be done
+      // WARNING - not availiable on nodejs environment
       onProgress: ({ total, current}) => console.log(total, current)
       // onProgress callback will be triggered during the response progress
       // till the response will be done
+      // WARNING - not availiable on nodejs environment
     },
   });
 ```
