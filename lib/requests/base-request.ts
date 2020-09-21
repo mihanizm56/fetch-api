@@ -16,6 +16,7 @@ import {
   GetPureRestErrorTextParamsType,
   GetPureRestAdditionalErrorsParamsType
 } from "@/types/types";
+import { isNode } from '@/utils/is-node';
 import {
   parseTypesMap,
   requestProtocolsMap,
@@ -33,6 +34,7 @@ import { blobParser } from "../utils/parsers/blob-parser";
 import { textParser } from "../utils/parsers/text-parser";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
+import { progressParser } from "@/utils/parsers/progress-parser";
 
 type GetFormattedHeadersParamsType = {
   body:JSON|FormData,
@@ -65,13 +67,16 @@ interface IBaseRequests {
   addAbortListenerToRequest:(params:AbortListenersParamsType) => void;
 }
 
+
+
 export class BaseRequest implements IBaseRequests {
   parseResponseData = async({
     response,
     parseType,
     isResponseOk,
     isStatusEmpty,
-    isNotFound
+    isNotFound,
+    progressOptions
   }: ParseResponseParams) => {
     try {
       if(isStatusEmpty){
@@ -95,6 +100,15 @@ export class BaseRequest implements IBaseRequests {
       if (!isResponseOk) {
         return await jsonParser(response);
       }
+
+      // progress not run on nodejs yet
+      if(progressOptions && parseType && !isNode()){
+          return await progressParser({
+            response,
+            progressOptions,
+            parseType
+          })
+      }
   
       if(parseType === parseTypesMap.json){
         return await jsonParser(response);
@@ -115,7 +129,8 @@ export class BaseRequest implements IBaseRequests {
   };
 
   addAbortListenerToRequest = ({fetchController, abortRequestId}: AbortListenersParamsType) => 
-    document.addEventListener(ABORT_REQUEST_EVENT_NAME, 
+    document.addEventListener(ABORT_REQUEST_EVENT_NAME,
+      // todo make the listener to remove after the request is done
       function listener(event: CustomEvent) {
         document.removeEventListener(ABORT_REQUEST_EVENT_NAME,listener)
 
@@ -130,7 +145,7 @@ export class BaseRequest implements IBaseRequests {
     fetchParams,
     abortRequestId,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    if (typeof window === "undefined") {
+    if (isNode()) {
       const requestFetch = (nodeFetch.bind(
         // eslint-disable-line
         null,
@@ -350,7 +365,8 @@ export class BaseRequest implements IBaseRequests {
     customTimeout,
     abortRequestId,
     arrayFormat,
-    isBatchRequest
+    isBatchRequest,
+    progressOptions
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -403,7 +419,8 @@ export class BaseRequest implements IBaseRequests {
             parseType,
             isResponseOk: isResponseStatusSuccess,
             isStatusEmpty,
-            isNotFound
+            isNotFound,
+            progressOptions
           });
 
           // validate the format of the request
@@ -498,7 +515,7 @@ export class BaseRequest implements IBaseRequests {
         );
 
         // if the window fetch
-        if (typeof window !== "undefined") {
+        if (!isNode()) {
           fetchController.abort();
         }
 

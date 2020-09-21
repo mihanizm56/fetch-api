@@ -17,6 +17,7 @@ https://www.npmjs.com/package/query-string is used
 - Provides two main classes for REST API - RestRequest and PureRestReques. <br/> The difference is in
   hard-structured responce format or not (both interfaces are the same)
 - Provides the ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
+- Provides the ability to handle the response progress
 
 #### Request input options:
 
@@ -89,6 +90,41 @@ export const getContractsRequest = (): Promise<IResponse> =>
         ),
       }).unknown(),
     }).unknown(),
+  });
+```
+
+#### get request with PROGRESS callbacks
+
+```javascript
+import Joi from "@hapi/joi";
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+
+export const getContractsRequest = (): Promise<IResponse> =>
+  new RestRequest().getRequest({
+    endpoint: "http://localhost:3000",
+    translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
+    isErrorTextStraightToOutput: true,
+    responseSchema: Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().required(),
+      info: Joi.object({
+        count: Joi.number().required(),
+        killers: Joi.array().items(
+          Joi.object({
+            username: Joi.string().required(),
+            count: Joi.number().required(),
+          }).unknown()
+        ),
+      }).unknown(),
+    }).unknown(),
+    progressOptions: {
+      onLoaded: (total) => console.log(total) 
+      // onLoaded callback will be called after 
+      // the whole response will be done
+      onProgress: ({ total, current}) => console.log(total, current)
+      // onProgress callback will be triggered during the response progress
+      // till the response will be done
+    },
   });
 ```
 

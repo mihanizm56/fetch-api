@@ -60,6 +60,14 @@ export type CacheType =
   | 'only-if-cached'
   | 'reload';
 
+export type ProgressCallbackParams = ({
+  total,
+  current,
+}: {
+  total: number;
+  current: number;
+}) => void;
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
@@ -77,6 +85,7 @@ export interface IRequestParams {
   arrayFormat?: ArrayFormatType;
   cache?: CacheType;
   isBatchRequest?: boolean;
+  progressOptions?: ProgressOptions;
 }
 
 export interface IResponse {
@@ -126,12 +135,18 @@ export type RequestRacerParams = {
   customTimeout?: number;
 };
 
+export type ProgressOptions = {
+  onLoaded?: (total: number) => void;
+  onProgress?: ProgressCallbackParams;
+};
+
 export type ParseResponseParams = {
   response: IRESTPureResponse | IJSONRPCPureResponse;
   parseType?: keyof typeof parseTypesMap;
   isResponseOk: boolean;
   isStatusEmpty: boolean;
   isNotFound: boolean;
+  progressOptions?: ProgressOptions;
 };
 
 export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
