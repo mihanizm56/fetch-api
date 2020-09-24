@@ -65,11 +65,15 @@ interface IBaseRequests {
   ) => GetIsomorphicFetchReturnsType;
 
   addAbortListenerToRequest:(params:AbortListenersParamsType) => void;
+
+  abortRequestListener?:any
 }
 
 
 
 export class BaseRequest implements IBaseRequests {
+  abortRequestListener:any = null
+
   parseResponseData = async({
     response,
     parseType,
@@ -128,16 +132,25 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  addAbortListenerToRequest = ({fetchController, abortRequestId}: AbortListenersParamsType) => 
-    document.addEventListener(ABORT_REQUEST_EVENT_NAME,
-      // todo make the listener to remove after the request is done
-      function listener(event: CustomEvent) {
-        document.removeEventListener(ABORT_REQUEST_EVENT_NAME,listener)
-
+  addAbortListenerToRequest = ({fetchController, abortRequestId}: AbortListenersParamsType) => {
+    if(!this.abortRequestListener){
+      this.abortRequestListener = (event: CustomEvent)=> {
         if (event.detail && event.detail.id === abortRequestId) {
           fetchController.abort()
         }
-    })
+      }
+    }
+
+    document.addEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener,true)
+  };
+
+  removeAbortListenerToRequest = () => {
+    if(this.abortRequestListener){
+      document.removeEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener,true)
+      this.abortRequestListener = null      
+    }
+  };
+
 
   // get an isomorfic fetch
   getIsomorphicFetch = ({
@@ -461,6 +474,9 @@ export class BaseRequest implements IBaseRequests {
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
+            // remove the abort listener
+            this.removeAbortListenerToRequest()
+
             return formattedResponseData;
           }
         }
@@ -472,6 +488,9 @@ export class BaseRequest implements IBaseRequests {
       })
       .catch((error) => {
         console.error("(fetch-api): get error in the request", error.message);
+
+        // remove the abort listener
+        this.removeAbortListenerToRequest()
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
