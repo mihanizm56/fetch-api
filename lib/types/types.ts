@@ -96,6 +96,8 @@ export interface IResponse {
   code: number;
 }
 
+export type IUtilResponse<DataType> = IResponse & { data: DataType };
+
 export type BatchResponseType = Array<IResponse>;
 
 export interface IRESTPureResponse {
