@@ -4,7 +4,7 @@ import {
   FormatResponseRESTDataOptionsType,
   TranslateFunction,
   AdditionalErrors,
-} from '@/types/types';
+} from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 
 export class RestResponseFormatter extends ResponseFormatter {

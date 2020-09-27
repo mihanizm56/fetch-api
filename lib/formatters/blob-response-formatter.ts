@@ -1,4 +1,4 @@
-import { ResponseFormatter, IResponse } from '@/types/types';
+import { ResponseFormatter, IResponse } from '@/types';
 
 export class BlobResponseFormatter extends ResponseFormatter {
   data: Blob;

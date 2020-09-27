@@ -4,7 +4,7 @@ import {
   JSONRPCErrorType,
   FormatResponseJSONRPCDataOptionsType,
   TranslateFunction,
-} from '@/types/types';
+} from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 
 export class JSONRPCResponseFormatter extends ResponseFormatter {

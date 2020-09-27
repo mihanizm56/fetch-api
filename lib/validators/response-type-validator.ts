@@ -6,7 +6,7 @@ import {
   IJSONRPCPureResponse,
   IDType,
   FormatValidateParams,
-} from '@/types/types';
+} from '@/types';
 import { requestProtocolsMap } from '@/constants/shared';
 
 export type FormatValidateParamsMehod = (

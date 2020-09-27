@@ -1,6 +1,6 @@
 import {
   IRequestParams,
-} from "@/types/types";
+} from "@/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
 

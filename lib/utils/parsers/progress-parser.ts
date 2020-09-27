@@ -1,4 +1,4 @@
-import { ProgressOptions } from '@/types/types';
+import { ProgressOptions } from '@/types';
 import { parseTypesMap } from '@/constants/shared';
 
 type ParamsType = {

@@ -4,7 +4,7 @@ import {
   IJSONRPCPureResponse,
   IResponse,
   IJSONPRCRequestFormattedBodyParams,
-} from '@/types/types';
+} from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 import { FormatDataTypeValidator } from '@/validators/response-type-validator';
 import { NETWORK_ERROR_KEY } from '@/constants/shared';

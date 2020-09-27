@@ -2,7 +2,7 @@ import {
   IResponse,
   ErrorResponseFormatterConstructorParams,
   GetFormattedErrorTextResponseParams,
-} from '@/types/types';
+} from '@/types';
 import {
   NETWORK_ERROR_KEY,
   ABORTED_ERROR_TEXT_CHROME,

@@ -15,7 +15,7 @@ import {
   FormatResponseParamsType,
   GetPureRestErrorTextParamsType,
   GetPureRestAdditionalErrorsParamsType
-} from "@/types/types";
+} from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
   parseTypesMap,

@@ -10,5 +10,6 @@ export {
   IRequestParams,
   TranslateFunction,
   ModeCorsType,
-} from './types/types';
+  IUtilResponse
+} from './types';
 export { ABORT_REQUEST_EVENT_NAME } from './constants/shared'

@@ -1,4 +1,4 @@
-import { IJSONPRCRequestParams, IResponse, IJSONPRCRequestFormattedBodyParams, IJSONPRCRequestBodyParams } from "@/types/types";
+import { IJSONPRCRequestParams, IResponse, IJSONPRCRequestFormattedBodyParams, IJSONPRCRequestBodyParams } from "@/types";
 import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
 import { BaseRequest } from "./base-request";
 import { uniqueId } from "@/utils/unique-id";
