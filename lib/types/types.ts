@@ -91,12 +91,14 @@ export interface IRequestParams {
 export interface IResponse {
   error: boolean;
   errorText: string;
-  data: Record<string, any> | null | Blob | string;
+  data: any;
   additionalErrors: Record<string, any> | null;
   code: number;
 }
 
-export type IUtilResponse<DataType> = IResponse & { data: DataType };
+export type IUtilResponse<DataType> = Omit<IResponse, 'data'> & {
+  data: DataType;
+};
 
 export type BatchResponseType = Array<IResponse>;
 
