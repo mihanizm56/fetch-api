@@ -14,7 +14,8 @@ import {
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
   GetPureRestErrorTextParamsType,
-  GetPureRestAdditionalErrorsParamsType
+  GetPureRestAdditionalErrorsParamsType,
+  CustomSelectorDataType
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -35,6 +36,7 @@ import { textParser } from "../utils/parsers/text-parser";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
 import { progressParser } from "@/utils/parsers/progress-parser";
+import { getDataFromSelector } from "@/utils/get-data-from-selector";
 
 type GetFormattedHeadersParamsType = {
   body:JSON|FormData,
@@ -355,6 +357,28 @@ export class BaseRequest implements IBaseRequests {
     };
   };
 
+  getSelectedResponse = ({
+    response,
+    customSelectorData,
+    selectedDataFields
+  }:{
+    response:IResponse,
+    customSelectorData?:CustomSelectorDataType,
+    selectedDataFields?: Record<string, any>
+  }):IResponse => {
+    if(selectedDataFields){
+      const dataFromSelector = getDataFromSelector({selectedDataFields,responseData:response.data})
+
+      return {...response,data:dataFromSelector};
+    }
+
+    const dataFromCustomSelector = customSelectorData && response.data 
+      ? customSelectorData(response.data) 
+      : response.data;
+
+    return {...response,data:dataFromCustomSelector};
+  }
+
   makeFetch = <
     MakeFetchType extends IRequestParams &
       Partial<IJSONPRCRequestParams> & {
@@ -379,7 +403,9 @@ export class BaseRequest implements IBaseRequests {
     abortRequestId,
     arrayFormat,
     isBatchRequest,
-    progressOptions
+    progressOptions,
+    customSelectorData,
+    selectedDataFields
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -474,10 +500,17 @@ export class BaseRequest implements IBaseRequests {
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
-            // remove the abort listener
-            this.removeAbortListenerToRequest()
+            // select the response data fields if all fields are not necessary
+            const selectedResponseData = this.getSelectedResponse({
+              response:formattedResponseData,
+              customSelectorData,
+              selectedDataFields
+            });
 
-            return formattedResponseData;
+            // remove the abort listener
+            this.removeAbortListenerToRequest();
+
+            return selectedResponseData;
           }
         }
 

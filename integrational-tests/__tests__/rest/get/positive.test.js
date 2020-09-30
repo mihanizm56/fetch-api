@@ -72,6 +72,116 @@ describe('get request (positive)', () => {
       });
     });
 
+    describe('test selected fields', () => {
+      test('get simple array with selected field', async () => {
+        const responseSchema = Joi.object({
+          foo: Joi.string().required(),
+          bar: Joi.object({
+            baz: Joi.number().required(),
+          }).required(),
+          delta: Joi.array().items(Joi.string()),
+        }).unknown();
+
+        const requestConfig = {
+          ...requestBaseConfig,
+          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+          responseSchema,
+          selectedDataFields: { delta: true },
+        };
+
+        const response = await new PureRestRequest().getRequest(requestConfig);
+
+        expect(response).toEqual({
+          additionalErrors: null,
+          code: 200,
+          data: { delta: ['1', '2'] },
+          error: false,
+          errorText: '',
+        });
+      });
+
+      test('get no data if empty select field provided', async () => {
+        const responseSchema = Joi.object({
+          foo: Joi.string().required(),
+          bar: Joi.object({
+            baz: Joi.number().required(),
+          }).required(),
+          delta: Joi.array().items(Joi.string()),
+        }).unknown();
+
+        const requestConfig = {
+          ...requestBaseConfig,
+          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+          responseSchema,
+          selectedDataFields: {},
+        };
+
+        const response = await new PureRestRequest().getRequest(requestConfig);
+
+        expect(response).toEqual({
+          additionalErrors: null,
+          code: 200,
+          data: {},
+          error: false,
+          errorText: '',
+        });
+      });
+
+      test('get no data if not correct select field provided', async () => {
+        const responseSchema = Joi.object({
+          foo: Joi.string().required(),
+          bar: Joi.object({
+            baz: Joi.number().required(),
+          }).required(),
+          delta: Joi.array().items(Joi.string()),
+        }).unknown();
+
+        const requestConfig = {
+          ...requestBaseConfig,
+          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+          responseSchema,
+          selectedDataFields: { zoo: true },
+        };
+
+        const response = await new PureRestRequest().getRequest(requestConfig);
+
+        expect(response).toEqual({
+          additionalErrors: null,
+          code: 200,
+          data: {},
+          error: false,
+          errorText: '',
+        });
+      });
+
+      test('get data if custom selector provided', async () => {
+        const responseSchema = Joi.object({
+          foo: Joi.string().required(),
+          bar: Joi.object({
+            baz: Joi.number().required(),
+          }).required(),
+          delta: Joi.array().items(Joi.string()),
+        }).unknown();
+
+        const requestConfig = {
+          ...requestBaseConfig,
+          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
+          responseSchema,
+          customSelectorData: data => data.delta,
+        };
+
+        const response = await new PureRestRequest().getRequest(requestConfig);
+
+        expect(response).toEqual({
+          additionalErrors: null,
+          code: 200,
+          data: ['1', '2'],
+          error: false,
+          errorText: '',
+        });
+      });
+    });
+
     test('response pure with headers are sent', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),

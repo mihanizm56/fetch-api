@@ -68,6 +68,8 @@ export type ProgressCallbackParams = ({
   current: number;
 }) => void;
 
+export type CustomSelectorDataType = (data: any) => any;
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
@@ -86,6 +88,8 @@ export interface IRequestParams {
   cache?: CacheType;
   isBatchRequest?: boolean;
   progressOptions?: ProgressOptions;
+  customSelectorData?: CustomSelectorDataType;
+  selectedDataFields?: Record<string, any>;
 }
 
 export interface IResponse {
