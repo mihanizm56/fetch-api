@@ -18,6 +18,7 @@ https://www.npmjs.com/package/query-string is used
   hard-structured responce format or not (both interfaces are the same)
 - Provides the ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
 - Provides the ability to handle the response progress
+- Provides the ability to select necessary fields from the response (json-mask library used)
 
 #### Request input options:
 
@@ -90,6 +91,44 @@ export const getContractsRequest = (): Promise<IResponse> =>
         ),
       }).unknown(),
     }).unknown(),
+  });
+```
+
+#### get request with response fields selection (Be ensure that selected field is guarded with the responseSchema)
+
+```javascript
+import Joi from "@hapi/joi";
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+
+export const getContractsRequest = (): Promise<IResponse> =>
+  new RestRequest().getRequest({
+    endpoint: "http://localhost:3000",
+    translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
+    isErrorTextStraightToOutput: true,
+    selectedDataFields: 'username,password', // the output will be {data:{ username, password }, etc...}
+    responseSchema: Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().required(),
+      info: Joi.object({
+        count: Joi.number().required(),
+        killers: Joi.array().items(
+          Joi.object({
+            username: Joi.string().required(),
+            count: Joi.number().required(),
+          }).unknown()
+        ),
+      }).unknown(),
+    }).unknown(),
+    progressOptions: {
+      onLoaded: (total) => console.log(total) 
+      // onLoaded callback will be called after 
+      // the whole response will be done
+      // WARNING - not availiable on nodejs environment
+      onProgress: ({ total, current}) => console.log(total, current)
+      // onProgress callback will be triggered during the response progress
+      // till the response will be done
+      // WARNING - not availiable on nodejs environment
+    },
   });
 ```
 
