@@ -69,20 +69,20 @@ export class RestRequest extends BaseRequest {
     });
 
   public getTextRequest = (
-      requestParams: Omit<
-        IRequestParams,
-        | "extraValidationCallback"
-        | "responseSchema"
-        | "body"
-        | "isErrorTextStraightToOutput"
-      >
-    ) =>
-      this.makeFetch({
-        ...requestParams,
-        method: "GET",
-        parseType: parseTypesMap.blob,
-        requestProtocol: requestProtocolsMap.rest,
-        extraValidationCallback: () => true,
-        isErrorTextStraightToOutput: false,
-      });
+    requestParams: Omit<
+      IRequestParams,
+      | "extraValidationCallback"
+      | "responseSchema"
+      | "body"
+      | "isErrorTextStraightToOutput"
+    >
+  ) =>
+    this.makeFetch({
+      ...requestParams,
+      method: "GET",
+      parseType: parseTypesMap.blob,
+      requestProtocol: requestProtocolsMap.rest,
+      extraValidationCallback: () => true,
+      isErrorTextStraightToOutput: false,
+    });
 }

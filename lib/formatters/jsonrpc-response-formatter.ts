@@ -40,14 +40,14 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
   getFormattedResponse = (): IResponse => ({
     errorText: this.error
       ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
-          errorTextKey: this.isErrorTextStraightToOutput
-            ? this.error.message
-            : this.error.data.trKey,
-          translateFunction: this.translateFunction,
-          isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
-          errorTextData: this.error.data,
-          statusCode:this.statusCode
-        })
+        errorTextKey: this.isErrorTextStraightToOutput
+          ? this.error.message
+          : this.error.data.trKey,
+        translateFunction: this.translateFunction,
+        isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
+        errorTextData: this.error.data,
+        statusCode: this.statusCode
+      })
       : '',
     error: Boolean(this.error),
     data: this.result || {},

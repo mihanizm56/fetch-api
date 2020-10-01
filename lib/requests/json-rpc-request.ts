@@ -6,7 +6,7 @@ import { uniqueId } from "@/utils/unique-id";
 export class JSONRPCRequest extends BaseRequest {
   getEnrichedBody = (
     body: Array<IJSONPRCRequestBodyParams>
-    ):Array<IJSONPRCRequestFormattedBodyParams> => body.map(bodyRequestData => ({
+  ): Array<IJSONPRCRequestFormattedBodyParams> => body.map(bodyRequestData => ({
     ...bodyRequestData,
     id: uniqueId("json-rpc_"),
     jsonrpc: "2.0"
@@ -27,11 +27,11 @@ export class JSONRPCRequest extends BaseRequest {
       method: "POST",
       parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.jsonRpc,
-      body: 
-        requestParams.isBatchRequest && 
-        requestParams.body && 
-        requestParams.body instanceof Array
-        ? this.getEnrichedBody(requestParams.body) 
-        : requestParams.body
+      body:
+        requestParams.isBatchRequest &&
+          requestParams.body &&
+          requestParams.body instanceof Array
+          ? this.getEnrichedBody(requestParams.body)
+          : requestParams.body
     });
 }

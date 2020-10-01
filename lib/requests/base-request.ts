@@ -39,9 +39,9 @@ import { progressParser } from "@/utils/parsers/progress-parser";
 import { getDataFromSelector } from "@/utils/get-data-from-selector";
 
 type GetFormattedHeadersParamsType = {
-  body:JSON|FormData,
-  headers?:{
-    [key:string]:any;
+  body: JSON | FormData,
+  headers?: {
+    [key: string]: any;
   }
 }
 
@@ -66,17 +66,17 @@ interface IBaseRequests {
     params: GetIsomorphicFetchParamsType
   ) => GetIsomorphicFetchReturnsType;
 
-  addAbortListenerToRequest:(params:AbortListenersParamsType) => void;
+  addAbortListenerToRequest: (params: AbortListenersParamsType) => void;
 
-  abortRequestListener?:any
+  abortRequestListener?: any
 }
 
 
 
 export class BaseRequest implements IBaseRequests {
-  abortRequestListener:any = null
+  abortRequestListener: any = null
 
-  parseResponseData = async({
+  parseResponseData = async ({
     response,
     parseType,
     isResponseOk,
@@ -85,11 +85,11 @@ export class BaseRequest implements IBaseRequests {
     progressOptions
   }: ParseResponseParams) => {
     try {
-      if(isStatusEmpty){
+      if (isStatusEmpty) {
         return {}
       }
-  
-      if(isNotFound){        
+
+      if (isNotFound) {
         try {
           return await jsonParser(response)
         } catch {
@@ -108,48 +108,48 @@ export class BaseRequest implements IBaseRequests {
       }
 
       // progress not run on nodejs yet
-      if(progressOptions && parseType && !isNode()){
-          return await progressParser({
-            response,
-            progressOptions,
-            parseType
-          })
+      if (progressOptions && parseType && !isNode()) {
+        return await progressParser({
+          response,
+          progressOptions,
+          parseType
+        })
       }
-  
-      if(parseType === parseTypesMap.json){
+
+      if (parseType === parseTypesMap.json) {
         return await jsonParser(response);
       }
-  
-      if(parseType === parseTypesMap.blob){
+
+      if (parseType === parseTypesMap.blob) {
         return await blobParser(response);
       }
-  
-      if(parseType === parseTypesMap.text){
+
+      if (parseType === parseTypesMap.text) {
         return await textParser(response);
       }
     } catch (error) {
-      console.error('(fetch-api): can not parse the response',error);
-      
+      console.error('(fetch-api): can not parse the response', error);
+
       throw new Error(NETWORK_ERROR_KEY)
     }
   };
 
-  addAbortListenerToRequest = ({fetchController, abortRequestId}: AbortListenersParamsType) => {
-    if(!this.abortRequestListener){
-      this.abortRequestListener = (event: CustomEvent)=> {
+  addAbortListenerToRequest = ({ fetchController, abortRequestId }: AbortListenersParamsType) => {
+    if (!this.abortRequestListener) {
+      this.abortRequestListener = (event: CustomEvent) => {
         if (event.detail && event.detail.id === abortRequestId) {
           fetchController.abort()
         }
       }
     }
 
-    document.addEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener,true)
+    document.addEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener, true)
   };
 
   removeAbortListenerToRequest = () => {
-    if(this.abortRequestListener){
-      document.removeEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener,true)
-      this.abortRequestListener = null      
+    if (this.abortRequestListener) {
+      document.removeEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener, true)
+      this.abortRequestListener = null
     }
   };
 
@@ -174,7 +174,7 @@ export class BaseRequest implements IBaseRequests {
     const fetchController = new AbortController();
 
     // set the cancel request listener
-    if(abortRequestId){
+    if (abortRequestId) {
       this.addAbortListenerToRequest({
         abortRequestId,
         fetchController,
@@ -202,8 +202,8 @@ export class BaseRequest implements IBaseRequests {
     queryParams,
     arrayFormat
   }: FormattedEndpointParams): string => {
-    if(queryParams){
-      return `${endpoint}?${queryString.stringify(queryParams,{
+    if (queryParams) {
+      return `${endpoint}?${queryString.stringify(queryParams, {
         arrayFormat: arrayFormat || 'none'
       })}`;
     }
@@ -225,12 +225,12 @@ export class BaseRequest implements IBaseRequests {
     }
 
     if (requestProtocol === requestProtocolsMap.jsonRpc) {
-      if(isBatchRequest){
+      if (isBatchRequest) {
         return JSON.stringify(body)
       }
 
       return JSON.stringify({ ...body, ...version, id });
-    }  
+    }
 
 
     if (isFormData(body)) {
@@ -240,11 +240,11 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  getFormattedHeaders = ({body,headers}:GetFormattedHeadersParamsType) => 
-    isFormData(body) 
+  getFormattedHeaders = ({ body, headers }: GetFormattedHeadersParamsType) =>
+    isFormData(body)
       ? headers
       : ({
-        "Content-type":"application/json",
+        "Content-type": "application/json",
         ...headers
       })
 
@@ -254,15 +254,15 @@ export class BaseRequest implements IBaseRequests {
   }: GetPureRestErrorTextParamsType) => {
     const { error, errorText } = response;
 
-    if(isResponseStatusSuccess){
+    if (isResponseStatusSuccess) {
       return ''
     }
 
-    if(typeof errorText === 'string'){
+    if (typeof errorText === 'string') {
       return errorText;
     }
 
-    if(typeof error === 'string'){
+    if (typeof error === 'string') {
       return error;
     }
 
@@ -275,11 +275,11 @@ export class BaseRequest implements IBaseRequests {
   }: GetPureRestAdditionalErrorsParamsType) => {
     const { additionalErrors, errorText, ...restResponce } = response;
 
-    if(isResponseStatusSuccess){
+    if (isResponseStatusSuccess) {
       return null;
     }
 
-    if(additionalErrors) {
+    if (additionalErrors) {
       return additionalErrors;
     }
 
@@ -299,7 +299,7 @@ export class BaseRequest implements IBaseRequests {
     isBatchRequest,
     responseSchema,
     body
-  }: GetPreparedResponseDataParams): FormatResponseParamsType => {    
+  }: GetPreparedResponseDataParams): FormatResponseParamsType => {
     if (parseType === 'blob' || parseType === 'text') {
       return {
         data: response,
@@ -312,35 +312,35 @@ export class BaseRequest implements IBaseRequests {
         additionalErrors: null,
         errorText: "",
       };
-    } 
+    }
 
     if (protocol === requestProtocolsMap.pureRest) {
       const error = !isResponseStatusSuccess
-      const errorText = this.getPureRestErrorText({response, isResponseStatusSuccess});
+      const errorText = this.getPureRestErrorText({ response, isResponseStatusSuccess });
       const data = isResponseStatusSuccess ? response : {};
-      const additionalErrors = this.getPureRestAdditionalErrors({response, isResponseStatusSuccess})
+      const additionalErrors = this.getPureRestAdditionalErrors({ response, isResponseStatusSuccess })
 
       return {
         error,
-        errorText, 
+        errorText,
         data,
-        additionalErrors, 
+        additionalErrors,
         statusCode,
         translateFunction,
         protocol,
         isErrorTextStraightToOutput,
         parseType,
       };
-    } 
+    }
 
-    if(isBatchRequest){
+    if (isBatchRequest) {
       return {
         translateFunction,
         protocol,
         isErrorTextStraightToOutput,
         statusCode,
-        parseType:parseTypesMap.json,
-        data:response,
+        parseType: parseTypesMap.json,
+        data: response,
         isBatchRequest,
         responseSchema,
         body
@@ -361,29 +361,29 @@ export class BaseRequest implements IBaseRequests {
     response,
     customSelectorData,
     selectedDataFields
-  }:{
-    response:IResponse,
-    customSelectorData?:CustomSelectorDataType,
-    selectedDataFields?: Record<string, any>
-  }):IResponse => {
-    if(selectedDataFields){
-      const dataFromSelector = getDataFromSelector({selectedDataFields,responseData:response.data})
+  }: {
+    response: IResponse,
+    customSelectorData?: CustomSelectorDataType,
+    selectedDataFields?: string
+  }): IResponse => {
+    if (selectedDataFields) {
+      const dataFromSelector = getDataFromSelector({ selectedDataFields, responseData: response.data })
 
-      return {...response,data:dataFromSelector};
+      return { ...response, data: dataFromSelector };
     }
 
-    const dataFromCustomSelector = customSelectorData && response.data 
-      ? customSelectorData(response.data) 
+    const dataFromCustomSelector = customSelectorData && response.data
+      ? customSelectorData(response.data)
       : response.data;
 
-    return {...response,data:dataFromCustomSelector};
+    return { ...response, data: dataFromCustomSelector };
   }
 
   makeFetch = <
     MakeFetchType extends IRequestParams &
-      Partial<IJSONPRCRequestParams> & {
-        requestProtocol: keyof typeof requestProtocolsMap;
-      } & { method: string }
+    Partial<IJSONPRCRequestParams> & {
+      requestProtocol: keyof typeof requestProtocolsMap;
+    } & { method: string }
   >({
     id,
     version,
@@ -433,7 +433,7 @@ export class BaseRequest implements IBaseRequests {
       fetchParams: {
         body: fetchBody,
         mode,
-        headers:formattedHeaders,
+        headers: formattedHeaders,
         method,
       },
     });
@@ -502,7 +502,7 @@ export class BaseRequest implements IBaseRequests {
 
             // select the response data fields if all fields are not necessary
             const selectedResponseData = this.getSelectedResponse({
-              response:formattedResponseData,
+              response: formattedResponseData,
               customSelectorData,
               selectedDataFields
             });

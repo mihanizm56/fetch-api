@@ -86,7 +86,7 @@ describe('get request (positive)', () => {
           ...requestBaseConfig,
           endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
           responseSchema,
-          selectedDataFields: { delta: true },
+          selectedDataFields: 'delta',
         };
 
         const response = await new PureRestRequest().getRequest(requestConfig);
@@ -100,7 +100,7 @@ describe('get request (positive)', () => {
         });
       });
 
-      test('get no data if empty select field provided', async () => {
+      test('get full data if empty select field provided', async () => {
         const responseSchema = Joi.object({
           foo: Joi.string().required(),
           bar: Joi.object({
@@ -113,7 +113,7 @@ describe('get request (positive)', () => {
           ...requestBaseConfig,
           endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
           responseSchema,
-          selectedDataFields: {},
+          selectedDataFields: '',
         };
 
         const response = await new PureRestRequest().getRequest(requestConfig);
@@ -121,7 +121,11 @@ describe('get request (positive)', () => {
         expect(response).toEqual({
           additionalErrors: null,
           code: 200,
-          data: {},
+          data: {
+            bar: { baz: 0 },
+            delta: ['1', '2'],
+            foo: 'foo',
+          },
           error: false,
           errorText: '',
         });
@@ -140,7 +144,7 @@ describe('get request (positive)', () => {
           ...requestBaseConfig,
           endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
           responseSchema,
-          selectedDataFields: { zoo: true },
+          selectedDataFields: 'zoo',
         };
 
         const response = await new PureRestRequest().getRequest(requestConfig);

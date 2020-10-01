@@ -1,5 +1,9 @@
+/*eslint-disable */
+import jsonMask from 'json-mask';
+/* eslint-enable */
+
 type ParamsType = {
-  selectedDataFields: Record<string, any>;
+  selectedDataFields: string;
   responseData: any;
 };
 
@@ -7,11 +11,4 @@ type ParamsType = {
 export const getDataFromSelector = ({
   selectedDataFields,
   responseData,
-}: ParamsType): any =>
-  Object.keys(selectedDataFields).reduce((acc: any, selectedField: string) => {
-    if (responseData[selectedField]) {
-      return { ...acc, [selectedField]: responseData[selectedField] };
-    }
-
-    return acc;
-  }, {});
+}: ParamsType): any => jsonMask(responseData, selectedDataFields);
