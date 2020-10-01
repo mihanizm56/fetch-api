@@ -10,6 +10,9 @@ export {
   IRequestParams,
   TranslateFunction,
   ModeCorsType,
-  IUtilResponse
+  IUtilResponse,
+  ExtraValidationCallback,
+  ProgressOptions,
+  CustomSelectorDataType
 } from './types';
 export { ABORT_REQUEST_EVENT_NAME } from './constants/shared'
