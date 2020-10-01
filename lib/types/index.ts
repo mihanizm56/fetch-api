@@ -89,7 +89,7 @@ export interface IRequestParams {
   isBatchRequest?: boolean;
   progressOptions?: ProgressOptions;
   customSelectorData?: CustomSelectorDataType;
-  selectedDataFields?: string;
+  selectData?: string;
 }
 
 export interface IResponse {

@@ -360,14 +360,14 @@ export class BaseRequest implements IBaseRequests {
   getSelectedResponse = ({
     response,
     customSelectorData,
-    selectedDataFields
+    selectData
   }: {
     response: IResponse,
     customSelectorData?: CustomSelectorDataType,
-    selectedDataFields?: string
+    selectData?: string
   }): IResponse => {
-    if (selectedDataFields) {
-      const dataFromSelector = getDataFromSelector({ selectedDataFields, responseData: response.data })
+    if (selectData) {
+      const dataFromSelector = getDataFromSelector({ selectData, responseData: response.data })
 
       return { ...response, data: dataFromSelector };
     }
@@ -405,7 +405,7 @@ export class BaseRequest implements IBaseRequests {
     isBatchRequest,
     progressOptions,
     customSelectorData,
-    selectedDataFields
+    selectData
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -504,7 +504,7 @@ export class BaseRequest implements IBaseRequests {
             const selectedResponseData = this.getSelectedResponse({
               response: formattedResponseData,
               customSelectorData,
-              selectedDataFields
+              selectData
             });
 
             // remove the abort listener

@@ -3,12 +3,12 @@ import jsonMask from 'json-mask';
 /* eslint-enable */
 
 type ParamsType = {
-  selectedDataFields: string;
+  selectData: string;
   responseData: any;
 };
 
 // TODO make it complex and recursive
 export const getDataFromSelector = ({
-  selectedDataFields,
+  selectData,
   responseData,
-}: ParamsType): any => jsonMask(responseData, selectedDataFields);
+}: ParamsType): any => jsonMask(responseData, selectData);

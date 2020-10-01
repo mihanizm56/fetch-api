@@ -86,7 +86,7 @@ describe('get request (positive)', () => {
           ...requestBaseConfig,
           endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
           responseSchema,
-          selectedDataFields: 'delta',
+          selectData: 'delta',
         };
 
         const response = await new PureRestRequest().getRequest(requestConfig);
@@ -113,7 +113,7 @@ describe('get request (positive)', () => {
           ...requestBaseConfig,
           endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
           responseSchema,
-          selectedDataFields: '',
+          selectData: '',
         };
 
         const response = await new PureRestRequest().getRequest(requestConfig);
@@ -144,7 +144,7 @@ describe('get request (positive)', () => {
           ...requestBaseConfig,
           endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
           responseSchema,
-          selectedDataFields: 'zoo',
+          selectData: 'zoo',
         };
 
         const response = await new PureRestRequest().getRequest(requestConfig);

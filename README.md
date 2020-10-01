@@ -105,7 +105,7 @@ export const getContractsRequest = (): Promise<IResponse> =>
     endpoint: "http://localhost:3000",
     translateFunction = (key, options) => `${key}:${JSON.stringify(options)}`,
     isErrorTextStraightToOutput: true,
-    selectedDataFields: 'username,password', // the output will be {data:{ username, password }, etc...}
+    selectData: 'username,password', // the output will be {data:{ username, password }, etc...}
     responseSchema: Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
