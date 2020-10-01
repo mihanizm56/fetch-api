@@ -520,7 +520,12 @@ export class BaseRequest implements IBaseRequests {
         );
       })
       .catch((error) => {
-        console.error("(fetch-api): get error in the request", error.message);
+        console.error("(fetch-api): get error in the request", endpoint);
+        console.group("Show error data");
+        console.error("(fetch-api): message:", error.message);
+        console.error("(fetch-api): endpoint:", endpoint);
+        console.error("(fetch-api): body params:", fetchBody);
+        console.groupEnd();
 
         // remove the abort listener
         this.removeAbortListenerToRequest()

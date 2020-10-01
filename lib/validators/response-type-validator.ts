@@ -83,6 +83,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     // if the base format is not valid
     if (!isFormatValid) {
       console.error('(fetch-api): response base format is not valid');
+      console.error('(fetch-api): full response: ', response);
       return false;
     }
 
@@ -122,6 +123,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
+      console.error('(fetch-api): full response: ', response);
       return false;
     }
 
@@ -141,6 +143,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     // if the base format is not valid
     if (!isFormatValid) {
       console.error('(fetch-api): response base format is not valid');
+      console.error('(fetch-api): full response: ', response);
       return false;
     }
 
@@ -175,6 +178,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
+      console.error('(fetch-api): full response: ', response);
       return false;
     }
 
