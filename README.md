@@ -132,6 +132,7 @@ export const getContractsRequest = (): Promise<IResponse> =>
   });
 ```
 
+
 #### get request with PROGRESS callbacks
 
 ```javascript
