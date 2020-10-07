@@ -6,6 +6,7 @@ import {
   TranslateFunction,
 } from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
+import { getOmittedObject } from '@/utils/omit';
 
 export class JSONRPCResponseFormatter extends ResponseFormatter {
   result?: any;
@@ -34,20 +35,36 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     this.statusCode = statusCode;
   }
 
-  // eslint-disable-next-line
-  getAdditionalErrors = (error?: JSONRPCErrorType) => error?.data ?? null;
+  getAdditionalErrors = (error?: JSONRPCErrorType) => {
+    if (error && error.data) {
+      // omit trKey from other errors - this will be in errorText
+      const formattedErrorData = getOmittedObject({
+        key: 'trKey',
+        object: error.data,
+      });
+
+      // if there are no keys in error data - only trKey
+      if (!Object.keys(formattedErrorData).length) {
+        return null;
+      }
+
+      return formattedErrorData;
+    }
+
+    return null;
+  };
 
   getFormattedResponse = (): IResponse => ({
     errorText: this.error
       ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
-        errorTextKey: this.isErrorTextStraightToOutput
-          ? this.error.message
-          : this.error.data.trKey,
-        translateFunction: this.translateFunction,
-        isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
-        errorTextData: this.error.data,
-        statusCode: this.statusCode
-      })
+          errorTextKey: this.isErrorTextStraightToOutput
+            ? this.error.message
+            : this.error.data.trKey,
+          translateFunction: this.translateFunction,
+          isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
+          errorTextData: this.error.data,
+          statusCode: this.statusCode,
+        })
       : '',
     error: Boolean(this.error),
     data: this.result || {},

@@ -32,7 +32,6 @@ describe('JSON-PRC request (negative)', () => {
     expect(data).toEqual({
       additionalErrors: {
         err: 'Тестовая ошибка 4 err',
-        trKey: 'test key 4',
         param4: 'test param 4',
       },
       code: 500,
@@ -137,7 +136,6 @@ describe('JSON-PRC request (negative)', () => {
     expect(data).toEqual({
       additionalErrors: {
         err: 'Тестовая ошибка 4 err',
-        trKey: 'test key 4',
         param4: 'test param 4',
       },
       code: 500,
@@ -195,7 +193,6 @@ describe('JSON-PRC request (negative)', () => {
     expect(data).toEqual({
       additionalErrors: {
         err: 'Тестовая ошибка 4 err',
-        trKey: 'test key 4',
         param4: 'test param 4',
       },
       code: 500,
@@ -330,9 +327,7 @@ describe('JSON-PRC request (negative)', () => {
         code: 200,
         data: [
           {
-            additionalErrors: {
-              trKey: 'test',
-            },
+            additionalErrors: null,
             error: true,
             errorText: 'network-error',
             data: {},
@@ -368,18 +363,14 @@ describe('JSON-PRC request (negative)', () => {
         code: 200,
         data: [
           {
-            additionalErrors: {
-              trKey: 'test',
-            },
+            additionalErrors: null,
             error: true,
             errorText: 'network-error',
             data: {},
             code: 500,
           },
           {
-            additionalErrors: {
-              trKey: 'test',
-            },
+            additionalErrors: null,
             error: true,
             errorText: 'network-error',
             data: {},
