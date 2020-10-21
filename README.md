@@ -19,6 +19,7 @@ https://www.npmjs.com/package/query-string is used
 - Provides the ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
 - Provides the ability to handle the response progress
 - Provides the ability to select necessary fields from the response (json-mask library used)
+- Provides the ability to use persistent params for all requests
 
 #### Request input options:
 
@@ -339,4 +340,16 @@ document.dispatchEvent(
     detail: { id: '1' },
   }),
 );
+```
+
+#### Set persist options to all requests
+
+```javascript
+import { FetchProxyMaker } from "@mihanizm56/fetch-api";
+
+new FetchProxyMaker().setPersistentOptions(() => ({
+  headers: {
+    foo: 'bar',
+  },
+}));
 ```

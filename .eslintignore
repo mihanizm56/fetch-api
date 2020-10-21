@@ -5,4 +5,5 @@ lib/requests/base-request.ts
 lib/requests/rest-request.ts
 lib/requests/pure-rest-request.ts
 lib/requests/json-rpc-request.ts
+lib/utils/fetch-proxy-maker/index.ts
 !**/.*

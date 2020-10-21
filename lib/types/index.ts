@@ -7,6 +7,8 @@ export type TranslateFunction = (
   options?: Record<string, any> | null,
 ) => string;
 
+export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
+
 export type AdditionalErrors = Record<string, any>;
 
 export type IJSONPRCRequestBodyParams = {
@@ -70,11 +72,19 @@ export type ProgressCallbackParams = ({
 
 export type CustomSelectorDataType = (data: any) => any;
 
+export type FetchMethodType =
+  | 'GET'
+  | 'POST'
+  | 'PUT'
+  | 'PATCH'
+  | 'UPDATE'
+  | 'DELETE';
+
 export interface IRequestParams {
   headers?: { [key: string]: string };
   body?: any;
   mode?: ModeCorsType;
-  method?: string;
+  method?: FetchMethodType;
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: QueryParamsType;
@@ -225,6 +235,11 @@ export type GetIsSchemaResponseValidParams = {
 export abstract class ResponseFormatter {
   public abstract getFormattedResponse: () => IResponse;
 }
+
+export type PersistentFetchParamsType = Pick<
+  IRequestParams & Partial<IJSONPRCRequestParams>,
+  'headers' | 'body' | 'mode' | 'method'
+>;
 
 export type FormatResponseParamsType = {
   parseType: keyof typeof parseTypesMap;

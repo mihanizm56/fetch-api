@@ -15,7 +15,8 @@ import {
   FormatResponseParamsType,
   GetPureRestErrorTextParamsType,
   GetPureRestAdditionalErrorsParamsType,
-  CustomSelectorDataType
+  CustomSelectorDataType,
+  PersistentFetchParamsType
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -71,10 +72,10 @@ interface IBaseRequests {
   abortRequestListener?: any
 }
 
-
-
 export class BaseRequest implements IBaseRequests {
   abortRequestListener: any = null
+
+  static persistentOptions?: PersistentFetchParamsType
 
   parseResponseData = async ({
     response,
@@ -160,12 +161,16 @@ export class BaseRequest implements IBaseRequests {
     fetchParams,
     abortRequestId,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
+    const requestParams = BaseRequest.persistentOptions 
+      ? {...fetchParams,...BaseRequest.persistentOptions} 
+      : fetchParams
+
     if (isNode()) {
       const requestFetch = (nodeFetch.bind(
         // eslint-disable-line
         null,
         endpoint,
-        { ...fetchParams }
+        { ...requestParams }
       ) as () => Promise<unknown>) as () => Promise<IResponse>;
 
       return { requestFetch };
@@ -182,7 +187,7 @@ export class BaseRequest implements IBaseRequests {
     }
 
     const requestFetch = (window.fetch.bind(null, endpoint, {
-      ...fetchParams,
+      ...requestParams,
       signal: fetchController.signal,
     }) as () => Promise<unknown>) as () => Promise<IResponse>;
 

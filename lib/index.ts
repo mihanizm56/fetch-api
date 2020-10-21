@@ -16,3 +16,4 @@ export {
   CustomSelectorDataType
 } from './types';
 export { ABORT_REQUEST_EVENT_NAME } from './constants/shared'
+export { FetchProxyMaker } from './utils/fetch-proxy-maker'
