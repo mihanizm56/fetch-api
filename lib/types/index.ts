@@ -197,7 +197,7 @@ export type GetIsomorphicFetchParamsType = {
   endpoint: string;
   fetchParams: Pick<
     IRequestParams & Partial<IJSONPRCRequestParams>,
-    'headers' | 'body' | 'mode' | 'method'
+    'headers' | 'body' | 'mode' | 'method' | 'cache'
   >;
   abortRequestId?: string;
 };

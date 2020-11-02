@@ -4,11 +4,29 @@ export interface IParseTypesMap {
   text: 'text';
 }
 
+export interface ICacheMap {
+  default: 'default';
+  forceCache: 'force-cache';
+  noCache: 'no-cache';
+  noStore: 'no-store';
+  onlyIfCached: 'only-if-cached';
+  reload: 'reload';
+}
+
 export interface IRequestProtocolsMap {
   rest: 'rest';
   jsonRpc: 'jsonRpc';
   pureRest: 'pureRest';
 }
+
+export const cacheMap: ICacheMap = {
+  default: 'default',
+  forceCache: 'force-cache',
+  noCache: 'no-cache',
+  noStore: 'no-store',
+  onlyIfCached: 'only-if-cached',
+  reload: 'reload',
+};
 
 export const parseTypesMap: IParseTypesMap = {
   json: 'json',
