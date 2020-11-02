@@ -15,7 +15,8 @@ import {
   FormatResponseParamsType,
   GetPureRestErrorTextParamsType,
   GetPureRestAdditionalErrorsParamsType,
-  CustomSelectorDataType
+  CustomSelectorDataType,
+  cacheMap
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -405,7 +406,8 @@ export class BaseRequest implements IBaseRequests {
     isBatchRequest,
     progressOptions,
     customSelectorData,
-    selectData
+    selectData,
+    cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -435,6 +437,7 @@ export class BaseRequest implements IBaseRequests {
         mode,
         headers: formattedHeaders,
         method,
+        cache
       },
     });
 

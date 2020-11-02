@@ -68,6 +68,24 @@ export type ProgressCallbackParams = ({
   current: number;
 }) => void;
 
+export interface ICacheMap {
+  default: 'default';
+  forceCache: 'force-cache';
+  noCache: 'no-cache';
+  noStore: 'no-store';
+  onlyIfCached: 'only-if-cached';
+  reload: 'reload';
+}
+
+export const cacheMap: ICacheMap = {
+  default: 'default',
+  forceCache: 'force-cache',
+  noCache: 'no-cache',
+  noStore: 'no-store',
+  onlyIfCached: 'only-if-cached',
+  reload: 'reload',
+};
+
 export type CustomSelectorDataType = (data: any) => any;
 
 export interface IRequestParams {
@@ -187,7 +205,7 @@ export type GetIsomorphicFetchParamsType = {
   endpoint: string;
   fetchParams: Pick<
     IRequestParams & Partial<IJSONPRCRequestParams>,
-    'headers' | 'body' | 'mode' | 'method'
+    'headers' | 'body' | 'mode' | 'method' | 'cache'
   >;
   abortRequestId?: string;
 };
