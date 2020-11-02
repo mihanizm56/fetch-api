@@ -26,6 +26,7 @@ import {
   TIMEOUT_ERROR_KEY,
   ABORT_REQUEST_EVENT_NAME,
   NOT_FOUND_ERROR_KEY,
+  cacheMap,
 } from "@/constants/shared";
 import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
@@ -163,7 +164,7 @@ export class BaseRequest implements IBaseRequests {
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
     const requestParams = BaseRequest.persistentOptions 
       ? {...fetchParams,...BaseRequest.persistentOptions} 
-      : fetchParams
+      : fetchParams;
 
     if (isNode()) {
       const requestFetch = (nodeFetch.bind(
@@ -394,6 +395,7 @@ export class BaseRequest implements IBaseRequests {
     version,
     headers,
     body,
+    cache = cacheMap.default,
     mode,
     method,
     endpoint,
@@ -421,7 +423,7 @@ export class BaseRequest implements IBaseRequests {
     const formattedHeaders = this.getFormattedHeaders({
       body,
       headers
-    })
+    });
 
     const fetchBody = this.getFetchBody({
       requestProtocol,
@@ -440,6 +442,7 @@ export class BaseRequest implements IBaseRequests {
         mode,
         headers: formattedHeaders,
         method,
+        cache,
       },
     });
 

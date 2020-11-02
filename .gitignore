@@ -10,6 +10,6 @@ dist
 
 # envs
 .env
-
+.idea
 # Misc
 .DS_Store
