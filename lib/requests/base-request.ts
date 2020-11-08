@@ -489,20 +489,6 @@ export class BaseRequest implements IBaseRequests {
           });
 
           if (isFormatValid) {
-            console.log('getPreparedResponseData',this.getPreparedResponseData({
-              response: respondedData,
-              translateFunction,
-              protocol: requestProtocol,
-              isErrorTextStraightToOutput,
-              parseType,
-              statusCode,
-              isResponseStatusSuccess,
-              isBatchRequest,
-              responseSchema,
-              body
-            }));
-            
-
             // get the formatter func
             const responseFormatter = new FormatResponseFactory().createFormatter(
               this.getPreparedResponseData({
@@ -522,18 +508,12 @@ export class BaseRequest implements IBaseRequests {
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
-
-            console.log('formattedResponseData',formattedResponseData);
-            
-
             // select the response data fields if all fields are not necessary
             const selectedResponseData = this.getSelectedResponse({
               response: formattedResponseData,
               customSelectorData,
               selectData
             });
-
-            console.log('selectedResponseData',selectedResponseData);
 
             // remove the abort listener
             this.removeAbortListenerToRequest();
