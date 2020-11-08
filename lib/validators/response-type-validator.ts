@@ -60,7 +60,10 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       return { error: false, errorText: '' };
     }
 
-    const validationResult = schema.validate(data, { allowUnknown: true });
+    const validationResult = schema.validate(data, {
+      allowUnknown: true,
+      abortEarly: false,
+    });
 
     return {
       error: Boolean(validationResult.error),
