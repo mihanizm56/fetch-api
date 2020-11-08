@@ -70,6 +70,24 @@ export type ProgressCallbackParams = ({
   current: number;
 }) => void;
 
+export interface ICacheMap {
+  default: 'default';
+  forceCache: 'force-cache';
+  noCache: 'no-cache';
+  noStore: 'no-store';
+  onlyIfCached: 'only-if-cached';
+  reload: 'reload';
+}
+
+export const cacheMap: ICacheMap = {
+  default: 'default',
+  forceCache: 'force-cache',
+  noCache: 'no-cache',
+  noStore: 'no-store',
+  onlyIfCached: 'only-if-cached',
+  reload: 'reload',
+};
+
 export type CustomSelectorDataType = (data: any) => any;
 
 export type FetchMethodType =

@@ -13,3 +13,6 @@ dist
 .idea
 # Misc
 .DS_Store
+
+.todo
+.idea
