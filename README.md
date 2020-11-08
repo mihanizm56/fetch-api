@@ -47,8 +47,6 @@ https://www.npmjs.com/package/query-string is used
 ## Features and recommendations
 
 - body will be serialized in JSON if body data NOT FormData
-- try to use .unknown() method with objects in Joi Schemas because your backend may be extended
-  and without this method the responce data may be not valid
 
 ## !!! Attention !!!
 ### If you need to support ie11 - please add the following polyfills
@@ -88,10 +86,10 @@ export const getContractsRequest = (): Promise<IResponse> =>
           Joi.object({
             username: Joi.string().required(),
             count: Joi.number().required(),
-          }).unknown()
+          })
         ),
-      }).unknown(),
-    }).unknown(),
+      }),
+    }),
   });
 ```
 
@@ -116,10 +114,10 @@ export const getContractsRequest = (): Promise<IResponse> =>
           Joi.object({
             username: Joi.string().required(),
             count: Joi.number().required(),
-          }).unknown()
+          })
         ),
-      }).unknown(),
-    }).unknown(),
+      }),
+    }),
     progressOptions: {
       onLoaded: (total) => console.log(total) 
       // onLoaded callback will be called after 
@@ -154,10 +152,10 @@ export const getContractsRequest = (): Promise<IResponse> =>
           Joi.object({
             username: Joi.string().required(),
             count: Joi.number().required(),
-          }).unknown()
+          })
         ),
-      }).unknown(),
-    }).unknown(),
+      }),
+    }),
     progressOptions: {
       onLoaded: (total) => console.log(total) 
       // onLoaded callback will be called after 
@@ -205,10 +203,10 @@ export const getContractsRequest = (): Promise<IResponse> =>
           Joi.object({
             username: Joi.string().required(),
             count: Joi.number().required(),
-          }).unknown()
+          })
         ),
-      }).unknown(),
-    }).unknown(),
+      }),
+    }),
   });
 ```
 
@@ -231,7 +229,7 @@ export const createReviseRequest = (someData): Promise<IResponse> =>
     responseSchema: Joi.object({
       username: Joi.string().required(),
       password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    }).unknown(),
+    }),
   });
 ```
 
@@ -266,9 +264,9 @@ export const createItemsRequest = (someData): Promise<IResponse> =>
           id: Joi.string().required(),
           name: Joi.string().required(),
           name: Joi.string()
-        }).unknown()
+        })
       )
-    }).unknown(),
+    }),
   });
 ```
 
@@ -280,11 +278,11 @@ import Joi from '@hapi/joi'
 
 const responseSchemaObjectOne = Joi.object({
   foo: Joi.string().required(),
-}).unknown();
+});
 
 const responseSchemaObjectTwo = Joi.object({
   foo: Joi.string().required(),
-}).unknown();
+});
 
 export const createItemsRequest = (someData): Promise<IResponse> =>
   new JSONRPCRequest().makeRequest({
@@ -331,7 +329,7 @@ export const createReviseRequest = (someData): Promise<IResponse> =>
     responseSchema: Joi.object({
       username: Joi.string().required(),
       password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    }).unknown(),
+    }),
   });
 );
 

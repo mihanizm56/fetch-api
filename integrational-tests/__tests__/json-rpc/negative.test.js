@@ -98,7 +98,7 @@ describe('JSON-PRC request (negative)', () => {
       notValidField: Joi.object({
         baz: Joi.number().required(),
       }).required(),
-    }).unknown();
+    });
 
     const data = await new JSONRPCRequest().makeRequest({
       endpoint: 'http://localhost:8080/json-rpc/positive',
@@ -205,7 +205,7 @@ describe('JSON-PRC request (negative)', () => {
     test('test simply answer code not from whitelist', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
@@ -226,10 +226,10 @@ describe('JSON-PRC request (negative)', () => {
     test('test not correct one schema', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
       const responseSchemaObjectTwo = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
@@ -270,10 +270,10 @@ describe('JSON-PRC request (negative)', () => {
     test('test not correct all (two) schemas', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
       const responseSchemaObjectTwo = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
@@ -312,7 +312,7 @@ describe('JSON-PRC request (negative)', () => {
     test('test get backend error in one item response', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
@@ -341,11 +341,11 @@ describe('JSON-PRC request (negative)', () => {
     test('test get backend error in two items response', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const responseSchemaObjectTwo = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:

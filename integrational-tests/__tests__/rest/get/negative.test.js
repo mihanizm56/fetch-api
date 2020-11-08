@@ -102,7 +102,7 @@ describe('get request (negative)', () => {
         baz: Joi.number().required(),
       }).required(),
       delta: Joi.array().items(Joi.string()),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,

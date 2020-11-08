@@ -22,7 +22,7 @@ describe('get request (positive)', () => {
         baz: Joi.number().required(),
       }).required(),
       delta: Joi.array().items(Joi.string()),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -53,7 +53,7 @@ describe('get request (positive)', () => {
           baz: Joi.number().required(),
         }).required(),
         delta: Joi.array().items(Joi.string()),
-      }).unknown();
+      });
 
       const requestConfig = {
         ...requestBaseConfig,
@@ -80,7 +80,7 @@ describe('get request (positive)', () => {
             baz: Joi.number().required(),
           }).required(),
           delta: Joi.array().items(Joi.string()),
-        }).unknown();
+        });
 
         const requestConfig = {
           ...requestBaseConfig,
@@ -107,7 +107,7 @@ describe('get request (positive)', () => {
             baz: Joi.number().required(),
           }).required(),
           delta: Joi.array().items(Joi.string()),
-        }).unknown();
+        });
 
         const requestConfig = {
           ...requestBaseConfig,
@@ -138,7 +138,7 @@ describe('get request (positive)', () => {
             baz: Joi.number().required(),
           }).required(),
           delta: Joi.array().items(Joi.string()),
-        }).unknown();
+        });
 
         const requestConfig = {
           ...requestBaseConfig,
@@ -165,7 +165,7 @@ describe('get request (positive)', () => {
             baz: Joi.number().required(),
           }).required(),
           delta: Joi.array().items(Joi.string()),
-        }).unknown();
+        });
 
         const requestConfig = {
           ...requestBaseConfig,
@@ -194,7 +194,7 @@ describe('get request (positive)', () => {
         }).required(),
         delta: Joi.array().items(Joi.string()),
         specialheader: Joi.string().required(),
-      }).unknown();
+      });
 
       const requestConfig = {
         ...requestBaseConfig,
@@ -230,7 +230,7 @@ describe('get request (positive)', () => {
       }).required(),
       delta: Joi.array().items(Joi.string()),
       specialheader: Joi.string().required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -268,7 +268,7 @@ describe('get request (positive)', () => {
       specialqueryparamNumber: Joi.number().required(),
       specialqueryparamString: Joi.string().required(),
       specialqueryparamArray: Joi.array().items(Joi.string()),
-    }).unknown();
+    });
 
     const data = await new RestRequest().getRequest({
       endpoint: 'http://127.0.0.1:8080/rest/positive',
@@ -326,7 +326,7 @@ describe('get request (positive)', () => {
       bar: Joi.object({
         baz: Joi.number().required(),
       }).required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -355,7 +355,7 @@ describe('get request (positive)', () => {
         bar: Joi.object({
           baz: Joi.number().required(),
         }).required(),
-      }).unknown();
+      });
 
       const requestConfig = {
         ...requestBaseConfig,
@@ -382,7 +382,7 @@ describe('get request (positive)', () => {
         Joi.object({
           username: Joi.string().required(),
           count: Joi.number().required(),
-        }).unknown(),
+        }),
       );
 
       const requestConfig = {

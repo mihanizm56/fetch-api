@@ -124,7 +124,7 @@ describe('get request (negative)', () => {
       notValidValue: Joi.object({
         baz: Joi.number().required(),
       }).required(),
-    }).unknown();
+    });
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/positive',
@@ -258,7 +258,7 @@ describe('get request (negative)', () => {
         bar: Joi.object({
           baz: Joi.number().required(),
         }),
-      }).unknown();
+      });
       const requestConfig = {
         ...requestBaseConfig,
         endpoint: 'http://127.0.0.1:8080/rest/positive',
@@ -282,7 +282,7 @@ describe('get request (negative)', () => {
         bar: Joi.object({
           baz: Joi.number().required(),
         }),
-      }).unknown();
+      });
       const translateFunction = jest
         .fn()
         .mockReturnValue('test value from translateFunction');
@@ -312,7 +312,7 @@ describe('get request (negative)', () => {
         bar: Joi.object({
           baz: Joi.number().required(),
         }),
-      }).unknown();
+      });
       const requestConfig = {
         ...requestBaseConfig,
         endpoint: 'http://127.0.0.1:8080/rest/negative?pureresponse=true',

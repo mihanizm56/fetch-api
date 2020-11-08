@@ -18,7 +18,7 @@ describe('put request (positive)', () => {
       bar: Joi.object({
         baz: Joi.number().required(),
       }).required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -44,7 +44,7 @@ describe('put request (positive)', () => {
         baz: Joi.number().required(),
       }).required(),
       bodyparam: Joi.string().required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -73,7 +73,7 @@ describe('put request (positive)', () => {
         baz: Joi.number().required(),
       }).required(),
       queryparam: Joi.string().required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -102,7 +102,7 @@ describe('put request (positive)', () => {
         baz: Joi.number().required(),
       }).required(),
       specialheader: Joi.string().required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -127,7 +127,7 @@ describe('put request (positive)', () => {
   test('extra validation callback returns "true" and was called', async () => {
     const responseSchema = Joi.object({
       nonActual: Joi.string().required(),
-    }).unknown();
+    });
     const extraValidationCallback = jest.fn().mockReturnValue(true);
     const requestConfig = {
       ...requestBaseConfig,
@@ -150,7 +150,7 @@ describe('put request (positive)', () => {
   test('schema was extended and is still valid', async () => {
     const responseSchema = Joi.object({
       foo: Joi.string().required(),
-    }).unknown();
+    });
 
     const requestConfig = {
       ...requestBaseConfig,
@@ -179,7 +179,7 @@ describe('put request (positive)', () => {
         bar: Joi.object({
           baz: Joi.number().required(),
         }).required(),
-      }).unknown();
+      });
 
       const requestConfig = {
         ...requestBaseConfig,
@@ -205,7 +205,7 @@ describe('put request (positive)', () => {
           baz: Joi.number().required(),
         }).required(),
         bodyparam: Joi.string().required(),
-      }).unknown();
+      });
 
       const requestConfig = {
         ...requestBaseConfig,
@@ -227,13 +227,13 @@ describe('put request (positive)', () => {
       });
     });
 
-    test("response extra validation callback returns 'true' and was called", async () => {
+    test('response extra validation callback returns \'true\' and was called', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         testNonValidField: {
           baz: Joi.number().required(),
         },
-      }).unknown();
+      });
       const extraValidationCallback = jest.fn().mockReturnValue(true);
 
       const requestConfig = {
@@ -264,7 +264,7 @@ describe('put request (positive)', () => {
           baz: Joi.number().required(),
         }).required(),
         specialheader: Joi.string().required(),
-      }).unknown();
+      });
 
       const requestConfig = {
         ...requestBaseConfig,

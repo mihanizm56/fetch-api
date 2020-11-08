@@ -12,7 +12,7 @@ describe('JSON-PRC request (negative)', () => {
       bar: Joi.object({
         baz: Joi.number().required(),
       }).required(),
-    }).unknown();
+    });
 
     const data = await new JSONRPCRequest().makeRequest({
       endpoint: 'http://localhost:8080/json-rpc/positive',
@@ -40,7 +40,7 @@ describe('JSON-PRC request (negative)', () => {
         baz: Joi.number().required(),
       }).required(),
       specialheader: Joi.string().required(),
-    }).unknown();
+    });
 
     const data = await new JSONRPCRequest().makeRequest({
       endpoint: 'http://localhost:8080/json-rpc/positive',
@@ -74,7 +74,7 @@ describe('JSON-PRC request (negative)', () => {
       specialqueryparamNumber: Joi.number().required(),
       specialqueryparamString: Joi.string().required(),
       specialqueryparamArray: Joi.array().items(Joi.string()),
-    }).unknown();
+    });
 
     const data = await new JSONRPCRequest().makeRequest({
       endpoint: 'http://localhost:8080/json-rpc/positive',
@@ -115,7 +115,7 @@ describe('JSON-PRC request (negative)', () => {
         baz: Joi.number().required(),
       }).required(),
       specialqueryparam: Joi.string().required(),
-    }).unknown();
+    });
 
     const extraValidationCallback = jest.fn().mockReturnValue(true);
 
@@ -146,7 +146,7 @@ describe('JSON-PRC request (negative)', () => {
     test('test answer one object', async () => {
       const responseSchemaObject = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
@@ -180,15 +180,15 @@ describe('JSON-PRC request (negative)', () => {
     test('test answer two objects', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
-      }).unknown();
+      });
       const responseSchemaObjectTwo = Joi.object({
         countries: Joi.array().items(
           Joi.object({
             id: Joi.string().required(),
             label: Joi.string().required(),
-          }).unknown(),
+          }),
         ),
-      }).unknown();
+      });
 
       const data = await new JSONRPCRequest().makeRequest({
         endpoint:
