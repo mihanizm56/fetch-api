@@ -2,7 +2,7 @@ import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
-export type TranslateFunction = (
+export type TranslateFunctionType = (
   key: string,
   options?: Record<string, any> | null,
 ) => string;
@@ -32,13 +32,13 @@ export interface IJSONPRCRequestParams extends IRequestParams {
 
 export type FormatResponseRESTDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   statusCode: number;
 } & IRESTPureResponse;
 
 export type FormatResponseJSONRPCDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   statusCode: number;
 } & IJSONRPCPureResponse;
 
@@ -48,7 +48,7 @@ export type ResponseValidateType = {
   prevId?: string;
 };
 
-export type ExtraValidationCallback = ({
+export type ExtraValidationCallbackType = ({
   response,
   schema,
   prevId,
@@ -106,10 +106,10 @@ export interface IRequestParams {
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: QueryParamsType;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   responseSchema?: any;
   isErrorTextStraightToOutput?: boolean;
-  extraValidationCallback?: ExtraValidationCallback;
+  extraValidationCallback?: ExtraValidationCallbackType;
   customTimeout?: number;
   abortRequestId?: string;
   arrayFormat?: ArrayFormatType;
@@ -167,7 +167,7 @@ export type RequestRacerParams = {
   fetchController?: any;
   requestId?: string | number;
   isErrorTextStraightToOutput?: boolean;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   customTimeout?: number;
 };
 
@@ -197,7 +197,7 @@ export type ErrorResponseFormatterConstructorParams = {
   errorTextKey: string;
   isErrorTextStraightToOutput?: boolean;
   errorTextData?: Record<string, any> | null;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   statusCode: number;
 };
 
@@ -231,7 +231,7 @@ export type GetFetchBodyParamsType = {
 
 export type GetPreparedResponseDataParams = {
   response: any;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   protocol: keyof typeof requestProtocolsMap;
   isErrorTextStraightToOutput?: boolean;
   parseType: keyof typeof parseTypesMap;
@@ -262,7 +262,7 @@ export type PersistentFetchParamsType = Pick<
 export type FormatResponseParamsType = {
   parseType: keyof typeof parseTypesMap;
   protocol: keyof typeof requestProtocolsMap;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   isErrorTextStraightToOutput?: boolean;
   statusCode: number;
   data: any | Blob | string | Array<IJSONRPCPureResponse>;
@@ -275,7 +275,7 @@ export type FormatResponseParamsType = {
 
 export type GetFormatValidateMethodParams = {
   protocol: keyof typeof requestProtocolsMap;
-  extraValidationCallback?: ExtraValidationCallback;
+  extraValidationCallback?: ExtraValidationCallbackType;
 };
 
 export type IDType = string;

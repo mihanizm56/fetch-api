@@ -2,7 +2,7 @@ import {
   ResponseFormatter,
   IResponse,
   FormatResponseRESTDataOptionsType,
-  TranslateFunction,
+  TranslateFunctionType,
   AdditionalErrors,
 } from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
@@ -12,7 +12,7 @@ export class RestResponseFormatter extends ResponseFormatter {
 
   error: boolean;
 
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
 
   errorText: string;
 

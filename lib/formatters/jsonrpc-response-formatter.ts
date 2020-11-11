@@ -3,7 +3,7 @@ import {
   IResponse,
   JSONRPCErrorType,
   FormatResponseJSONRPCDataOptionsType,
-  TranslateFunction,
+  TranslateFunctionType,
 } from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 import { getOmittedObject } from '@/utils/omit';
@@ -13,7 +13,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
 
   error?: JSONRPCErrorType;
 
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
 
   isErrorTextStraightToOutput?: boolean;
 

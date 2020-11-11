@@ -8,10 +8,10 @@ export {
   IResponse,
   QueryParamsType,
   IRequestParams,
-  TranslateFunction,
+  TranslateFunctionType,
   ModeCorsType,
   IUtilResponse,
-  ExtraValidationCallback,
+  ExtraValidationCallbackType,
   ProgressOptions,
   CustomSelectorDataType
 } from './types';

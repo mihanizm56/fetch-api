@@ -1,6 +1,6 @@
 import {
   ResponseFormatter,
-  TranslateFunction,
+  TranslateFunctionType,
   IJSONRPCPureResponse,
   IResponse,
   IJSONPRCRequestFormattedBodyParams,
@@ -14,7 +14,7 @@ type ParamsType = {
   data: Array<IJSONRPCPureResponse>;
   isErrorTextStraightToOutput?: boolean;
   statusCode: number;
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
   responseSchema?: Array<any>;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
 };
@@ -28,7 +28,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
 
   responseSchema?: Array<any>;
 
-  translateFunction?: TranslateFunction;
+  translateFunction?: TranslateFunctionType;
 
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
 
