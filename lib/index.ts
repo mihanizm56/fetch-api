@@ -12,7 +12,7 @@ export {
   ModeCorsType,
   IUtilResponse,
   ExtraValidationCallbackType,
-  ProgressOptions,
+  ProgressOptionsType,
   CustomSelectorDataType
 } from './types';
 export { ABORT_REQUEST_EVENT_NAME } from './constants/shared'

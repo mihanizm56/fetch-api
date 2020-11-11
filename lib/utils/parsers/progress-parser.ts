@@ -1,9 +1,9 @@
-import { ProgressOptions } from '@/types';
+import { ProgressOptionsType } from '@/types';
 import { parseTypesMap } from '@/constants/shared';
 
 type ParamsType = {
   response: any;
-  progressOptions: ProgressOptions;
+  progressOptions: ProgressOptionsType;
   parseType: keyof typeof parseTypesMap;
 };
 

@@ -111,11 +111,11 @@ export interface IRequestParams {
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallbackType;
   customTimeout?: number;
-  abortRequestId?: string;
-  arrayFormat?: ArrayFormatType;
   cache?: CacheType;
   isBatchRequest?: boolean;
-  progressOptions?: ProgressOptions;
+  abortRequestId?: string;
+  arrayFormat?: ArrayFormatType;
+  progressOptions?: ProgressOptionsType;
   customSelectorData?: CustomSelectorDataType;
   selectData?: string;
 }
@@ -171,7 +171,7 @@ export type RequestRacerParams = {
   customTimeout?: number;
 };
 
-export type ProgressOptions = {
+export type ProgressOptionsType = {
   onLoaded?: (total: number) => void;
   onProgress?: ProgressCallbackParams;
 };
@@ -182,7 +182,7 @@ export type ParseResponseParams = {
   isResponseOk: boolean;
   isStatusEmpty: boolean;
   isNotFound: boolean;
-  progressOptions?: ProgressOptions;
+  progressOptions?: ProgressOptionsType;
 };
 
 export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
