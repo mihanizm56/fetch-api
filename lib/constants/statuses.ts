@@ -2,6 +2,8 @@ export interface IWhiteListStatusesHash {
   [key: number]: boolean;
 }
 
+export const OFFLINE_STATUS_CODE = 600;
+
 export const whitelistStatuses: IWhiteListStatusesHash = {
   101: true,
   200: true,

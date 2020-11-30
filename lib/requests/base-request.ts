@@ -38,6 +38,7 @@ import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
 import { progressParser } from "@/utils/parsers/progress-parser";
 import { getDataFromSelector } from "@/utils/get-data-from-selector";
+import { OFFLINE_STATUS_CODE } from "@/constants/statuses";
 
 type GetFormattedHeadersParamsType = {
   body: JSON | FormData,
@@ -548,7 +549,7 @@ export class BaseRequest implements IBaseRequests {
         this.removeAbortListenerToRequest()
 
         const isOnlineRequest = this.getIsRequestOnline()
-        const errorCode = isOnlineRequest ? 500 : 600;
+        const errorCode = isOnlineRequest ? 500 : OFFLINE_STATUS_CODE;
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
