@@ -1,6 +1,5 @@
 import nodeFetch from "node-fetch";
 import queryString from "query-string";
-import { uniqueId } from "@/utils/unique-id";
 import {
   RequestRacerParams,
   ParseResponseParams,
@@ -69,6 +68,8 @@ interface IBaseRequests {
   ) => GetIsomorphicFetchReturnsType;
 
   addAbortListenerToRequest: (params: AbortListenersParamsType) => void;
+
+  getIsRequestOnline: () => boolean;
 
   abortRequestListener?: any
 }
@@ -385,6 +386,14 @@ export class BaseRequest implements IBaseRequests {
     return { ...response, data: dataFromCustomSelector };
   }
 
+  getIsRequestOnline = () => {
+    if (typeof navigator === 'undefined') {
+      return false
+    }
+
+    return navigator.onLine
+  }
+
   makeFetch = <
     MakeFetchType extends IRequestParams &
     Partial<IJSONPRCRequestParams> & {
@@ -538,14 +547,17 @@ export class BaseRequest implements IBaseRequests {
         // remove the abort listener
         this.removeAbortListenerToRequest()
 
+        const isOnlineRequest = this.getIsRequestOnline()
+        const errorCode = isOnlineRequest ? 500 : 600;
+
         return new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
             translateFunction,
             errorTextKey: error.message,
             isErrorTextStraightToOutput,
-            statusCode: 500
+            statusCode: errorCode
           },
-          statusCode: 500,
+          statusCode: errorCode,
         });
       });
 
