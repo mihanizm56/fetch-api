@@ -169,12 +169,9 @@ export class BaseRequest implements IBaseRequests {
       : fetchParams;
 
     if (isNode()) {
-      const requestFetch = (nodeFetch.bind(
-        // eslint-disable-line
-        null,
-        endpoint,
-        { ...requestParams }
-      ) as () => Promise<unknown>) as () => Promise<IResponse>;
+      const requestFetch = (
+        () => nodeFetch(endpoint,requestParams) as unknown
+      ) as () => Promise<IResponse>
 
       return { requestFetch };
     }
@@ -422,7 +419,13 @@ export class BaseRequest implements IBaseRequests {
     progressOptions,
     customSelectorData,
     selectData,
-    cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр
+    cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр,
+    credentials,
+    integrity,
+    keepalive,
+    redirect,
+    referrer,
+    referrerPolicy,
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -452,7 +455,13 @@ export class BaseRequest implements IBaseRequests {
         mode,
         headers: formattedHeaders,
         method,
-        cache
+        cache,
+        credentials,
+        integrity,
+        keepalive,
+        redirect,
+        referrer,
+        referrerPolicy,
       },
     });
 

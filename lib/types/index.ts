@@ -98,11 +98,9 @@ export type FetchMethodType =
   | 'UPDATE'
   | 'DELETE';
 
-export interface IRequestParams {
+export interface IRequestParams extends RequestInit {
   headers?: { [key: string]: string };
   body?: any;
-  mode?: ModeCorsType;
-  method?: FetchMethodType;
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
   queryParams?: QueryParamsType;
@@ -111,7 +109,6 @@ export interface IRequestParams {
   isErrorTextStraightToOutput?: boolean;
   extraValidationCallback?: ExtraValidationCallbackType;
   customTimeout?: number;
-  cache?: CacheType;
   isBatchRequest?: boolean;
   abortRequestId?: string;
   arrayFormat?: ArrayFormatType;
@@ -213,10 +210,7 @@ export type GetIsomorphicFetchReturnsType = {
 
 export type GetIsomorphicFetchParamsType = {
   endpoint: string;
-  fetchParams: Pick<
-    IRequestParams & Partial<IJSONPRCRequestParams>,
-    'headers' | 'body' | 'mode' | 'method' | 'cache'
-  >;
+  fetchParams: RequestInit & Pick<IRequestParams, 'headers'>;
   abortRequestId?: string;
 };
 
