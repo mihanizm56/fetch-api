@@ -234,6 +234,7 @@ export type GetPreparedResponseDataParams = {
   isBatchRequest?: boolean;
   responseSchema?: any;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
+  isNotFound: boolean;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };

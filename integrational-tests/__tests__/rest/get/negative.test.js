@@ -190,6 +190,28 @@ describe('get request (negative)', () => {
       });
     });
 
+    test('check 404 error with "text" parse type', async () => {
+      const responseSchema = Joi.any();
+
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/rest/negative?notfoundwithoutbody=true',
+        responseSchema,
+        parseType: 'text',
+      };
+
+      const data = await new RestRequest().getRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText: 'not-found-error',
+        code: 404,
+      });
+    });
+
     test('check 404 error with body', async () => {
       const responseSchema = Joi.any();
 

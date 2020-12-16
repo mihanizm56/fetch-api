@@ -303,9 +303,10 @@ export class BaseRequest implements IBaseRequests {
     parseType,
     isBatchRequest,
     responseSchema,
-    body
+    body,
+    isNotFound
   }: GetPreparedResponseDataParams): FormatResponseParamsType => {
-    if (parseType === 'blob' || parseType === 'text') {
+    if ((parseType === 'blob' || parseType === 'text') && !isNotFound ) {
       return {
         data: response,
         translateFunction,
@@ -471,9 +472,9 @@ export class BaseRequest implements IBaseRequests {
         const statusCode = response.status;
         const isStatusEmpty = statusCode === 204;
         const isNotFound = statusCode === 404;
-        const isResponseStatusSuccess: boolean = this.getIsResponseStatusSuccess(
+        const isResponseStatusSuccess = this.getIsResponseStatusSuccess(
           statusCode
-        );
+        );        
         const isValidStatus = statusValidator.getStatusIsFromWhiteList(
           statusCode
         );
@@ -520,7 +521,8 @@ export class BaseRequest implements IBaseRequests {
                 isResponseStatusSuccess,
                 isBatchRequest,
                 responseSchema,
-                body
+                body,
+                isNotFound
               })
             );
 
