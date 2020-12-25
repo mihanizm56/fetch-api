@@ -427,6 +427,7 @@ export class BaseRequest implements IBaseRequests {
     redirect,
     referrer,
     referrerPolicy,
+    retry
   }: MakeFetchType): Promise<IResponse> => {
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -466,7 +467,7 @@ export class BaseRequest implements IBaseRequests {
       },
     });
 
-    const request = requestFetch()
+    const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
       .then(async (response: any) => {
         const statusValidator = new StatusValidator();
         const statusCode = response.status;
@@ -549,6 +550,13 @@ export class BaseRequest implements IBaseRequests {
         );
       })
       .catch((error) => {
+        if(typeof retry !== 'undefined' && 
+            typeof retryCounter !== 'undefined' && 
+            retryCounter < retry
+          ) {
+            return getRequest(retryCounter + 1)
+        }
+
         console.error("(fetch-api): get error in the request", endpoint);
         console.group("Show error data");
         console.error("(fetch-api): message:", error.message);
@@ -574,7 +582,7 @@ export class BaseRequest implements IBaseRequests {
       });
 
     return this.requestRacer({
-      request,
+      request: getRequest(0),
       fetchController,
       translateFunction,
       isErrorTextStraightToOutput,

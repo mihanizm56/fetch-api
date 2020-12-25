@@ -115,6 +115,7 @@ export interface IRequestParams extends RequestInit {
   progressOptions?: ProgressOptionsType;
   customSelectorData?: CustomSelectorDataType;
   selectData?: string;
+  retry?: number;
 }
 
 export interface IResponse {
