@@ -34,7 +34,7 @@
   goes straight from backend ("errorText" if REST and "message" if JSON-RPC)
 - extraValidationCallback(function): callback that can be used for custom response <br/>
   data validation or if you don't want to use @hapi/joi
-- customTimeout(number) - milliseconds for cancel the request on timeout (or a number of requests if the "retry" parameter is activated) 
+- customTimeout(number) - milliseconds for cancel the request on timeout (or a full package of requests if the "retry" parameter is activated) 
 - retry - number of requests try to request if the response is negative
 
 #### Request output options:
