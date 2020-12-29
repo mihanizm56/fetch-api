@@ -529,6 +529,12 @@ export class BaseRequest implements IBaseRequests {
 
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
+            
+            if(formattedResponseData.error){
+              if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
+                return getRequest(retryCounter + 1)
+              }
+            }
 
             // select the response data fields if all fields are not necessary
             const selectedResponseData = this.getSelectedResponse({
@@ -550,11 +556,8 @@ export class BaseRequest implements IBaseRequests {
         );
       })
       .catch((error) => {
-        if(typeof retry !== 'undefined' && 
-            typeof retryCounter !== 'undefined' && 
-            retryCounter < retry
-          ) {
-            return getRequest(retryCounter + 1)
+        if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
+          return getRequest(retryCounter + 1)
         }
 
         console.error("(fetch-api): get error in the request", endpoint);
@@ -582,7 +585,7 @@ export class BaseRequest implements IBaseRequests {
       });
 
     return this.requestRacer({
-      request: getRequest(0),
+      request: getRequest(1),
       fetchController,
       translateFunction,
       isErrorTextStraightToOutput,
