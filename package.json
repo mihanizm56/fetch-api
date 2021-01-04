@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "install": "node config/install/mark.js",
-    "server": "node ./integrational-tests/server/index.js",
+    "server": "node integrational-tests/setup/runner.js",
     "test:watch": "jest --watch",
     "test": "npm run build && set CI=true && jest",
     "test:coverage": "jest --coverage",

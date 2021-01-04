@@ -1,12 +1,12 @@
 const mockPositiveData = {
-  foo: "foo",
+  foo: 'foo',
   bar: {
     baz: 0,
   },
 };
 
 module.exports.positiveDeleteController = (req, res) => {
-  const { specialparameter, queryparam, pureresponse } = req.query;
+  const { queryparam, pureresponse } = req.query;
   const { specialheader } = req.headers;
   const { bodyparam } = req.body;
 
@@ -21,7 +21,7 @@ module.exports.positiveDeleteController = (req, res) => {
   if (bodyparam) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, bodyparam },
       additionalErrors: null,
     });
@@ -30,7 +30,7 @@ module.exports.positiveDeleteController = (req, res) => {
   if (queryparam) {
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, queryparam },
       additionalErrors: null,
     });
@@ -46,7 +46,7 @@ module.exports.positiveDeleteController = (req, res) => {
 
     return res.status(200).json({
       error: false,
-      errorText: "",
+      errorText: '',
       data: { ...mockPositiveData, specialheader: req.headers.specialheader },
       additionalErrors: null,
     });
@@ -54,7 +54,7 @@ module.exports.positiveDeleteController = (req, res) => {
 
   res.status(200).json({
     error: false,
-    errorText: "",
+    errorText: '',
     data: mockPositiveData,
     additionalErrors: null,
   });
