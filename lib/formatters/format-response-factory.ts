@@ -5,6 +5,7 @@ import { RestResponseFormatter } from './rest-response-formatter';
 import { BlobResponseFormatter } from './blob-response-formatter';
 import { TextResponseFormatter } from './text-response-formatter';
 import { JSONRPCBatchResponseFormatter } from './jsonrpc-batch-response-formatter';
+import { PureRestResponseFormatter } from './pure-rest-response-formatter';
 
 export interface IFormatResponseFactory {
   createFormatter: (params: FormatResponseParamsType) => ResponseFormatter;
@@ -58,6 +59,15 @@ export class FormatResponseFactory implements IFormatResponseFactory {
         translateFunction,
         isErrorTextStraightToOutput,
         statusCode,
+      });
+    }
+
+    if (protocol === requestProtocolsMap.pureRest) {
+      return new PureRestResponseFormatter({
+        isErrorTextStraightToOutput,
+        statusCode,
+        translateFunction,
+        data,
       });
     }
 

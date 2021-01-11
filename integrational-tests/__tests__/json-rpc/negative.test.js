@@ -40,7 +40,7 @@ describe('JSON-PRC request (negative)', () => {
       errorText: 'network-error',
     });
   });
-  test('simple response error 501 (not parsed)', async () => {
+  test('simple response error 500 (not parsed)', async () => {
     const responseSchema = Joi.any();
 
     const data = await new JSONRPCRequest().makeRequest({

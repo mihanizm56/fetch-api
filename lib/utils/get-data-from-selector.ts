@@ -1,14 +1,22 @@
-/*eslint-disable */
+/* eslint-disable */
+import { CustomSelectorDataType } from '@/types';
 import jsonMask from 'json-mask';
 /* eslint-enable */
 
 type ParamsType = {
-  selectData: string;
+  selectData?: string;
   responseData: any;
+  customSelectorData?: CustomSelectorDataType;
 };
 
-// TODO make it complex and recursive
 export const getDataFromSelector = ({
   selectData,
   responseData,
-}: ParamsType): any => jsonMask(responseData, selectData);
+  customSelectorData,
+}: ParamsType): any =>
+  customSelectorData
+    ? {
+        ...responseData,
+        data: customSelectorData(responseData.data, selectData),
+      }
+    : { ...responseData, data: jsonMask(responseData.data, selectData) };

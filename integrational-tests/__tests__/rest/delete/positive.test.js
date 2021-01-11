@@ -227,7 +227,7 @@ describe('post request (positive)', () => {
       });
     });
 
-    test('response extra validation callback returns \'true\' and was called', async () => {
+    test('response extra validation callback returns "true" and was called', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         testNonValidField: {

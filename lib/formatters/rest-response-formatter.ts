@@ -33,27 +33,27 @@ export class RestResponseFormatter extends ResponseFormatter {
   }: FormatResponseRESTDataOptionsType) {
     super();
 
-    this.error = error;
+    this.error = error || false;
     this.translateFunction = translateFunction;
-    this.errorText = errorText;
     this.additionalErrors = additionalErrors;
-    this.data = data;
+    this.data = data || {};
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
     this.statusCode = statusCode;
+    this.errorText = error
+      ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
+          errorTextKey: errorText,
+          translateFunction,
+          isErrorTextStraightToOutput,
+          errorTextData: additionalErrors,
+          statusCode,
+        })
+      : '';
   }
 
   getFormattedResponse = (): IResponse => ({
-    data: this.data || {},
-    error: this.error || false,
-    errorText: this.error
-      ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
-          errorTextKey: this.errorText,
-          translateFunction: this.translateFunction,
-          isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
-          errorTextData: this.additionalErrors,
-          statusCode: this.statusCode,
-        })
-      : '',
+    data: this.data,
+    error: this.error,
+    errorText: this.errorText,
     additionalErrors: this.additionalErrors,
     code: this.statusCode,
   });

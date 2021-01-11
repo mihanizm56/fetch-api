@@ -1,17 +1,22 @@
-import { ProgressOptionsType } from '@/types';
+import { ProgressOptionsType, ResponseParser } from '@/types';
 import { parseTypesMap } from '@/constants/shared';
 
-type ParamsType = {
-  response: any;
+type ProgressParseOptionsType = {
   progressOptions: ProgressOptionsType;
   parseType: keyof typeof parseTypesMap;
 };
 
-export const progressParser = async ({
-  response,
-  progressOptions: { onProgress, onLoaded },
-  parseType,
-}: ParamsType) => {
+export const progressParse = async (
+  response: Response,
+  {
+    progressOptions: { onProgress, onLoaded },
+    parseType,
+  }: ProgressParseOptionsType,
+) => {
+  if (!response.body) {
+    return null;
+  }
+
   const reader = response.body.getReader();
 
   const contentLength = Number(response.headers.get('Content-Length'));
@@ -22,7 +27,10 @@ export const progressParser = async ({
   // eslint-disable-next-line no-constant-condition
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const { done, value } = await reader.read();
+    const { done, value } = (await reader.read()) as {
+      done: boolean;
+      value: Uint8Array;
+    };
 
     if (onProgress) {
       onProgress({ total: contentLength, current: receivedLength });
@@ -71,3 +79,8 @@ export const progressParser = async ({
 
   return responseInBlob;
 };
+
+export class ProgressParser extends ResponseParser {
+  parse = (data: Response, options: ProgressParseOptionsType) =>
+    progressParse(data, options);
+}

@@ -1,2 +1,5 @@
-export const textParser = (data: any) =>
-  new Promise(resolve => resolve(data.text()));
+import { ResponseParser } from '@/types';
+
+export class TextParser extends ResponseParser {
+  parse = (data: Response) => data.text();
+}

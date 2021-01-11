@@ -12,8 +12,6 @@ import {
   GetFetchBodyParamsType,
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
-  GetPureRestErrorTextParamsType,
-  GetPureRestAdditionalErrorsParamsType,
   CustomSelectorDataType,
   PersistentFetchParamsType
 } from "@/types";
@@ -27,18 +25,17 @@ import {
   NOT_FOUND_ERROR_KEY,
   cacheMap,
 } from "@/constants/shared";
-import { StatusValidator } from "../validators/response-status-validator";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
 import { ErrorResponseFormatter } from "../errors-formatter/error-response-formatter";
 import { TIMEOUT_VALUE } from "../constants/timeout";
-import { jsonParser } from "../utils/parsers/json-parser";
-import { blobParser } from "../utils/parsers/blob-parser";
-import { textParser } from "../utils/parsers/text-parser";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
-import { progressParser } from "@/utils/parsers/progress-parser";
 import { getDataFromSelector } from "@/utils/get-data-from-selector";
-import { OFFLINE_STATUS_CODE } from "@/constants/statuses";
+import { OFFLINE_STATUS_CODE, REQUEST_ERROR_STATUS_CODE } from "@/constants/statuses";
+import { makeErrorRequestLogs } from "@/utils/make-error-request-logs";
+import { getIsRequestOnline } from "@/utils/get-is-request-online";
+import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-factory";
+import { getIsStatusCodeSuccess } from "@/utils/get-is-status-code-success";
 
 type GetFormattedHeadersParamsType = {
   body: JSON | FormData,
@@ -70,9 +67,13 @@ interface IBaseRequests {
 
   addAbortListenerToRequest: (params: AbortListenersParamsType) => void;
 
-  getIsRequestOnline: () => boolean;
-
   abortRequestListener?: any
+
+  getFormattedEndpoint:(params: FormattedEndpointParams) => string;
+
+  getFetchBody: (params: GetFetchBodyParamsType) => any
+
+  getFormattedHeaders:(options: GetFormattedHeadersParamsType) => Record<string,string> | undefined;
 }
 
 export class BaseRequest implements IBaseRequests {
@@ -83,7 +84,7 @@ export class BaseRequest implements IBaseRequests {
   parseResponseData = async ({
     response,
     parseType,
-    isResponseOk,
+    isResponseStatusSuccess,
     isStatusEmpty,
     isNotFound,
     progressOptions
@@ -93,10 +94,17 @@ export class BaseRequest implements IBaseRequests {
         return {}
       }
 
+      const responseDataParser = new ResponseDataParserFactory().getParser({
+        parseType,
+        isResponseStatusSuccess,
+        isNotFound,
+        progressOptions
+      })      
+
       if (isNotFound) {
         try {
-          return await jsonParser(response)
-        } catch {
+          return await responseDataParser.parse(response)
+        } catch {          
           return {
             error: true,
             errorText: NOT_FOUND_ERROR_KEY,
@@ -106,31 +114,7 @@ export class BaseRequest implements IBaseRequests {
         }
       }
 
-      // if not "not ok" status then always get json format
-      if (!isResponseOk) {
-        return await jsonParser(response);
-      }
-
-      // progress not run on nodejs yet
-      if (progressOptions && parseType && !isNode()) {
-        return await progressParser({
-          response,
-          progressOptions,
-          parseType
-        })
-      }
-
-      if (parseType === parseTypesMap.json) {
-        return await jsonParser(response);
-      }
-
-      if (parseType === parseTypesMap.blob) {
-        return await blobParser(response);
-      }
-
-      if (parseType === parseTypesMap.text) {
-        return await textParser(response);
-      }
+      return await responseDataParser.parse(response)
     } catch (error) {
       console.error('(fetch-api): can not parse the response', error);
 
@@ -150,7 +134,7 @@ export class BaseRequest implements IBaseRequests {
     document.addEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener, true)
   };
 
-  removeAbortListenerToRequest = () => {
+  removeAbortListenerFromRequest = () => {
     if (this.abortRequestListener) {
       document.removeEventListener(ABORT_REQUEST_EVENT_NAME, this.abortRequestListener, true)
       this.abortRequestListener = null
@@ -171,7 +155,7 @@ export class BaseRequest implements IBaseRequests {
     if (isNode()) {
       const requestFetch = (
         () => nodeFetch(endpoint,requestParams) as unknown
-      ) as () => Promise<IResponse>
+      ) as () => Promise<Response>
 
       return { requestFetch };
     }
@@ -186,10 +170,10 @@ export class BaseRequest implements IBaseRequests {
       })
     }
 
-    const requestFetch = (window.fetch.bind(null, endpoint, {
+    const requestFetch = window.fetch.bind(null, endpoint, {
       ...requestParams,
       signal: fetchController.signal,
-    }) as () => Promise<unknown>) as () => Promise<IResponse>;
+    })
 
     return {
       requestFetch,
@@ -197,23 +181,19 @@ export class BaseRequest implements IBaseRequests {
     };
   };
 
-  // get pure response status is "success"
-  getIsResponseStatusSuccess = (statusCode: number): boolean =>
-    statusCode < 400;
-
   // get serialized endpoint
   getFormattedEndpoint = ({
     endpoint,
     queryParams,
     arrayFormat
   }: FormattedEndpointParams): string => {
-    if (queryParams) {
-      return `${endpoint}?${queryString.stringify(queryParams, {
-        arrayFormat: arrayFormat || 'none'
-      })}`;
+    if(!queryParams){
+      return endpoint;
     }
 
-    return endpoint;
+    return `${endpoint}?${queryString.stringify(queryParams, {
+      arrayFormat: arrayFormat || 'none'
+    })}`;
   };
 
   // get formatted fetch body in needed
@@ -253,45 +233,6 @@ export class BaseRequest implements IBaseRequests {
         ...headers
       })
 
-  getPureRestErrorText = ({
-    response,
-    isResponseStatusSuccess
-  }: GetPureRestErrorTextParamsType) => {
-    const { error, errorText } = response;
-
-    if (isResponseStatusSuccess) {
-      return ''
-    }
-
-    if (typeof errorText === 'string') {
-      return errorText;
-    }
-
-    if (typeof error === 'string') {
-      return error;
-    }
-
-    return '';
-  }
-
-  getPureRestAdditionalErrors = ({
-    response,
-    isResponseStatusSuccess
-  }: GetPureRestAdditionalErrorsParamsType) => {
-    const { additionalErrors, errorText, ...restResponce } = response;
-
-    if (isResponseStatusSuccess) {
-      return null;
-    }
-
-    if (additionalErrors) {
-      return additionalErrors;
-    }
-
-    // if backend wont give us a special field for error parameters
-    return restResponce;
-  }
-
   // TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedResponseData = ({
     response,
@@ -299,7 +240,6 @@ export class BaseRequest implements IBaseRequests {
     protocol,
     isErrorTextStraightToOutput,
     statusCode,
-    isResponseStatusSuccess,
     parseType,
     isBatchRequest,
     responseSchema,
@@ -321,16 +261,8 @@ export class BaseRequest implements IBaseRequests {
     }
 
     if (protocol === requestProtocolsMap.pureRest) {
-      const error = !isResponseStatusSuccess
-      const errorText = this.getPureRestErrorText({ response, isResponseStatusSuccess });
-      const data = isResponseStatusSuccess ? response : {};
-      const additionalErrors = this.getPureRestAdditionalErrors({ response, isResponseStatusSuccess })
-
       return {
-        error,
-        errorText,
-        data,
-        additionalErrors,
+        data:response, 
         statusCode,
         translateFunction,
         protocol,
@@ -362,36 +294,6 @@ export class BaseRequest implements IBaseRequests {
       statusCode,
     };
   };
-
-  getSelectedResponse = ({
-    response,
-    customSelectorData,
-    selectData
-  }: {
-    response: IResponse,
-    customSelectorData?: CustomSelectorDataType,
-    selectData?: string
-  }): IResponse => {
-    if (selectData) {
-      const dataFromSelector = getDataFromSelector({ selectData, responseData: response.data })
-
-      return { ...response, data: dataFromSelector };
-    }
-
-    const dataFromCustomSelector = customSelectorData && response.data
-      ? customSelectorData(response.data)
-      : response.data;
-
-    return { ...response, data: dataFromCustomSelector };
-  }
-
-  getIsRequestOnline = () => {
-    if (typeof navigator === 'undefined') {
-      return false
-    }
-
-    return navigator.onLine
-  }
 
   makeFetch = <
     MakeFetchType extends IRequestParams &
@@ -468,24 +370,19 @@ export class BaseRequest implements IBaseRequests {
     });
 
     const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
-      .then(async (response: any) => {
-        const statusValidator = new StatusValidator();
+      .then(async (response: Response) => {
         const statusCode = response.status;
+        const isValidStatus = statusCode <= 500;
         const isStatusEmpty = statusCode === 204;
         const isNotFound = statusCode === 404;
-        const isResponseStatusSuccess = this.getIsResponseStatusSuccess(
-          statusCode
-        );        
-        const isValidStatus = statusValidator.getStatusIsFromWhiteList(
-          statusCode
-        );
+        const isResponseStatusSuccess = getIsStatusCodeSuccess(statusCode)    
 
         if (isValidStatus) {
           // any type because we did not know about data structure
           const respondedData: any = await this.parseResponseData({
             response,
             parseType,
-            isResponseOk: isResponseStatusSuccess,
+            isResponseStatusSuccess,
             isStatusEmpty,
             isNotFound,
             progressOptions
@@ -519,7 +416,6 @@ export class BaseRequest implements IBaseRequests {
                 isErrorTextStraightToOutput,
                 parseType,
                 statusCode,
-                isResponseStatusSuccess,
                 isBatchRequest,
                 responseSchema,
                 body,
@@ -529,54 +425,55 @@ export class BaseRequest implements IBaseRequests {
 
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
-            
-            if(formattedResponseData.error){
-              if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
-                return getRequest(retryCounter + 1)
-              }
+
+            // check if needs to retry request          
+            if(formattedResponseData.error && typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry){
+              return getRequest(retryCounter + 1)
             }
 
             // select the response data fields if all fields are not necessary
-            const selectedResponseData = this.getSelectedResponse({
-              response: formattedResponseData,
-              customSelectorData,
-              selectData
-            });
+            const selectedResponseData = selectData || customSelectorData 
+              ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
+              : formattedResponseData;
 
             // remove the abort listener
-            this.removeAbortListenerToRequest();
+            this.removeAbortListenerFromRequest();
 
+            // return data
             return selectedResponseData;
           }
         }
 
-        // if not status from the whitelist - throw error with default error
+        // if a status is above 500 - throw an error with default error message
         throw new Error(
           isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY
         );
       })
-      .catch((error) => {
+      .catch((error: Error) => {
+        const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY
+        
+        // check if needs to retry request   
         if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
           return getRequest(retryCounter + 1)
         }
 
-        console.error("(fetch-api): get error in the request", endpoint);
-        console.group("Show error data");
-        console.error("(fetch-api): message:", error.message);
-        console.error("(fetch-api): endpoint:", endpoint);
-        console.error("(fetch-api): body params:", fetchBody);
-        console.groupEnd();
+        // make error logs
+        makeErrorRequestLogs({
+          endpoint,
+          errorRequestMessage,
+          fetchBody,
+        })
 
         // remove the abort listener
-        this.removeAbortListenerToRequest()
+        this.removeAbortListenerFromRequest();
 
-        const isOnlineRequest = this.getIsRequestOnline()
-        const errorCode = isOnlineRequest ? 500 : OFFLINE_STATUS_CODE;
+        const isOnlineRequest = getIsRequestOnline()
+        const errorCode = isOnlineRequest ? REQUEST_ERROR_STATUS_CODE : OFFLINE_STATUS_CODE;        
 
         return new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
             translateFunction,
-            errorTextKey: error.message,
+            errorTextKey: errorRequestMessage,
             isErrorTextStraightToOutput,
             statusCode: errorCode
           },
@@ -602,15 +499,15 @@ export class BaseRequest implements IBaseRequests {
   }: RequestRacerParams): Promise<IResponse> => {
     const timeoutException: Promise<IResponse> = new Promise((resolve) =>
       setTimeout(() => {
-        const defaultError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
+        const requestTimeoutError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
           {
             errorDictionaryParams: {
               translateFunction,
               errorTextKey: TIMEOUT_ERROR_KEY,
               isErrorTextStraightToOutput,
-              statusCode: 500
+              statusCode: REQUEST_ERROR_STATUS_CODE
             },
-            statusCode: 500,
+            statusCode: REQUEST_ERROR_STATUS_CODE,
           }
         );
 
@@ -619,7 +516,7 @@ export class BaseRequest implements IBaseRequests {
           fetchController.abort();
         }
 
-        resolve(defaultError);
+        resolve(requestTimeoutError);
       }, customTimeout || TIMEOUT_VALUE)
     );
 

@@ -36,6 +36,13 @@ export type FormatResponseRESTDataOptionsType = {
   statusCode: number;
 } & IRESTPureResponse;
 
+export type FormatResponsePureRESTDataOptionsType = {
+  isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunctionType;
+  statusCode: number;
+  data: any; // data here is pure response parsed data
+};
+
 export type FormatResponseJSONRPCDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunctionType;
@@ -88,7 +95,10 @@ export const cacheMap: ICacheMap = {
   reload: 'reload',
 };
 
-export type CustomSelectorDataType = (data: any) => any;
+export type CustomSelectorDataType = (
+  responseData: any,
+  selectData?: string,
+) => any;
 
 export type FetchMethodType =
   | 'GET'
@@ -175,13 +185,17 @@ export type ProgressOptionsType = {
 };
 
 export type ParseResponseParams = {
-  response: IRESTPureResponse | IJSONRPCPureResponse;
+  response: Response;
   parseType?: keyof typeof parseTypesMap;
-  isResponseOk: boolean;
+  isResponseStatusSuccess: boolean;
   isStatusEmpty: boolean;
   isNotFound: boolean;
   progressOptions?: ProgressOptionsType;
 };
+
+export abstract class ResponseParser {
+  public abstract parse: (data: Response, options?: Record<string, any>) => any;
+}
 
 export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
 
@@ -205,7 +219,7 @@ export type FormatDataTypeValidatorParamsType = {
 };
 
 export type GetIsomorphicFetchReturnsType = {
-  requestFetch: () => Promise<IResponse>;
+  requestFetch: () => Promise<Response>;
   fetchController?: AbortController;
 };
 
@@ -231,7 +245,6 @@ export type GetPreparedResponseDataParams = {
   isErrorTextStraightToOutput?: boolean;
   parseType: keyof typeof parseTypesMap;
   statusCode: number;
-  isResponseStatusSuccess: boolean;
   isBatchRequest?: boolean;
   responseSchema?: any;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
@@ -289,10 +302,3 @@ export type FormatValidateParams = {
   isStatusEmpty?: boolean;
   isBatchRequest?: boolean;
 };
-
-export type GetPureRestErrorTextParamsType = {
-  response: any;
-  isResponseStatusSuccess: boolean;
-};
-
-export type GetPureRestAdditionalErrorsParamsType = GetPureRestErrorTextParamsType;
