@@ -29,10 +29,20 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
+          type: 'doc',
           label: 'Documentation',
           position: 'left',
+          docId: 'overview',
+        },
+        {
+          type: 'doc',
+          label: 'API',
+          position: 'left',
+          docId: 'api/api',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
         },
         {
           href: 'https://github.com/mihanizm56/fetch-api',
@@ -50,9 +60,8 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/mihanizm56/fetch-api',
+          sidebarPath: require.resolve('./sidebars.config.js'),
+          editUrl: 'https://github.com/mihanizm56/fetch-api/tree/docs',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

@@ -21,7 +21,7 @@ const features = [
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        All native es-fetch features are supported.
+        All native window.fetch features are supported.
       </>
     ),
   },
@@ -30,7 +30,7 @@ const features = [
     imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        For browser this is usual es-fetch and for Node.js node-fetch is used.
+        For browser this is usual window.fetch and for Node.js node-fetch is used.
       </>
     ),
   },
