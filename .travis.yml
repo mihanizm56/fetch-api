@@ -13,6 +13,8 @@ deploy:
     local_dir: build
     skip-cleanup: true
     github-token: $GITHUB_TOKEN_FETCH_API
+    on:
+      branch: feature/docs
     # on:
     #   tags: true
     #   branches:
