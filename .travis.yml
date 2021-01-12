@@ -1,13 +1,20 @@
 language: node_js
+
 node_js:
-  - '12'
-branches:
-  only:
-    - feature/docs
+- 12.13.0
+
+cache: yarn
 
 script:
-  - git config --global user.name "${GH_NAME}"
-  - git config --global user.email "${GH_EMAIL}"
-  - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
-  - npm install && GIT_USER="${GH_NAME}" npm run deploy
+    - npm run build
 
+deploy:
+    provider: pages
+    local_dir: build
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN_FETCH_API
+    on:
+      tags: true
+      branches:
+        only:
+        - /v(\d)\.(\d)\.(\d)(\-\d)?/
