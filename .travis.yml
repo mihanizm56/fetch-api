@@ -15,8 +15,3 @@ deploy:
     github-token: $GITHUB_TOKEN
     on:
       branch: feature/docs
-    # on:
-    #   tags: true
-    #   branches:
-    #     only:
-    #     - /v(\d)\.(\d)\.(\d)(\-\d)?/
