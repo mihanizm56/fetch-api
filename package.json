@@ -1,93 +1,34 @@
 {
-  "name": "@mihanizm56/fetch-api",
-  "version": "3.5.2-beta.1",
-  "description": "api servise",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "fetch-api",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "install": "node config/install/mark.js",
-    "server": "node integrational-tests/setup/runner.js",
-    "test:watch": "jest --watch",
-    "test": "npm run build && set CI=true && jest",
-    "test:coverage": "jest --coverage",
-    "build": "rm -fr ./dist && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./lib -o ./dist",
-    "lint": "npx eslint ./lib --ext .ts --fix",
-    "stop": "sudo kill $(sudo lsof -t -i:8080)",
-    "commit": "git add . && git commit --no-edit",
-    "packages-vulnerability-check": "check-audit",
-    "release": "npm run commit && git push && npm publish --access=public",
-    "beta": "npm run commit && git push && npm publish --tag beta --access=public",
-    "size": "pkgfiles"
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "serve": "docusaurus serve",
+    "clear": "docusaurus clear"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mihanizm56/fetch-api.git"
-  },
-  "author": "mihanizm56",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mihanizm56/fetch-api/issues"
-  },
-  "homepage": "https://github.com/mihanizm56/fetch-api#readme",
   "dependencies": {
-    "@hapi/joi": "17.1.1",
-    "colors": "1.4.0",
-    "json-mask": "1.0.4",
-    "node-fetch": "2.6.1",
-    "query-string": "6.13.7"
+    "@docusaurus/core": "2.0.0-alpha.70",
+    "@docusaurus/preset-classic": "2.0.0-alpha.70",
+    "@mdx-js/react": "1.6.21",
+    "clsx": "1.1.1",
+    "react": "16.8.4",
+    "react-dom": "16.8.4"
   },
-  "devDependencies": {
-    "@commitlint/cli": "11.0.0",
-    "@types/joi": "14.3.4",
-    "@types/node-fetch": "2.5.7",
-    "@types/jest": "24.9.1",
-    "@typescript-eslint/eslint-plugin": "2.5.0",
-    "@typescript-eslint/parser": "2.5.0",
-    "babel-jest": "25.2.6",
-    "body-parser": "1.19.0",
-    "commitizen": "4.2.1",
-    "cz-customizable": "6.2.0",
-    "eslint": "6.8.0",
-    "eslint-config-airbnb-base": "14.1.0",
-    "eslint-config-prettier": "6.5.0",
-    "eslint-import-resolver-alias": "1.1.2",
-    "eslint-import-resolver-typescript": "2.0.0",
-    "eslint-loader": "3.0.2",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-prettier": "3.1.1",
-    "eslint-plugin-security": "1.4.0",
-    "express": "4.17.1",
-    "husky": "3.0.9",
-    "jest": "25.1.0",
-    "morgan": "1.10.0",
-    "npm-audit-resolver": "2.1.0",
-    "pkgfiles": "2.3.2",
-    "prettier": "1.18.2",
-    "ts-jest": "25.4.0",
-    "tsconfig-paths": "3.9.0",
-    "tscpaths": "0.0.9",
-    "typescript": "3.8.3",
-    "typescript-transform-paths": "1.1.14"
-  },
-  "files": [
-    "dist",
-    "config/install"
-  ],
-  "browser": false,
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-customizable"
-    },
-    "cz-customizable": {
-      "config": "config/git/commitizen.js"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g config/git/commitlint.js",
-      "pre-commit": "npm run test && npm run lint && npm run packages-vulnerability-check && git add .",
-      "pre-push": "npm run size",
-      "prepare-commit-msg": "node ./config/git/prepare-commit.js"
-    }
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
