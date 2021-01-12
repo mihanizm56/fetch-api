@@ -3,25 +3,38 @@ title: Overview
 sidebar_label: Overview
 ---
 
-# @mihanizm56/fetch-api
+### Why it is useful
+This library was written in purpose to make life easier with simple window.fetch API and not to write from project to project
+a lot of error catching and response validating. In common case we usually need to get structured respone from the backend 
+and this library helps us with that. RestRequest needs some stricted fields to be in response and PureRestRequest is not need.
+What to use is up to you. JSONRPCRequest is build by standard of JSON-RPC with no additions.
 
-## Solution for the isomorphic fetch
+Also the killer feature of this package is to validate responses with schemas (on top of @hapi/joi) and to select the responded fields
+if we don't need the full response.
 
-### Benefits:
 
-- Provides validation for responses (based on @hapi/joi Schema validation and may use your own validation function)
-- Provides the ability to make rest-api and json-rpc protocol requests in One interface
-- Provides query-params serialize (booleans,strings,numbers,arrays of numbers or strings and variable serialize options for different backend services, https://www.npmjs.com/package/query-string is used)
-- Provides cancel-request if the timeout is higher than timeout value (60 seconds by default) 
-- Provides error catching (you dont need to use try/catch)
-- Provides the ability to match the exact error translation
-- Provides different kinds of the response formats to parse
-- Returns ALWAYS the hard prepared response structure (data, error, errorText, additionalErrors)
-- Works in modern browsers and ie11
-- Provides two main classes for REST API - RestRequest and PureRestReques. <br/> The difference is in the
-  hard-structured response format
-- Provides the ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
-- Provides the ability to handle the response progress
-- Provides the ability to select necessary fields from the response (https://github.com/nemtsov/json-mask#readme used)
-- Provides the ability to use persistent params for all requests
-- Provides the ability to retry requests
+### Full list of features
+- Validation for the responses
+- Universal requests (nodejs 8+ and modern browsers)
+- Translation for the responses
+- Logging in browser devtools in useful "group" format
+- One interface for all types of requests
+- Query-params serialize
+- Cancel-request if the timeout is higher than timeout value (60 seconds by default) 
+- Error catching (you dont need to use try/catch)
+- The ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
+- The ability to handle the response progress
+- The ability to select necessary fields from the response (https://github.com/nemtsov/json-mask#readme used)
+- The ability to use persistent params for all requests
+- The ability to retry requests and use it with the timeouts
+
+
+
+## If you need to support ie11 
+
+  please add the following polyfills
+
+```javascript
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
+import 'whatwg-fetch';
+```

@@ -6,23 +6,19 @@ module.exports = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'mihanizm56', // Usually your GitHub org/user name.
-  projectName: 'Fetch-API', // Usually your repo name.
+  organizationName: 'mihanizm56',
+  projectName: 'Fetch-API',
   themeConfig: {
+    hideableSidebar: true,
     algolia: {
       apiKey: 'YOUR_API_KEY',
       indexName: 'YOUR_INDEX_NAME',
-
-      // Optional: see doc section bellow
       contextualSearch: true,
-
-      // Optional: Algolia search parameters
       searchParameters: {},
-
-      //... other Algolia params
     },
     navbar: {
       title: 'Fetch-API',
+      hideOnScroll: true,
       logo: {
         alt: 'Fetch-API Logo',
         src: 'img/logo.svg',
@@ -52,7 +48,7 @@ module.exports = {
       ],
     },
     footer: {
-      style: 'light',
+      style: 'dark',
     },
   },
   presets: [

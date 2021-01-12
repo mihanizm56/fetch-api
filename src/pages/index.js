@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 const features = [
   {
     title: 'Easy to Use',
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    imageUrl: 'img/like.svg',
     description: (
       <>
         Fetch-API provides the same interface for all types of requests.
@@ -18,7 +18,7 @@ const features = [
   },
   {
     title: 'Fetch on steroids',
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    imageUrl: 'img/like.svg',
     description: (
       <>
         All native window.fetch features are supported.
@@ -27,7 +27,7 @@ const features = [
   },
   {
     title: 'Universal library',
-    imageUrl: 'img/undraw_docusaurus_tree.svg',
+    imageUrl: 'img/like.svg',
     description: (
       <>
         For browser this is usual window.fetch and for Node.js node-fetch is used.
@@ -36,7 +36,7 @@ const features = [
   },
   {
     title: 'All types of validations',
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    imageUrl: 'img/like.svg',
     description: (
       <>
         You can use shemas to validate responses or you can provide your own validate function
@@ -45,7 +45,7 @@ const features = [
   },
   {
     title: 'Select the fields that are necessary',
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    imageUrl: 'img/like.svg',
     description: (
       <>
         You're able to select only necessary data from JSON response
@@ -53,8 +53,8 @@ const features = [
     ),
   },
   {
-    title: 'Translate your responses easily',
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    title: 'Translate your responses',
+    imageUrl: 'img/like.svg',
     description: (
       <>
         Just provide translateFunction option that handles the response key and translate it
