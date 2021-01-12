@@ -13,8 +13,8 @@ deploy:
     local_dir: build
     skip-cleanup: true
     github-token: $GITHUB_TOKEN_FETCH_API
-    on:
-      tags: true
-      branches:
-        only:
-        - /v(\d)\.(\d)\.(\d)(\-\d)?/
+    # on:
+    #   tags: true
+    #   branches:
+    #     only:
+    #     - /v(\d)\.(\d)\.(\d)(\-\d)?/
