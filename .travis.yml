@@ -12,7 +12,7 @@ deploy:
     provider: pages
     local_dir: build
     skip-cleanup: true
-    github-token: $GITHUB_TOKEN_FETCH_API
+    github-token: $GITHUB_TOKEN
     on:
       branch: feature/docs
     # on:
