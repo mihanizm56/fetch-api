@@ -2,7 +2,7 @@ module.exports = {
   title: 'Fetch-API',
   tagline: 'Api client based of native fetch api',
   url: 'https://mihanizm56.github.io',
-  baseUrl: '/',
+  baseUrl: '/fetch-api/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
