@@ -4,10 +4,10 @@ sidebar_label: Get
 ---
 
 ```javascript
-import Joi from "@hapi/joi";
+import Joi from "joi";
 import { PureRestRequest, IResponse } from "@mihanizm56/fetch-api";
 
-export const getContractsRequest = (): Promise<IResponse> =>
+export const getWhateverRequest = (): Promise<IResponse> =>
   new PureRestRequest().getRequest({
     endpoint: "http://localhost:3000",
     responseSchema: Joi.object({

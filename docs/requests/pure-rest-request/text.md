@@ -4,7 +4,7 @@ sidebar_label: Text request
 ---
 
 ```javascript
-import Joi from "@hapi/joi";
+import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getPhotoRequest = (): Promise<IResponse> =>

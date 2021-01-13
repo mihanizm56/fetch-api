@@ -34,7 +34,21 @@ module.exports = {
         items: ['requests/json-rpc-request/batched','requests/json-rpc-request/regular'],
       }
     ],
-    Features: ['features/mdx'],
+    Examples: [
+      'examples/universal-requests',
+      'examples/validations',
+      'examples/one-interface',
+      'examples/error-catching',
+      'examples/cancel-requests',
+      'examples/logging',
+      'examples/query-params',
+      'examples/response-progress',
+      'examples/retry-requests',
+      'examples/select-response-fields',
+      'examples/translation',
+      'examples/browser-support',
+      'examples/request-timeout'
+    ],
   },
 };
 

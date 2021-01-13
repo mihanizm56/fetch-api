@@ -7,7 +7,7 @@ sidebar_label: JSON-RPC Request with batch
 
 ```javascript
 import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";
-import Joi from '@hapi/joi'
+import Joi from 'joi'
 
 const responseSchemaObjectOne = Joi.object({
   foo: Joi.string().required(),

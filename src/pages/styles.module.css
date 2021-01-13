@@ -18,6 +18,11 @@
   }
 }
 
+.hero__title{
+  color:var(--ifm-color-primary);
+  font-size: 40px;
+}
+
 .buttons {
   display: flex;
   align-items: center;

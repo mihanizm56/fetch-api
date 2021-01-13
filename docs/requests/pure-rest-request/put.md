@@ -4,7 +4,7 @@ sidebar_label: Put
 ---
 
 ```javascript
-import Joi from "@hapi/joi";
+import Joi from "joi";
 import { PureRestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const putContractsRequest = (): Promise<IResponse> =>

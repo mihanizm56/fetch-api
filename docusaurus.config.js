@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Fetch-API',
-  tagline: 'Api client based of native fetch api',
+  tagline: 'Api client based of native fetch api with a lot of features',
   url: 'https://mihanizm56.github.io',
   baseUrl: '/fetch-api/',
   onBrokenLinks: 'throw',
@@ -9,6 +9,7 @@ module.exports = {
   organizationName: 'mihanizm56',
   projectName: 'Fetch-API',
   themeConfig: {
+    theme: require('prism-react-renderer/themes/github'),
     hideableSidebar: true,
     algolia: {
       apiKey: 'YOUR_API_KEY',
@@ -37,6 +38,11 @@ module.exports = {
           docId: 'api/api',
         },
         {
+          to: 'https://github.com/mihanizm56/fetch-api',
+          label: 'Star me',
+          position: 'right',
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
         },
@@ -62,6 +68,7 @@ module.exports = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        excludeNextVersionDocs: true,
       },
     ],
   ],
