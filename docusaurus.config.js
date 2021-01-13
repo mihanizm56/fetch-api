@@ -5,7 +5,7 @@ module.exports = {
   baseUrl: '/fetch-api/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/like.ico',
   organizationName: 'mihanizm56',
   projectName: 'Fetch-API',
   themeConfig: {
@@ -22,7 +22,7 @@ module.exports = {
       hideOnScroll: true,
       logo: {
         alt: 'Fetch-API Logo',
-        src: 'img/logo.svg',
+        src: 'img/like.svg',
       },
       items: [
         {
