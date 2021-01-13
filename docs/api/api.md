@@ -2,7 +2,6 @@
 title: API
 ---
 
-
 #### Request input options:
 
 - endpoint(string): the request url
