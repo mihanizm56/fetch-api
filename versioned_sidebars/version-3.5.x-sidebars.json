@@ -1,5 +1,5 @@
 {
-  "version-3.5.1/someSidebar": [
+  "version-3.5.x/someSidebar": [
     {
       "collapsed": true,
       "type": "category",
@@ -7,7 +7,7 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-3.5.1/overview"
+          "id": "version-3.5.x/overview"
         }
       ]
     },
@@ -23,31 +23,31 @@
           "items": [
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/blob"
+              "id": "version-3.5.x/requests/rest-request/blob"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/text"
+              "id": "version-3.5.x/requests/rest-request/text"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/get"
+              "id": "version-3.5.x/requests/rest-request/get"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/post"
+              "id": "version-3.5.x/requests/rest-request/post"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/put"
+              "id": "version-3.5.x/requests/rest-request/put"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/patch"
+              "id": "version-3.5.x/requests/rest-request/patch"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/rest-request/delete"
+              "id": "version-3.5.x/requests/rest-request/delete"
             }
           ]
         },
@@ -58,31 +58,31 @@
           "items": [
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/blob"
+              "id": "version-3.5.x/requests/pure-rest-request/blob"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/text"
+              "id": "version-3.5.x/requests/pure-rest-request/text"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/get"
+              "id": "version-3.5.x/requests/pure-rest-request/get"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/post"
+              "id": "version-3.5.x/requests/pure-rest-request/post"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/put"
+              "id": "version-3.5.x/requests/pure-rest-request/put"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/patch"
+              "id": "version-3.5.x/requests/pure-rest-request/patch"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/pure-rest-request/delete"
+              "id": "version-3.5.x/requests/pure-rest-request/delete"
             }
           ]
         },
@@ -93,11 +93,11 @@
           "items": [
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/json-rpc-request/batched"
+              "id": "version-3.5.x/requests/json-rpc-request/batched"
             },
             {
               "type": "doc",
-              "id": "version-3.5.1/requests/json-rpc-request/regular"
+              "id": "version-3.5.x/requests/json-rpc-request/regular"
             }
           ]
         }
@@ -110,55 +110,55 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/universal-requests"
+          "id": "version-3.5.x/examples/universal-requests"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/validations"
+          "id": "version-3.5.x/examples/validations"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/one-interface"
+          "id": "version-3.5.x/examples/one-interface"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/error-catching"
+          "id": "version-3.5.x/examples/error-catching"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/cancel-requests"
+          "id": "version-3.5.x/examples/cancel-requests"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/logging"
+          "id": "version-3.5.x/examples/logging"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/query-params"
+          "id": "version-3.5.x/examples/query-params"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/response-progress"
+          "id": "version-3.5.x/examples/response-progress"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/retry-requests"
+          "id": "version-3.5.x/examples/retry-requests"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/select-response-fields"
+          "id": "version-3.5.x/examples/select-response-fields"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/translation"
+          "id": "version-3.5.x/examples/translation"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/browser-support"
+          "id": "version-3.5.x/examples/browser-support"
         },
         {
           "type": "doc",
-          "id": "version-3.5.1/examples/request-timeout"
+          "id": "version-3.5.x/examples/request-timeout"
         }
       ]
     }
