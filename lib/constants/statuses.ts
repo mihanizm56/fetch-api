@@ -1,2 +1,0 @@
-export const REQUEST_ERROR_STATUS_CODE = 500;
-export const OFFLINE_STATUS_CODE = 600;

@@ -7,7 +7,7 @@ import {
   IDType,
   FormatValidateParams,
 } from '@/types';
-import { requestProtocolsMap } from '@/constants/shared';
+import { requestProtocolsMap } from '@/constants';
 
 export type FormatValidateParamsMehod = (
   options: FormatValidateParams,

@@ -1,7 +1,7 @@
 import {
   IRequestParams,
 } from "@/types";
-import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
+import { parseTypesMap, requestProtocolsMap } from "@/constants";
 import { BaseRequest } from "./base-request";
 
 export class RestRequest extends BaseRequest {

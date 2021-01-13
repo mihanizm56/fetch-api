@@ -1,4 +1,4 @@
-import { parseTypesMap } from '@/constants/shared';
+import { parseTypesMap } from '@/constants';
 import { ProgressOptionsType, ResponseParser } from '@/types';
 import { isNode } from '../is-node';
 import { BlobParser } from './blob-parse';

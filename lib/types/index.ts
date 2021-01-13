@@ -1,4 +1,4 @@
-import { parseTypesMap, requestProtocolsMap } from '../constants/shared';
+import { ICacheMap, parseTypesMap, requestProtocolsMap } from '@/constants';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
@@ -76,15 +76,6 @@ export type ProgressCallbackParams = ({
   total: number;
   current: number;
 }) => void;
-
-export interface ICacheMap {
-  default: 'default';
-  forceCache: 'force-cache';
-  noCache: 'no-cache';
-  noStore: 'no-store';
-  onlyIfCached: 'only-if-cached';
-  reload: 'reload';
-}
 
 export const cacheMap: ICacheMap = {
   default: 'default',

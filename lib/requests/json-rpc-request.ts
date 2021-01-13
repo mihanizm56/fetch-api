@@ -1,5 +1,5 @@
 import { IJSONPRCRequestParams, IResponse, IJSONPRCRequestFormattedBodyParams, IJSONPRCRequestBodyParams } from "@/types";
-import { parseTypesMap, requestProtocolsMap } from "@/constants/shared";
+import { parseTypesMap, requestProtocolsMap } from "@/constants";
 import { BaseRequest } from "./base-request";
 import { uniqueId } from "@/utils/unique-id";
 

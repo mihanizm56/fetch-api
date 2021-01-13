@@ -15,6 +15,5 @@ export {
   ProgressOptionsType,
   CustomSelectorDataType
 } from './types';
-export { ABORT_REQUEST_EVENT_NAME } from './constants/shared';
-export { OFFLINE_STATUS_CODE } from './constants/statuses'
+export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE } from '@/constants';
 export { FetchProxyMaker } from './utils/fetch-proxy-maker';

@@ -7,7 +7,7 @@ import {
 } from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 import { FormatDataTypeValidator } from '@/validators/response-type-validator';
-import { NETWORK_ERROR_KEY } from '@/constants/shared';
+import { NETWORK_ERROR_KEY } from '@/constants';
 import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 
 type ParamsType = {

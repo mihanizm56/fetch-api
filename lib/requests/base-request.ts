@@ -24,14 +24,14 @@ import {
   ABORT_REQUEST_EVENT_NAME,
   NOT_FOUND_ERROR_KEY,
   cacheMap,
-} from "@/constants/shared";
+} from "@/constants";
 import { FormatDataTypeValidator } from "../validators/response-type-validator";
 import { ErrorResponseFormatter } from "../errors-formatter/error-response-formatter";
-import { TIMEOUT_VALUE } from "../constants/timeout";
+import { TIMEOUT_VALUE } from "@/constants";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
 import { getDataFromSelector } from "@/utils/get-data-from-selector";
-import { OFFLINE_STATUS_CODE, REQUEST_ERROR_STATUS_CODE } from "@/constants/statuses";
+import { OFFLINE_STATUS_CODE, REQUEST_ERROR_STATUS_CODE } from "@/constants";
 import { makeErrorRequestLogs } from "@/utils/make-error-request-logs";
 import { getIsRequestOnline } from "@/utils/get-is-request-online";
 import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-factory";

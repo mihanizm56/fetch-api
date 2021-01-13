@@ -9,7 +9,7 @@ import {
   ABORTED_ERROR_TEXT_SAFARI,
   ABORTED_ERROR_TEXT_MOZILLA,
   NOT_FOUND_ERROR_KEY,
-} from '@/constants/shared';
+} from '@/constants';
 
 interface IErrorResponseFormatter {
   getFormattedErrorResponse: (

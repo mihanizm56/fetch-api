@@ -1,5 +1,5 @@
 import { ResponseFormatter, FormatResponseParamsType } from '@/types';
-import { requestProtocolsMap, parseTypesMap } from '@/constants/shared';
+import { requestProtocolsMap, parseTypesMap } from '@/constants';
 import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 import { RestResponseFormatter } from './rest-response-formatter';
 import { BlobResponseFormatter } from './blob-response-formatter';

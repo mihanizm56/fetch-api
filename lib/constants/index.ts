@@ -48,3 +48,9 @@ export const ABORTED_ERROR_TEXT_CHROME = 'The user aborted a request.';
 export const ABORTED_ERROR_TEXT_MOZILLA = 'The operation was aborted. ';
 export const ABORTED_ERROR_TEXT_SAFARI = 'Fetch is aborted';
 export const ABORT_REQUEST_EVENT_NAME = 'abort_request_event';
+
+export const REQUEST_ERROR_STATUS_CODE = 500;
+export const OFFLINE_STATUS_CODE = 600;
+
+// timeout value to cancel the request
+export const TIMEOUT_VALUE = 60000;

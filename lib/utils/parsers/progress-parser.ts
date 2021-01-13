@@ -1,5 +1,5 @@
 import { ProgressOptionsType, ResponseParser } from '@/types';
-import { parseTypesMap } from '@/constants/shared';
+import { parseTypesMap } from '@/constants';
 
 type ProgressParseOptionsType = {
   progressOptions: ProgressOptionsType;
