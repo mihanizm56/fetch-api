@@ -40,6 +40,12 @@ import { progressParser } from "@/utils/parsers/progress-parser";
 import { getDataFromSelector } from "@/utils/get-data-from-selector";
 import { OFFLINE_STATUS_CODE } from "@/constants/statuses";
 
+
+type GetFilteredDefaultErrorMessageParamsType = {
+  response:Response, 
+  isErrorTextStraightToOutput?:boolean
+}
+
 type GetFormattedHeadersParamsType = {
   body: JSON | FormData,
   headers?: {
@@ -157,6 +163,20 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
+  getFilteredDefaultErrorMessage = ({
+    response, 
+    isErrorTextStraightToOutput}: GetFilteredDefaultErrorMessageParamsType): string => {
+    // if awaiting the pure response from fetch
+    if(isErrorTextStraightToOutput && 
+        typeof response.statusText === 'string' && 
+        response.statusText.trim() && 
+        response.statusText.trim() !== 'OK'
+      ){
+        return response.statusText;
+      }
+
+    return NETWORK_ERROR_KEY;
+  }
 
   // get an isomorfic fetch
   getIsomorphicFetch = ({
@@ -543,10 +563,11 @@ export class BaseRequest implements IBaseRequests {
           }
         }
 
-        // if not status from the whitelist - throw error with default error
-        throw new Error(
-          isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY
-        );
+        // if a status is above 500 or response not valid or response.statusText is empty 
+        // throw an error with default error message
+        const validationErrorMessage = this.getFilteredDefaultErrorMessage({response, isErrorTextStraightToOutput})
+
+        throw new Error(validationErrorMessage);
       })
       .catch((error) => {
         console.error("(fetch-api): get error in the request", endpoint);
