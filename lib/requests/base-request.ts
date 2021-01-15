@@ -49,6 +49,11 @@ type AbortListenersParamsType = {
   abortRequestId: string;
 }
 
+type GetFilteredDefaultErrorMessageParamsType = {
+  response:Response, 
+  isErrorTextStraightToOutput?:boolean
+}
+
 interface IBaseRequests {
   makeFetch: (
     values: IRequestParams &
@@ -195,6 +200,21 @@ export class BaseRequest implements IBaseRequests {
       arrayFormat: arrayFormat || 'none'
     })}`;
   };
+
+  getFilteredDefaultErrorMessage = ({
+    response, 
+    isErrorTextStraightToOutput}: GetFilteredDefaultErrorMessageParamsType): string => {
+    // if awaiting the pure response from fetch
+    if(isErrorTextStraightToOutput && 
+        typeof response.statusText === 'string' && 
+        response.statusText.trim() && 
+        response.statusText.trim() !== 'OK'
+      ){
+        return response.statusText;
+      }
+
+    return NETWORK_ERROR_KEY;
+  }
 
   // get formatted fetch body in needed
   getFetchBody = ({
@@ -444,10 +464,11 @@ export class BaseRequest implements IBaseRequests {
           }
         }
 
-        // if a status is above 500 - throw an error with default error message
-        throw new Error(
-          isErrorTextStraightToOutput ? response.statusText : NETWORK_ERROR_KEY
-        );
+        // if a status is above 500 or response not valid or response.statusText is empty 
+        // throw an error with default error message
+        const validationErrorMessage = this.getFilteredDefaultErrorMessage({response, isErrorTextStraightToOutput})
+
+        throw new Error(validationErrorMessage);
       })
       .catch((error: Error) => {
         const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY
