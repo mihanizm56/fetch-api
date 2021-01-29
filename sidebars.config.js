@@ -6,8 +6,6 @@ module.exports = {
         type: 'category',
         label: 'REST request',
         items: [
-          'requests/rest-request/blob',
-          'requests/rest-request/text',
           'requests/rest-request/get',
           'requests/rest-request/post',
           'requests/rest-request/put',
@@ -19,8 +17,6 @@ module.exports = {
       type: 'category',
         label: 'Pure REST request',
         items: [
-          'requests/pure-rest-request/blob',
-          'requests/pure-rest-request/text',
           'requests/pure-rest-request/get',
           'requests/pure-rest-request/post',
           'requests/pure-rest-request/put',
