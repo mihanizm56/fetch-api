@@ -292,4 +292,36 @@ export type FormatValidateParams = {
   isResponseStatusSuccess?: boolean;
   isStatusEmpty?: boolean;
   isBatchRequest?: boolean;
+  isBlobOrTextRequest?: boolean;
+};
+
+export type FormatValidateParamsMethod = (
+  options: FormatValidateParams,
+) => boolean;
+
+export type RestResponseValidParams = {
+  response: IRESTPureResponse;
+  parseType?: keyof typeof parseTypesMap;
+};
+
+export type FormatValidateParamsMehod = (
+  options: FormatValidateParams,
+) => boolean;
+
+export type GetFormattedHeadersParamsType = {
+  isBlobOrTextRequest?: boolean;
+  body: JSON | FormData;
+  headers?: {
+    [key: string]: any;
+  };
+};
+
+export type AbortListenersParamsType = {
+  fetchController: AbortController;
+  abortRequestId: string;
+};
+
+export type GetFilteredDefaultErrorMessageParamsType = {
+  response: Response;
+  isErrorTextStraightToOutput?: boolean;
 };

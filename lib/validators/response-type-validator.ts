@@ -6,12 +6,9 @@ import {
   IJSONRPCPureResponse,
   IDType,
   FormatValidateParams,
+  FormatValidateParamsMethod,
 } from '@/types';
 import { requestProtocolsMap } from '@/constants';
-
-export type FormatValidateParamsMehod = (
-  options: FormatValidateParams,
-) => boolean;
 
 interface IResponseFormatValidator {
   getIsRestFormatResponseValid: (response: IRESTPureResponse) => boolean;
@@ -75,10 +72,18 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     requestId === responceId;
 
   // todo fix any type
-  public getRestFormatIsValid = ({ response, schema }: any) => {
+  public getRestFormatIsValid = ({
+    response,
+    schema,
+    isBlobOrTextRequest,
+  }: any) => {
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
       return false;
+    }
+
+    if (isBlobOrTextRequest) {
+      return true;
     }
 
     const isFormatValid = this.getIsRestFormatResponseValid(response);
@@ -174,8 +179,13 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     schema,
     isResponseStatusSuccess,
     isStatusEmpty,
+    isBlobOrTextRequest,
   }: FormatValidateParams) => {
     if (isStatusEmpty) {
+      return true;
+    }
+
+    if (isBlobOrTextRequest) {
       return true;
     }
 
@@ -207,7 +217,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   getFormatValidateMethod = ({
     protocol,
     extraValidationCallback,
-  }: GetFormatValidateMethodParams): FormatValidateParamsMehod => {
+  }: GetFormatValidateMethodParams): FormatValidateParamsMethod => {
     // if there is an extra callback for validations
     if (extraValidationCallback) {
       return extraValidationCallback;

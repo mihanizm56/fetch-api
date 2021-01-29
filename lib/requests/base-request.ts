@@ -12,8 +12,10 @@ import {
   GetFetchBodyParamsType,
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
-  CustomSelectorDataType,
-  PersistentFetchParamsType
+  PersistentFetchParamsType,
+  AbortListenersParamsType,
+  GetFormattedHeadersParamsType,
+  GetFilteredDefaultErrorMessageParamsType
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -37,22 +39,7 @@ import { getIsRequestOnline } from "@/utils/get-is-request-online";
 import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-factory";
 import { getIsStatusCodeSuccess } from "@/utils/get-is-status-code-success";
 
-type GetFormattedHeadersParamsType = {
-  body: JSON | FormData,
-  headers?: {
-    [key: string]: any;
-  }
-}
 
-type AbortListenersParamsType = {
-  fetchController: AbortController;
-  abortRequestId: string;
-}
-
-type GetFilteredDefaultErrorMessageParamsType = {
-  response:Response, 
-  isErrorTextStraightToOutput?:boolean
-}
 
 interface IBaseRequests {
   makeFetch: (
@@ -245,13 +232,17 @@ export class BaseRequest implements IBaseRequests {
     }
   };
 
-  getFormattedHeaders = ({ body, headers }: GetFormattedHeadersParamsType) =>
-    isFormData(body)
-      ? headers
-      : ({
-        "Content-type": "application/json",
-        ...headers
-      })
+  getFormattedHeaders = ({ body, headers = {}, isBlobOrTextRequest }: GetFormattedHeadersParamsType) => {
+    if(isBlobOrTextRequest || isFormData(body)){
+      return headers
+    }
+
+    return {
+      "Content-type": "application/json",
+      ...headers
+    }
+  }
+
 
   // TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedResponseData = ({
@@ -266,7 +257,7 @@ export class BaseRequest implements IBaseRequests {
     body,
     isNotFound
   }: GetPreparedResponseDataParams): FormatResponseParamsType => {
-    if ((parseType === 'blob' || parseType === 'text') && !isNotFound ) {
+    if ((parseType === 'blob' || parseType === 'text') && !isNotFound) {
       return {
         data: response,
         translateFunction,
@@ -310,7 +301,6 @@ export class BaseRequest implements IBaseRequests {
       translateFunction,
       protocol,
       isErrorTextStraightToOutput,
-      isBlobGetRequest: false,
       statusCode,
     };
   };
@@ -351,6 +341,8 @@ export class BaseRequest implements IBaseRequests {
     referrerPolicy,
     retry
   }: MakeFetchType): Promise<IResponse> => {
+    const isBlobOrTextRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text;
+
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
       queryParams,
@@ -359,7 +351,8 @@ export class BaseRequest implements IBaseRequests {
 
     const formattedHeaders = this.getFormattedHeaders({
       body,
-      headers
+      headers,
+      isBlobOrTextRequest
     });
 
     const fetchBody = this.getFetchBody({
@@ -392,10 +385,20 @@ export class BaseRequest implements IBaseRequests {
     const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
       .then(async (response: Response) => {
         const statusCode = response.status;
-        const isValidStatus = statusCode <= 500;
         const isStatusEmpty = statusCode === 204;
-        const isNotFound = statusCode === 404;
-        const isResponseStatusSuccess = getIsStatusCodeSuccess(statusCode)    
+        const isNotFound = statusCode === 404;        
+        
+        // for text and blob response does not matter response to parse
+        // but does matter what code we get from the backend
+        // alse 404 is useful that can contain some data 
+        // and we need to provide that code to the client
+        const isValidStatus = isBlobOrTextRequest 
+          ? statusCode === 200 || statusCode === 304 || statusCode === 404
+          : statusCode <= 500;
+
+        const isResponseStatusSuccess = getIsStatusCodeSuccess(statusCode);
+        // disable all validations for "blob" and "text" requests
+        // because they always parse the response in necessary format even if error
 
         if (isValidStatus) {
           // any type because we did not know about data structure
@@ -406,7 +409,7 @@ export class BaseRequest implements IBaseRequests {
             isStatusEmpty,
             isNotFound,
             progressOptions
-          });
+          });          
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
@@ -423,8 +426,9 @@ export class BaseRequest implements IBaseRequests {
             prevId: id,
             isResponseStatusSuccess,
             isStatusEmpty,
-            isBatchRequest
-          });
+            isBatchRequest,
+            isBlobOrTextRequest
+          });          
 
           if (isFormatValid) {
             // get the formatter func
@@ -452,7 +456,8 @@ export class BaseRequest implements IBaseRequests {
             }
 
             // select the response data fields if all fields are not necessary
-            const selectedResponseData = selectData || customSelectorData 
+            // work only for json responses
+            const selectedResponseData = (selectData || customSelectorData) && !isBlobOrTextRequest 
               ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
               : formattedResponseData;
 
@@ -483,7 +488,7 @@ export class BaseRequest implements IBaseRequests {
           endpoint,
           errorRequestMessage,
           fetchBody,
-        })
+        });
 
         // remove the abort listener
         this.removeAbortListenerFromRequest();
