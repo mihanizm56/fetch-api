@@ -534,7 +534,7 @@ export class BaseRequest implements IBaseRequests {
             requestParams: fetchParams,
             response: this.response,
             formattedResponseData: formattedResponseError,
-            isError: false
+            isError: true
           })
         }
 
