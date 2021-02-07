@@ -82,6 +82,16 @@ const { error, errorText, data, additionalErrors } = await createItemsRequest(
 ```javascript
 import { FetchProxyMaker } from "@mihanizm56/fetch-api";
 
+new FetchProxyMaker().setResponseTrackCallback((requestData) => ({
+ // do some metrics or logging here
+}));
+```
+
+#### Set callback for metrics for all requests
+
+```javascript
+import { FetchProxyMaker } from "@mihanizm56/fetch-api";
+
 new FetchProxyMaker().setPersistentOptions(() => ({
   headers: {
     foo: 'bar',

@@ -15,7 +15,8 @@ import {
   PersistentFetchParamsType,
   AbortListenersParamsType,
   GetFormattedHeadersParamsType,
-  GetFilteredDefaultErrorMessageParamsType
+  GetFilteredDefaultErrorMessageParamsType,
+  SetResponseTrackCallback,
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -69,9 +70,13 @@ interface IBaseRequests {
 }
 
 export class BaseRequest implements IBaseRequests {
-  abortRequestListener: any = null
+  abortRequestListener: any = null; // TODO FIX ANY
+  response: Response | null = null;
+  fetchParams?: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
 
-  static persistentOptions?: PersistentFetchParamsType
+  static persistentOptions?: PersistentFetchParamsType;
+
+  static responseTrackCallback?: SetResponseTrackCallback;
 
   parseResponseData = async ({
     response,
@@ -364,22 +369,25 @@ export class BaseRequest implements IBaseRequests {
       isBatchRequest
     });
 
+    const fetchParams = {
+      endpoint: formattedEndpoint,
+      body: fetchBody,
+      mode,
+      headers: formattedHeaders,
+      method,
+      cache,
+      credentials,
+      integrity,
+      keepalive,
+      redirect,
+      referrer,
+      referrerPolicy,
+    }
+
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
       abortRequestId,
-      fetchParams: {
-        body: fetchBody,
-        mode,
-        headers: formattedHeaders,
-        method,
-        cache,
-        credentials,
-        integrity,
-        keepalive,
-        redirect,
-        referrer,
-        referrerPolicy,
-      },
+      fetchParams
     });
 
     const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
@@ -400,16 +408,21 @@ export class BaseRequest implements IBaseRequests {
         // disable all validations for "blob" and "text" requests
         // because they always parse the response in necessary format even if error
 
+        // add response to Request class to share if an error exist
+        // if the request will crash - there will be null
+        // if not - there will be pure response object
+        this.response = response;
+
         if (isValidStatus) {
           // any type because we did not know about data structure
-          const respondedData: any = await this.parseResponseData({
+          const parsedResponseData: any = await this.parseResponseData({
             response,
             parseType,
             isResponseStatusSuccess,
             isStatusEmpty,
             isNotFound,
             progressOptions
-          });          
+          });
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
@@ -421,7 +434,7 @@ export class BaseRequest implements IBaseRequests {
 
           // get the full validation result
           const isFormatValid: boolean = formatDataTypeValidator({
-            response: respondedData,
+            response: parsedResponseData,
             schema: responseSchema,
             prevId: id,
             isResponseStatusSuccess,
@@ -434,7 +447,7 @@ export class BaseRequest implements IBaseRequests {
             // get the formatter func
             const responseFormatter = new FormatResponseFactory().createFormatter(
               this.getPreparedResponseData({
-                response: respondedData,
+                response: parsedResponseData,
                 translateFunction,
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
@@ -463,6 +476,15 @@ export class BaseRequest implements IBaseRequests {
 
             // remove the abort listener
             this.removeAbortListenerFromRequest();
+
+            if(BaseRequest.responseTrackCallback){
+              BaseRequest.responseTrackCallback({
+                requestParams: fetchParams,
+                response: this.response,
+                formattedResponseData: formattedResponseData,
+                isError: false
+              })
+            }
 
             // return data
             return selectedResponseData;
@@ -494,9 +516,9 @@ export class BaseRequest implements IBaseRequests {
         this.removeAbortListenerFromRequest();
 
         const isOnlineRequest = getIsRequestOnline()
-        const errorCode = isOnlineRequest ? REQUEST_ERROR_STATUS_CODE : OFFLINE_STATUS_CODE;        
-
-        return new ErrorResponseFormatter().getFormattedErrorResponse({
+        const errorCode = isOnlineRequest ? REQUEST_ERROR_STATUS_CODE : OFFLINE_STATUS_CODE;
+        
+        const formattedResponseError = new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
             translateFunction,
             errorTextKey: errorRequestMessage,
@@ -504,7 +526,19 @@ export class BaseRequest implements IBaseRequests {
             statusCode: errorCode
           },
           statusCode: errorCode,
-        });
+        })
+
+
+        if(BaseRequest.responseTrackCallback){
+          BaseRequest.responseTrackCallback({
+            requestParams: fetchParams,
+            response: this.response,
+            formattedResponseData: formattedResponseError,
+            isError: false
+          })
+        }
+
+        return formattedResponseError
       });
 
     return this.requestRacer({

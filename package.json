@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.6.0",
+  "version": "3.6.1-beta.1",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -54,7 +54,7 @@
     "eslint-import-resolver-alias": "1.1.2",
     "eslint-import-resolver-typescript": "2.0.0",
     "eslint-loader": "3.0.2",
-    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-import": "2.20.1",
     "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-security": "1.4.0",
     "express": "4.17.1",
@@ -86,7 +86,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g config/git/commitlint.js",
-      "pre-commit": "npm run test && npm run lint && npm run packages-vulnerability-check && git add .",
+      "pre-commit": "npm run test && git add .",
       "pre-push": "npm run size",
       "prepare-commit-msg": "node ./config/git/prepare-commit.js"
     }
