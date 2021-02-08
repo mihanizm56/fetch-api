@@ -1,12 +1,10 @@
 {
   "name": "fetch-api",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "private": true,
   "scripts": {
-    "docusaurus": "docusaurus",
     "start": "docusaurus start --no-open",
     "build": "docusaurus build",
-    "swizzle": "docusaurus swizzle",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear"
   },

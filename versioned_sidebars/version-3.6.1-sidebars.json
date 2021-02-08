@@ -1,0 +1,154 @@
+{
+  "version-3.6.1/someSidebar": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Overview",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-3.6.1/overview"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Request Types",
+      "items": [
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "REST request",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/rest-request/get"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/rest-request/post"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/rest-request/put"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/rest-request/patch"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/rest-request/delete"
+            }
+          ]
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Pure REST request",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/pure-rest-request/get"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/pure-rest-request/post"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/pure-rest-request/put"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/pure-rest-request/patch"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/pure-rest-request/delete"
+            }
+          ]
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "JSON-RPC request",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/json-rpc-request/batched"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.6.1/requests/json-rpc-request/regular"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Examples",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/universal-requests"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/validations"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/one-interface"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/error-catching"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/cancel-requests"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/logging"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/query-params"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/response-progress"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/retry-requests"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/select-response-fields"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/translation"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/browser-support"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/request-timeout"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.6.1/examples/proxy-maker"
+        }
+      ]
+    }
+  ]
+}

@@ -43,7 +43,8 @@ module.exports = {
       'examples/select-response-fields',
       'examples/translation',
       'examples/browser-support',
-      'examples/request-timeout'
+      'examples/request-timeout',
+      'examples/proxy-maker'
     ],
   },
 };
