@@ -14,7 +14,6 @@ export class FetchProxyMaker implements IFetchProxyMaker{
         } catch (error) {
             console.error('setResponseTrackCallback gets an error', error);
         }
-
     }
 
     // adds params to all requests

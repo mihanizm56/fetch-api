@@ -1,5 +1,4 @@
 import { ICacheMap, parseTypesMap, requestProtocolsMap } from '@/constants';
-import { Request } from 'node-fetch';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
@@ -11,7 +10,8 @@ export type TranslateFunctionType = (
 export type SetResponseTrackCallbackOptions = {
   requestParams: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
   response: Response | null;
-  isError: boolean;
+  pureResponseData: any | null;
+  requestError: boolean;
   formattedResponseData:IResponse;
 }
 
@@ -334,3 +334,10 @@ export type GetFilteredDefaultErrorMessageParamsType = {
   response: Response;
   isErrorTextStraightToOutput?: boolean;
 };
+
+export type ExtendedResponse = Omit<Response,'body'> & {body:any};
+
+export type SetResponseParams = {
+  pureResponse: ExtendedResponse,
+  responseBody: any;
+}

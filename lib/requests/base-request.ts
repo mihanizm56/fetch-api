@@ -17,6 +17,8 @@ import {
   GetFormattedHeadersParamsType,
   GetFilteredDefaultErrorMessageParamsType,
   SetResponseTrackCallback,
+  SetResponseParams,
+  ExtendedResponse,
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -72,6 +74,7 @@ interface IBaseRequests {
 export class BaseRequest implements IBaseRequests {
   abortRequestListener: any = null; // TODO FIX ANY
   response: Response | null = null;
+  pureResponseData: any = null;
   fetchParams?: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
 
   static persistentOptions?: PersistentFetchParamsType;
@@ -248,7 +251,6 @@ export class BaseRequest implements IBaseRequests {
     }
   }
 
-
   // TODO REFACTOR THIS FORMATTING!!!!!!
   getPreparedResponseData = ({
     response,
@@ -424,6 +426,8 @@ export class BaseRequest implements IBaseRequests {
             progressOptions
           });
 
+          this.pureResponseData = parsedResponseData;
+
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
             {
@@ -481,8 +485,9 @@ export class BaseRequest implements IBaseRequests {
               BaseRequest.responseTrackCallback({
                 requestParams: fetchParams,
                 response: this.response,
+                pureResponseData: this.pureResponseData,
                 formattedResponseData: formattedResponseData,
-                isError: false
+                requestError: false
               })
             }
 
@@ -534,7 +539,8 @@ export class BaseRequest implements IBaseRequests {
             requestParams: fetchParams,
             response: this.response,
             formattedResponseData: formattedResponseError,
-            isError: true
+            requestError: true,
+            pureResponseData:this.pureResponseData
           })
         }
 
