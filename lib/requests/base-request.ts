@@ -481,7 +481,7 @@ export class BaseRequest implements IBaseRequests {
             // remove the abort listener
             this.removeAbortListenerFromRequest();
 
-            // fire additional middlewares
+            // fire additional callbacks with response and request data
             BaseRequest.responseTrackCallbacks.forEach((callback)=>{
               callback({
                 requestParams: fetchParams,
@@ -534,7 +534,7 @@ export class BaseRequest implements IBaseRequests {
           statusCode: errorCode,
         })
 
-        // fire additional middlewares
+        // fire additional callbacks with response and request data
         BaseRequest.responseTrackCallbacks.forEach((callback)=>{
           callback({
             requestParams: fetchParams,
