@@ -8,15 +8,18 @@ export type TranslateFunctionType = (
 ) => string;
 
 export type SetResponseTrackCallbackOptions = {
-  requestParams: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
+  requestParams: RequestInit &
+    Pick<IRequestParams, 'headers'> & { endpoint: string };
   response: Response | null;
   pureResponseData: any | null;
   requestError: boolean;
-  formattedResponseData:IResponse;
-}
+  formattedResponseData: IResponse;
+};
 
 export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
-export type SetResponseTrackCallback = (options:SetResponseTrackCallbackOptions) => void;
+export type SetResponseTrackCallback = (
+  options: SetResponseTrackCallbackOptions,
+) => void;
 
 export type AdditionalErrors = Record<string, any>;
 
@@ -335,9 +338,9 @@ export type GetFilteredDefaultErrorMessageParamsType = {
   isErrorTextStraightToOutput?: boolean;
 };
 
-export type ExtendedResponse = Omit<Response,'body'> & {body:any};
+export type ExtendedResponse = Omit<Response, 'body'> & { body: any };
 
 export type SetResponseParams = {
-  pureResponse: ExtendedResponse,
+  pureResponse: ExtendedResponse;
   responseBody: any;
-}
+};
