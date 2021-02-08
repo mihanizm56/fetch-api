@@ -10,7 +10,7 @@ export class FetchProxyMaker implements IFetchProxyMaker{
     // possibility to get response fro logging and metrics
     setResponseTrackCallback(callback: SetResponseTrackCallback){
         try {
-            BaseRequest.responseTrackCallback = callback;  
+            BaseRequest.responseTrackCallbacks.push(callback);  
         } catch (error) {
             console.error('setResponseTrackCallback gets an error', error);
         }

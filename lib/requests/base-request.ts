@@ -79,7 +79,7 @@ export class BaseRequest implements IBaseRequests {
 
   static persistentOptions?: PersistentFetchParamsType;
 
-  static responseTrackCallback?: SetResponseTrackCallback;
+  static responseTrackCallbacks: Array<SetResponseTrackCallback> = [];
 
   parseResponseData = async ({
     response,
@@ -481,15 +481,16 @@ export class BaseRequest implements IBaseRequests {
             // remove the abort listener
             this.removeAbortListenerFromRequest();
 
-            if(BaseRequest.responseTrackCallback){
-              BaseRequest.responseTrackCallback({
+            // fire additional middlewares
+            BaseRequest.responseTrackCallbacks.forEach((callback)=>{
+              callback({
                 requestParams: fetchParams,
                 response: this.response,
                 pureResponseData: this.pureResponseData,
                 formattedResponseData: formattedResponseData,
                 requestError: false
               })
-            }
+            });
 
             // return data
             return selectedResponseData;
@@ -533,16 +534,16 @@ export class BaseRequest implements IBaseRequests {
           statusCode: errorCode,
         })
 
-
-        if(BaseRequest.responseTrackCallback){
-          BaseRequest.responseTrackCallback({
+        // fire additional middlewares
+        BaseRequest.responseTrackCallbacks.forEach((callback)=>{
+          callback({
             requestParams: fetchParams,
             response: this.response,
+            pureResponseData: this.pureResponseData,
             formattedResponseData: formattedResponseError,
-            requestError: true,
-            pureResponseData:this.pureResponseData
+            requestError: false
           })
-        }
+        });
 
         return formattedResponseError
       });
