@@ -129,6 +129,7 @@ export interface IRequestParams extends RequestInit {
   customSelectorData?: CustomSelectorDataType;
   selectData?: string;
   retry?: number;
+  traceRequestCallback?: SetResponseTrackCallback;
 }
 
 export interface IResponse {

@@ -346,7 +346,8 @@ export class BaseRequest implements IBaseRequests {
     redirect,
     referrer,
     referrerPolicy,
-    retry
+    retry,
+    traceRequestCallback
   }: MakeFetchType): Promise<IResponse> => {
     const isBlobOrTextRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text;
 
@@ -492,6 +493,17 @@ export class BaseRequest implements IBaseRequests {
               })
             });
 
+            // fire special tracing request callback
+            if(traceRequestCallback) {
+              traceRequestCallback({
+                requestParams: fetchParams,
+                response: this.response,
+                pureResponseData: this.pureResponseData,
+                formattedResponseData: formattedResponseData,
+                requestError: false
+              })
+            }
+
             // return data
             return selectedResponseData;
           }
@@ -544,6 +556,17 @@ export class BaseRequest implements IBaseRequests {
             requestError: true
           })
         });
+
+        // fire special tracing request callback
+        if(traceRequestCallback) {
+          traceRequestCallback({
+            requestParams: fetchParams,
+            response: this.response,
+            pureResponseData: this.pureResponseData,
+            formattedResponseData: formattedResponseError,
+            requestError: false
+          })
+        }
 
         return formattedResponseError
       });
