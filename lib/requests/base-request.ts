@@ -40,8 +40,6 @@ import { getIsRequestOnline } from "@/utils/get-is-request-online";
 import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-factory";
 import { getIsStatusCodeSuccess } from "@/utils/get-is-status-code-success";
 
-
-
 interface IBaseRequests {
   makeFetch: (
     values: IRequestParams &
@@ -562,7 +560,7 @@ export class BaseRequest implements IBaseRequests {
             response: this.response,
             pureResponseData: this.pureResponseData,
             formattedResponseData: formattedResponseError,
-            requestError: false
+            requestError: true
           })
         }
 
