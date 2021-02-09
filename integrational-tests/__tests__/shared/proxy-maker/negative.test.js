@@ -43,8 +43,11 @@ describe('FetchProxyMaker negative tests', () => {
       test('set one tracking callback', async () => {
         let resultOptions
 
-        new FetchProxyMaker().setResponseTrackCallback((setResponseTrackCallbackOptions) => {
-         resultOptions = {...setResponseTrackCallbackOptions}
+        new FetchProxyMaker().setResponseTrackCallback({
+          callback:(setResponseTrackCallbackOptions) => {
+            resultOptions = {...setResponseTrackCallbackOptions}
+           },
+           name:'test'
         });
 
         const requestConfig = {
@@ -66,13 +69,19 @@ describe('FetchProxyMaker negative tests', () => {
         let resultOptionsOne
         let resultOptionsTwo
 
-        new FetchProxyMaker().setResponseTrackCallback((setResponseTrackCallbackOptions) => {
-          resultOptionsOne = {...setResponseTrackCallbackOptions}
+        new FetchProxyMaker().setResponseTrackCallback({
+          callback:(setResponseTrackCallbackOptions) => {
+            resultOptionsOne = {...setResponseTrackCallbackOptions}
+           },
+           name:'test one'
         });
 
-        new FetchProxyMaker().setResponseTrackCallback((setResponseTrackCallbackOptions) => {
-          resultOptionsTwo = {...setResponseTrackCallbackOptions}
-         });
+        new FetchProxyMaker().setResponseTrackCallback({
+          callback:(setResponseTrackCallbackOptions) => {
+            resultOptionsTwo = {...setResponseTrackCallbackOptions}
+           },
+           name:'test two'
+        });
 
         const requestConfig = {
           ...requestBaseConfig,

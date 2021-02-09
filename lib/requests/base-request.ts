@@ -16,9 +16,7 @@ import {
   AbortListenersParamsType,
   GetFormattedHeadersParamsType,
   GetFilteredDefaultErrorMessageParamsType,
-  SetResponseTrackCallback,
-  SetResponseParams,
-  ExtendedResponse,
+  SetResponseTrackOptions,
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -79,7 +77,7 @@ export class BaseRequest implements IBaseRequests {
 
   static persistentOptions?: PersistentFetchParamsType;
 
-  static responseTrackCallbacks: Array<SetResponseTrackCallback> = [];
+  static responseTrackCallbacks: Array<SetResponseTrackOptions> = [];
 
   parseResponseData = async ({
     response,
@@ -483,7 +481,7 @@ export class BaseRequest implements IBaseRequests {
             this.removeAbortListenerFromRequest();
 
             // fire additional callbacks with response and request data
-            BaseRequest.responseTrackCallbacks.forEach((callback)=>{
+            BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
               callback({
                 requestParams: fetchParams,
                 response: this.response,
@@ -547,7 +545,7 @@ export class BaseRequest implements IBaseRequests {
         })
 
         // fire additional callbacks with response and request data
-        BaseRequest.responseTrackCallbacks.forEach((callback)=>{
+        BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
           callback({
             requestParams: fetchParams,
             response: this.response,

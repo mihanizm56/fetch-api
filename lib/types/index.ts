@@ -20,6 +20,10 @@ export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
 export type SetResponseTrackCallback = (
   options: SetResponseTrackCallbackOptions,
 ) => void;
+export type SetResponseTrackOptions = {
+  callback: SetResponseTrackCallback;
+  name: string;
+};
 
 export type AdditionalErrors = Record<string, any>;
 
