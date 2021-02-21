@@ -8,7 +8,8 @@ import {
   FormatValidateParams,
   FormatValidateParamsMethod,
 } from '@/types';
-import { requestProtocolsMap } from '@/constants';
+import { HAPI_CONSTANT, requestProtocolsMap } from '@/constants';
+import { DependencyController } from '@/utils/dependency-controller';
 
 interface IResponseFormatValidator {
   getIsRestFormatResponseValid: (response: IRESTPureResponse) => boolean;
@@ -214,13 +215,22 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     return true;
   };
 
-  getFormatValidateMethod = ({
+  private truthyValidator = () => true
+
+  public getFormatValidateMethod = ({
     protocol,
     extraValidationCallback,
   }: GetFormatValidateMethodParams): FormatValidateParamsMethod => {
     // if there is an extra callback for validations
     if (extraValidationCallback) {
       return extraValidationCallback;
+    }
+
+    // check that joi lib is exist and we can use it 
+    const Joi = new DependencyController().getDependency(HAPI_CONSTANT)
+
+    if(!Boolean(Joi)){
+      return this.truthyValidator;
     }
 
     switch (protocol) {

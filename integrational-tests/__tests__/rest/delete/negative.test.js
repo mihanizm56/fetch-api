@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, PureRestRequest } = require('../../../../dist');
+const { RestRequest, PureRestRequest, HAPI_CONSTANT, DependencyController } = require('../../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -9,6 +9,11 @@ const requestBaseConfig = {
   translateFunction: (key, options) =>
     `translateFunction got key ${key} and options ${options}`,
 };
+
+new DependencyController().setDependency({
+  name: HAPI_CONSTANT,
+  value: Joi
+})
 
 describe('delete request (negative)', () => {
   beforeEach(() => {

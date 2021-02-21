@@ -54,3 +54,5 @@ export const OFFLINE_STATUS_CODE = 600;
 
 // timeout value to cancel the request
 export const TIMEOUT_VALUE = 60000;
+
+export const HAPI_CONSTANT = '@hapi/joi';

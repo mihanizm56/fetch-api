@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.6.2",
+  "version": "4.0.0-beta.0",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/mihanizm56/fetch-api#readme",
   "dependencies": {
-    "@hapi/joi": "17.1.1",
     "colors": "1.4.0",
     "json-mask": "1.0.4",
     "node-fetch": "2.6.1",
@@ -67,8 +66,9 @@
     "ts-jest": "25.4.0",
     "tsconfig-paths": "3.9.0",
     "tscpaths": "0.0.9",
-    "typescript": "3.8.3",
-    "typescript-transform-paths": "1.1.14"
+    "typescript-transform-paths": "1.1.14",
+    "typescript": "4.1.5",
+    "@hapi/joi": "17.1.1"
   },
   "files": [
     "dist",

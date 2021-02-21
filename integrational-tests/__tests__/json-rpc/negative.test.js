@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { JSONRPCRequest } = require('../../../dist');
+const { JSONRPCRequest, DependencyController, HAPI_CONSTANT } = require('../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -10,8 +10,15 @@ const requestBaseConfig = {
     `translateFunction got key ${key} and options ${options}`,
 };
 
+new DependencyController().setDependency({
+  name: HAPI_CONSTANT,
+  value: Joi
+})
+
 describe('JSON-PRC request (negative)', () => {
   beforeEach(() => {
+
+
     delete global.window;
   });
 

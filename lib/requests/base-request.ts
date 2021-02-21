@@ -73,6 +73,8 @@ export class BaseRequest implements IBaseRequests {
   pureResponseData: any = null;
   fetchParams?: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
 
+  static dependencies: Record<string, any>
+
   static persistentOptions?: PersistentFetchParamsType;
 
   static responseTrackCallbacks: Array<SetResponseTrackOptions> = [];

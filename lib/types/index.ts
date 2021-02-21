@@ -71,11 +71,9 @@ export type ResponseValidateType = {
   prevId?: string;
 };
 
-export type ExtraValidationCallbackType = ({
-  response,
-  schema,
-  prevId,
-}: ResponseValidateType) => boolean;
+export type ExtraValidationCallbackType = (
+  options: ResponseValidateType,
+) => boolean;
 
 export type CacheType =
   | 'default'
@@ -348,4 +346,9 @@ export type ExtendedResponse = Omit<Response, 'body'> & { body: any };
 export type SetResponseParams = {
   pureResponse: ExtendedResponse;
   responseBody: any;
+};
+
+export type DependencyType = {
+  name: string;
+  value: any;
 };
