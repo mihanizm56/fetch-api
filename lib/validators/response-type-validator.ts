@@ -220,16 +220,14 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   public getFormatValidateMethod = ({
     protocol,
     extraValidationCallback,
+    responseSchema
   }: GetFormatValidateMethodParams): FormatValidateParamsMethod => {
     // if there is an extra callback for validations
     if (extraValidationCallback) {
       return extraValidationCallback;
     }
-
-    // check that joi lib is exist and we can use it 
-    const Joi = new DependencyController().getDependency(HAPI_CONSTANT)
-
-    if(!Boolean(Joi)){
+    
+    if(!Boolean(responseSchema)){
       return this.truthyValidator;
     }
 

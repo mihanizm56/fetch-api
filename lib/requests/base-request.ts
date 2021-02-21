@@ -432,6 +432,7 @@ export class BaseRequest implements IBaseRequests {
             {
               protocol: requestProtocol,
               extraValidationCallback,
+              responseSchema
             }
           );
 

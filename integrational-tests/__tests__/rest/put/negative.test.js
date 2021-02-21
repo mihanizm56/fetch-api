@@ -1,11 +1,6 @@
 const Joi = require('@hapi/joi');
 const { RestRequest, PureRestRequest, DependencyController, HAPI_CONSTANT } = require('../../../../dist');
 
-new DependencyController().setDependency({
-  name: HAPI_CONSTANT,
-  value: Joi
-})
-
 const requestBaseConfig = {
   mode: 'cors',
   queryParams: {

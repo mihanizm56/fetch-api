@@ -291,6 +291,7 @@ export type FormatResponseParamsType = {
 export type GetFormatValidateMethodParams = {
   protocol: keyof typeof requestProtocolsMap;
   extraValidationCallback?: ExtraValidationCallbackType;
+  responseSchema?: any | Array<any>;
 };
 
 export type IDType = string;

@@ -10,10 +10,7 @@ const requestBaseConfig = {
     `translateFunction got key ${key} and options ${options}`,
 };
 
-new DependencyController().setDependency({
-  name: HAPI_CONSTANT,
-  value: Joi
-})
+
 
 describe('delete request (negative)', () => {
   beforeEach(() => {
