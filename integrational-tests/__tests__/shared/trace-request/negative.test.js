@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, FetchProxyMaker } = require('../../../../dist');
+const { RestRequest, ProxyController } = require('../../../../dist');
 
 const requestBaseConfig = {
   responseSchema: Joi.any(),

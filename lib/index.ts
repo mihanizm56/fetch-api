@@ -14,5 +14,5 @@ export {
   CustomSelectorDataType
 } from './types';
 export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE, HAPI_CONSTANT } from '@/constants';
-export { FetchProxyMaker } from './utils/fetch-proxy-maker';
+export { ProxyController } from './utils/fetch-proxy-maker';
 export { DependencyController } from './utils/dependency-controller'

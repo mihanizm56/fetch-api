@@ -17,3 +17,5 @@ dist
 .todo
 .idea
 
+build
+.docusaurus

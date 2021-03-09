@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, FetchProxyMaker } = require('../../../../dist');
+const { RestRequest, ProxyController } = require('../../../../dist');
 
 const requestBaseConfig = {
   responseSchema: Joi.any(),
@@ -31,7 +31,7 @@ const requestParams = {
   referrerPolicy: undefined,
 };
 
-describe('FetchProxyMaker negative tests', () => {
+describe('ProxyController negative tests', () => {
   beforeEach(() => {
     delete global.window;
   });
@@ -40,7 +40,7 @@ describe('FetchProxyMaker negative tests', () => {
     test('set one tracking callback', async () => {
       let resultOptions;
 
-      new FetchProxyMaker().setResponseTrackCallback({
+      new ProxyController().setResponseTrackCallback({
         callback: setResponseTrackCallbackOptions => {
           resultOptions = { ...setResponseTrackCallbackOptions };
         },
@@ -66,14 +66,14 @@ describe('FetchProxyMaker negative tests', () => {
       let resultOptionsOne;
       let resultOptionsTwo;
 
-      new FetchProxyMaker().setResponseTrackCallback({
+      new ProxyController().setResponseTrackCallback({
         callback: setResponseTrackCallbackOptions => {
           resultOptionsOne = { ...setResponseTrackCallbackOptions };
         },
         name: 'test one',
       });
 
-      new FetchProxyMaker().setResponseTrackCallback({
+      new ProxyController().setResponseTrackCallback({
         callback: setResponseTrackCallbackOptions => {
           resultOptionsTwo = { ...setResponseTrackCallbackOptions };
         },

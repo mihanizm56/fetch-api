@@ -20,6 +20,7 @@
 - Provides the ability to select necessary fields from the response (https://github.com/nemtsov/json-mask#readme used)
 - Provides the ability to use persistent params for all requests
 - Provides the ability to retry requests
+- Provides the ability to logging your error requests
 
 #### Request input options:
 - endpoint(string): the request url
@@ -80,9 +81,9 @@ const { error, errorText, data, additionalErrors } = await createItemsRequest(
 #### Set persist options to all requests
 
 ```javascript
-import { FetchProxyMaker } from "@mihanizm56/fetch-api";
+import { ProxyController } from "@mihanizm56/fetch-api";
 
-new FetchProxyMaker().setResponseTrackCallback(({
+new ProxyController().setResponseTrackCallback(({
   requestParams, // all request parameters
   response, //  pure response protected object
   pureResponseData, // response body without formatting
@@ -96,9 +97,9 @@ new FetchProxyMaker().setResponseTrackCallback(({
 #### Set callback for metrics for all requests
 
 ```javascript
-import { FetchProxyMaker } from "@mihanizm56/fetch-api";
+import { ProxyController } from "@mihanizm56/fetch-api";
 
-new FetchProxyMaker().setPersistentOptions(() => ({
+new ProxyController().setPersistentOptions(() => ({
   headers: {
     foo: 'bar',
   },

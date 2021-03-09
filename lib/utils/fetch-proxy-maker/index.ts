@@ -1,13 +1,14 @@
 import { BaseRequest } from "@/requests/base-request"
 import { PersistentFetchOptionsCallback,SetResponseTrackOptions } from "@/types"
 
-interface IFetchProxyMaker {
-    setPersistentOptions: (callback:PersistentFetchOptionsCallback) => void;
-    setResponseTrackCallback: (callbackParams:SetResponseTrackOptions)=>void;
+interface IProxyController {
+    // setPersistentOptions: (callback:PersistentFetchOptionsCallback) => void;
+    setResponseTrackCallback: (callbackParams:SetResponseTrackOptions) => void;
+    deleteResponseTrackCallback: (callbackName:string) => void;
 }
 
-export class FetchProxyMaker implements IFetchProxyMaker{
-    // possibility to get response fro logging and metrics
+export class ProxyController implements IProxyController{
+    // adds callback for each response (possibility for logging and metrics)
     setResponseTrackCallback(callbackParams: SetResponseTrackOptions){
         try {
             BaseRequest.responseTrackCallbacks.push(callbackParams);  
@@ -16,16 +17,17 @@ export class FetchProxyMaker implements IFetchProxyMaker{
         }
     }
 
+    // remove one of responseTrackCallbacks
     deleteResponseTrackCallback(callbackName:string){
         BaseRequest.responseTrackCallbacks = BaseRequest.responseTrackCallbacks.filter((responseTrackCallback)=>responseTrackCallback.name !== callbackName);
     }
 
     // adds params to all requests
-    setPersistentOptions(callback:PersistentFetchOptionsCallback){
-        try {
-        BaseRequest.persistentOptions = callback();
-        } catch (error) {
-            console.error('setPersistentOptions gets an error', error);
-        }
-    }
+    // setPersistentOptions(callback:PersistentFetchOptionsCallback){
+    //     try {
+    //     BaseRequest.persistentOptions = callback();
+    //     } catch (error) {
+    //         console.error('setPersistentOptions gets an error', error);
+    //     }
+    // }
 }
