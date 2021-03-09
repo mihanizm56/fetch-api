@@ -1,5 +1,5 @@
 import { BaseRequest } from "@/requests/base-request"
-import { PersistentFetchOptionsCallback,SetResponseTrackOptions } from "@/types"
+import { SetResponseTrackOptions } from "@/types"
 
 interface IProxyController {
     // setPersistentOptions: (callback:PersistentFetchOptionsCallback) => void;
