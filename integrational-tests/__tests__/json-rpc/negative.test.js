@@ -1,15 +1,6 @@
 const Joi = require('@hapi/joi');
 const { JSONRPCRequest } = require('../../../dist');
 
-const requestBaseConfig = {
-  mode: 'cors',
-  queryParams: {
-    foo: 'bar',
-  },
-  translateFunction: (key, options) =>
-    `translateFunction got key ${key} and options ${options}`,
-};
-
 describe('JSON-PRC request (negative)', () => {
   beforeEach(() => {
     delete global.window;

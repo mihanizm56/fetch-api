@@ -28,7 +28,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     isBatchRequest,
     body,
     responseSchema,
-  }: FormatResponseParamsType): ResponseFormatter => {
+  }: FormatResponseParamsType): ResponseFormatter => {    
     if (parseType === parseTypesMap.blob) {
       return new BlobResponseFormatter(data);
     }

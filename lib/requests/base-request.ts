@@ -76,9 +76,10 @@ export class BaseRequest implements IBaseRequest {
   abortRequestListener: any = null; // TODO FIX ANY
   response: Response | null = null;
   parsedResponseData: any = null;
+  statusCode: number = 0;
   fetchParams?: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
   validationError:boolean = false;
-  cookie: string = ''
+  cookie: string = '';
 
   static dependencies: Record<string, any>
 
@@ -145,7 +146,6 @@ export class BaseRequest implements IBaseRequest {
       this.abortRequestListener = null
     }
   };
-
 
   // get an isomorfic fetch
   getIsomorphicFetch = ({
@@ -236,7 +236,6 @@ export class BaseRequest implements IBaseRequest {
 
       return JSON.stringify({ ...body, ...version, id });
     }
-
 
     if (isFormData(body)) {
       return body;
@@ -330,26 +329,21 @@ export class BaseRequest implements IBaseRequest {
       responseBody,
       formattedResponse,
       endpoint,
-      method
-    }: TraceBaseRequestParamsType) => {
-      console.log('traceRequestCallback',traceRequestCallback);
-      console.log('BaseRequest.responseTrackCallbacks.length',BaseRequest.responseTrackCallbacks.length);
-      console.log('response',response);
-    
-      
+      method,
+      code
+    }: TraceBaseRequestParamsType) => {    
     // special check if we need to configure tracking object
     if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response){
       return;
     }
 
-    console.log('1');
-
     const {responseHeaders,responseCookies} = getResponseHeaders(response);
-    const errorTracingType = getErrorTracingType({
+    const errorType = getErrorTracingType({
       requestError,
       responseError,
       validationError
     });
+    
     const error = requestError || validationError || responseError || false;
 
     const options: SetResponseTrackCallbackOptions = {
@@ -364,12 +358,11 @@ export class BaseRequest implements IBaseRequest {
       responseHeaders,
       responseCookies,
       error,
-      errorType: errorTracingType // request|network|validation
+      errorType,
+      code
     }
 
     BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
-      console.log('2');
-      
       callback(options)
     });
 
@@ -465,19 +458,19 @@ export class BaseRequest implements IBaseRequest {
 
     const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
       .then(async (response: Response) => {
-        const statusCode = response.status;
-        const isStatusEmpty = statusCode === 204;
-        const isNotFound = statusCode === 404;        
+        this.statusCode = response.status;
+        const isStatusEmpty = this.statusCode === 204;
+        const isNotFound = this.statusCode === 404;        
         
         // for text and blob response does not matter response to parse
         // but does matter what code we get from the backend
         // alse 404 is useful that can contain some data 
         // and we need to provide that code to the client
         const isValidStatus = isBlobOrTextRequest 
-          ? statusCode === 200 || statusCode === 304 || statusCode === 404
-          : statusCode <= 500;
+          ? this.statusCode === 200 || this.statusCode === 304 || this.statusCode === 404
+          : this.statusCode <= 500;
 
-        const isResponseStatusSuccess = getIsStatusCodeSuccess(statusCode);
+        const isResponseStatusSuccess = getIsStatusCodeSuccess(this.statusCode);
 
         // add response to Request class to share if an error exist
         // if the request will crash - there will be null
@@ -494,7 +487,7 @@ export class BaseRequest implements IBaseRequest {
             isNotFound,
             progressOptions
           });
-
+          
           this.parsedResponseData = parsedResponseData;
 
           // validate the format of the request
@@ -515,7 +508,7 @@ export class BaseRequest implements IBaseRequest {
             isStatusEmpty,
             isBatchRequest,
             isBlobOrTextRequest,
-          });          
+          });         
 
           if (isFormatValid) {
             // get the formatter func
@@ -526,7 +519,7 @@ export class BaseRequest implements IBaseRequest {
                 protocol: requestProtocol,
                 isErrorTextStraightToOutput,
                 parseType,
-                statusCode,
+                statusCode: this.statusCode,
                 isBatchRequest,
                 responseSchema,
                 body,
@@ -565,7 +558,8 @@ export class BaseRequest implements IBaseRequest {
               responseBody: parsedResponseData,
               formattedResponse: formattedResponseData,
               endpoint,
-              method
+              method,
+              code: this.statusCode
             })
 
             // return data
@@ -577,12 +571,12 @@ export class BaseRequest implements IBaseRequest {
 
         // if a status is above 500 or response not valid or response.statusText is empty 
         // throw an error with default error message
-        const validationErrorMessage = this.getFilteredDefaultErrorMessage({response, isErrorTextStraightToOutput})
+        const validationErrorMessage = this.getFilteredDefaultErrorMessage({response, isErrorTextStraightToOutput});
 
         throw new Error(validationErrorMessage);
       })
       .catch((error: Error) => {
-        const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY
+        const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY;
         
         // check if needs to retry request   
         if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
@@ -610,7 +604,7 @@ export class BaseRequest implements IBaseRequest {
             statusCode: errorCode
           },
           statusCode: errorCode,
-        })
+        })        
 
         this.traceBaseRequest({
           validationError: this.validationError,
@@ -623,7 +617,8 @@ export class BaseRequest implements IBaseRequest {
           responseBody: this.parsedResponseData,
           formattedResponse: formattedResponseError,
           endpoint,
-          method
+          method,
+          code: this.statusCode
         })
 
         return formattedResponseError

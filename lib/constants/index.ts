@@ -64,6 +64,6 @@ export const TRACING_ERRORS: Record<
   'request-error' | 'validation-error' | 'response-error'
 > = {
   REQUEST_ERROR: 'request-error',
-  RESPONSE_ERROR: 'validation-error',
-  VALIDATION_ERROR: 'response-error',
+  RESPONSE_ERROR: 'response-error',
+  VALIDATION_ERROR: 'validation-error',
 };

@@ -17,7 +17,12 @@ module.exports.negativeRPCController = (req, res) => {
     twoSchemaNegative,
     simpleOneResponseError,
     simpleTwoResponseError,
+    networkerror,
   } = req.query;
+
+  if (networkerror) {
+    return res.status(501).send();
+  }
 
   if (notsameversion) {
     return sendErrorDataRPC(400, '1.0', res, id, {

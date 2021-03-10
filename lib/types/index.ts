@@ -21,6 +21,7 @@ export type SetResponseTrackCallbackOptions = {
   responseCookies:Record<string,string>
   error: boolean;
   errorType: ErrorTracingType;
+  code: number;
 };
 
 export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
@@ -45,6 +46,7 @@ export type TraceBaseRequestParamsType = {
   formattedResponse: IResponse;
   endpoint: string;
   method: Pick<RequestInit,'method'>;
+  code: number;
 }
 
 export type AdditionalErrors = Record<string, any>;
