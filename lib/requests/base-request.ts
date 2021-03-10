@@ -330,10 +330,11 @@ export class BaseRequest implements IBaseRequest {
       formattedResponse,
       endpoint,
       method,
-      code
+      code,
+      tracingDisabled
     }: TraceBaseRequestParamsType) => {    
     // special check if we need to configure tracking object
-    if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response){
+    if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response || tracingDisabled){
       return;
     }
 
@@ -407,7 +408,8 @@ export class BaseRequest implements IBaseRequest {
     referrer,
     referrerPolicy,
     retry,
-    traceRequestCallback
+    traceRequestCallback,
+    tracingDisabled
   }: MakeFetchType): Promise<IResponse> => {
     const isBlobOrTextRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text;
 
@@ -559,7 +561,8 @@ export class BaseRequest implements IBaseRequest {
               formattedResponse: formattedResponseData,
               endpoint,
               method,
-              code: this.statusCode
+              code: this.statusCode,
+              tracingDisabled
             })
 
             // return data
@@ -618,7 +621,8 @@ export class BaseRequest implements IBaseRequest {
           formattedResponse: formattedResponseError,
           endpoint,
           method,
-          code: this.statusCode
+          code: this.statusCode,
+          tracingDisabled
         })
 
         return formattedResponseError

@@ -10,15 +10,15 @@ export type TranslateFunctionType = (
 
 export type SetResponseTrackCallbackOptions = {
   endpoint: string;
-  method: Pick<RequestInit,'method'>;
-  requestBody: Pick<RequestInit,'body'>
-  requestHeaders: Pick<RequestInit,'headers'>
+  method: Pick<RequestInit, 'method'>;
+  requestBody: Pick<RequestInit, 'body'>;
+  requestHeaders: Pick<RequestInit, 'headers'>;
   requestCookies: string;
   response: Response;
   responseBody: any; // because we dont know about response body type yet
   formattedResponse: IResponse;
-  responseHeaders:Record<string,string>
-  responseCookies:Record<string,string>
+  responseHeaders: Record<string, string>;
+  responseCookies: Record<string, string>;
   error: boolean;
   errorType: ErrorTracingType;
   code: number;
@@ -34,20 +34,21 @@ export type SetResponseTrackOptions = {
 };
 
 export type TraceBaseRequestParamsType = {
-  traceRequestCallback?:SetResponseTrackCallback;
+  traceRequestCallback?: SetResponseTrackCallback;
   response: Response | null;
-  requestError?:boolean,
-  validationError?:boolean,
-  responseError?:boolean,
-  requestBody: Pick<RequestInit,'body'>
-  requestHeaders: Pick<RequestInit,'headers'>
+  requestError?: boolean;
+  validationError?: boolean;
+  responseError?: boolean;
+  requestBody: Pick<RequestInit, 'body'>;
+  requestHeaders: Pick<RequestInit, 'headers'>;
   requestCookies: string;
   responseBody: any; // because we dont know about response body type yet
   formattedResponse: IResponse;
   endpoint: string;
-  method: Pick<RequestInit,'method'>;
+  method: Pick<RequestInit, 'method'>;
   code: number;
-}
+  tracingDisabled?: boolean;
+};
 
 export type AdditionalErrors = Record<string, any>;
 
@@ -156,6 +157,7 @@ export interface IRequestParams extends RequestInit {
   selectData?: string;
   retry?: number;
   traceRequestCallback?: SetResponseTrackCallback;
+  tracingDisabled?: boolean;
 }
 
 export interface IResponse {
@@ -169,7 +171,6 @@ export interface IResponse {
 export type IUtilResponse<DataType> = Omit<IResponse, 'data'> & {
   data: DataType;
 };
-
 
 export type BatchResponseType = Array<IResponse>;
 
@@ -263,7 +264,7 @@ export type GetIsomorphicFetchParamsType = {
 export type GetFetchBodyParamsType = {
   requestProtocol: keyof typeof requestProtocolsMap;
   body: any;
-  method: Pick<RequestInit,'method'>;
+  method: Pick<RequestInit, 'method'>;
   version?: { jsonrpc: string };
   id?: string;
   isBatchRequest?: boolean;
