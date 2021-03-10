@@ -1,20 +1,24 @@
-export const getResponseHeaders = (response:Response) => {
-    const responseHeaders:Record<string,string> = {};
-    const responseCookies:Record<string,string> = {};
+/* eslint-disable no-continue */
+/* eslint-disable no-restricted-syntax */
 
-    for (const [key,value] of response.headers.entries()) {
-        const isHeaderCookie = key === 'Set-Cookie' || key === 'set-cookie' || key === 'Set-cookie'
+export const getResponseHeaders = (response: Response) => {
+  const responseHeaders: Record<string, string> = {};
+  const responseCookies: Record<string, string> = {};
 
-        if(isHeaderCookie){
-            responseCookies[key] = value;
-            continue;
-        }
+  for (const [key, value] of response.headers.entries()) {
+    const isHeaderCookie =
+      key === 'Set-Cookie' || key === 'set-cookie' || key === 'Set-cookie';
 
-        responseHeaders[key] = value;
+    if (isHeaderCookie) {
+      responseCookies[key] = value;
+      continue;
     }
 
-    return {
-        responseHeaders,
-        responseCookies
-    }
-}
+    responseHeaders[key] = value;
+  }
+
+  return {
+    responseHeaders,
+    responseCookies,
+  };
+};
