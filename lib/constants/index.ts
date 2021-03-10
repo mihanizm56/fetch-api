@@ -56,3 +56,14 @@ export const OFFLINE_STATUS_CODE = 600;
 export const TIMEOUT_VALUE = 60000;
 
 export const HAPI_CONSTANT = '@hapi/joi';
+
+// tracing constants
+
+export const TRACING_ERRORS: Record<
+  string,
+  'request-error' | 'validation-error' | 'response-error'
+> = {
+  REQUEST_ERROR: 'request-error',
+  RESPONSE_ERROR: 'validation-error',
+  VALIDATION_ERROR: 'response-error',
+};

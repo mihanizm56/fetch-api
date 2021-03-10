@@ -1,4 +1,5 @@
 import { ICacheMap, parseTypesMap, requestProtocolsMap } from '@/constants';
+import { ErrorTracingType } from '@/utils/tracing/get-error-tracing-type';
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
@@ -8,12 +9,18 @@ export type TranslateFunctionType = (
 ) => string;
 
 export type SetResponseTrackCallbackOptions = {
-  requestParams: RequestInit &
-    Pick<IRequestParams, 'headers'> & { endpoint: string };
-  response: Response | null;
-  pureResponseData: any | null;
-  requestError: boolean;
-  formattedResponseData: IResponse;
+  endpoint: string;
+  method: Pick<RequestInit,'method'>;
+  requestBody: Pick<RequestInit,'body'>
+  requestHeaders: Pick<RequestInit,'headers'>
+  requestCookies: string;
+  response: Response;
+  responseBody: any; // because we dont know about response body type yet
+  formattedResponse: IResponse;
+  responseHeaders:Record<string,string>
+  responseCookies:Record<string,string>
+  error: boolean;
+  errorType: ErrorTracingType;
 };
 
 export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
@@ -24,6 +31,21 @@ export type SetResponseTrackOptions = {
   callback: SetResponseTrackCallback;
   name: string;
 };
+
+export type TraceBaseRequestParamsType = {
+  traceRequestCallback?:SetResponseTrackCallback;
+  response: Response | null;
+  requestError?:boolean,
+  validationError?:boolean,
+  responseError?:boolean,
+  requestBody: Pick<RequestInit,'body'>
+  requestHeaders: Pick<RequestInit,'headers'>
+  requestCookies: string;
+  responseBody: any; // because we dont know about response body type yet
+  formattedResponse: IResponse;
+  endpoint: string;
+  method: Pick<RequestInit,'method'>;
+}
 
 export type AdditionalErrors = Record<string, any>;
 
@@ -146,6 +168,7 @@ export type IUtilResponse<DataType> = Omit<IResponse, 'data'> & {
   data: DataType;
 };
 
+
 export type BatchResponseType = Array<IResponse>;
 
 export interface IRESTPureResponse {
@@ -238,7 +261,7 @@ export type GetIsomorphicFetchParamsType = {
 export type GetFetchBodyParamsType = {
   requestProtocol: keyof typeof requestProtocolsMap;
   body: any;
-  method: string;
+  method: Pick<RequestInit,'method'>;
   version?: { jsonrpc: string };
   id?: string;
   isBatchRequest?: boolean;

@@ -17,6 +17,9 @@ import {
   GetFormattedHeadersParamsType,
   GetFilteredDefaultErrorMessageParamsType,
   SetResponseTrackOptions,
+  TraceBaseRequestParamsType,
+  SetResponseTrackCallback,
+  SetResponseTrackCallbackOptions
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -39,13 +42,15 @@ import { makeErrorRequestLogs } from "@/utils/make-error-request-logs";
 import { getIsRequestOnline } from "@/utils/get-is-request-online";
 import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-factory";
 import { getIsStatusCodeSuccess } from "@/utils/get-is-status-code-success";
+import { getErrorTracingType } from "@/utils/tracing/get-error-tracing-type";
+import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
 
-interface IBaseRequests {
+interface IBaseRequest {
   makeFetch: (
     values: IRequestParams &
       IJSONPRCRequestParams & {
         requestProtocol: keyof typeof requestProtocolsMap;
-      } & { method: string }
+      } & { method: Pick<RequestInit,'method'>; }
   ) => Promise<IResponse>;
 
   requestRacer: (params: RequestRacerParams) => Promise<any>;
@@ -67,11 +72,13 @@ interface IBaseRequests {
   getFormattedHeaders:(options: GetFormattedHeadersParamsType) => Record<string,string> | undefined;
 }
 
-export class BaseRequest implements IBaseRequests {
+export class BaseRequest implements IBaseRequest {
   abortRequestListener: any = null; // TODO FIX ANY
   response: Response | null = null;
-  pureResponseData: any = null;
+  parsedResponseData: any = null;
   fetchParams?: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
+  validationError:boolean = false;
+  cookie: string = ''
 
   static dependencies: Record<string, any>
 
@@ -310,11 +317,73 @@ export class BaseRequest implements IBaseRequests {
     };
   };
 
+  traceBaseRequest = (
+    {
+      traceRequestCallback,
+      response,
+      requestError,
+      validationError,
+      responseError,
+      requestCookies,
+      requestBody,
+      requestHeaders,
+      responseBody,
+      formattedResponse,
+      endpoint,
+      method
+    }: TraceBaseRequestParamsType) => {
+      console.log('traceRequestCallback',traceRequestCallback);
+      console.log('BaseRequest.responseTrackCallbacks.length',BaseRequest.responseTrackCallbacks.length);
+      console.log('response',response);
+    
+      
+    // special check if we need to configure tracking object
+    if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response){
+      return;
+    }
+
+    console.log('1');
+
+    const {responseHeaders,responseCookies} = getResponseHeaders(response);
+    const errorTracingType = getErrorTracingType({
+      requestError,
+      responseError,
+      validationError
+    });
+    const error = requestError || validationError || responseError || false;
+
+    const options: SetResponseTrackCallbackOptions = {
+      endpoint,
+      method,
+      requestBody,
+      requestHeaders,
+      requestCookies,
+      response,
+      responseBody,
+      formattedResponse,
+      responseHeaders,
+      responseCookies,
+      error,
+      errorType: errorTracingType // request|network|validation
+    }
+
+    BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
+      console.log('2');
+      
+      callback(options)
+    });
+
+    // fire special tracing request callback (for each request separately)
+    if(traceRequestCallback) {
+      traceRequestCallback(options)
+    }
+  }
+
   makeFetch = <
     MakeFetchType extends IRequestParams &
     Partial<IJSONPRCRequestParams> & {
       requestProtocol: keyof typeof requestProtocolsMap;
-    } & { method: string }
+    } & { method: Pick<RequestInit,'method'> }
   >({
     id,
     version,
@@ -348,6 +417,9 @@ export class BaseRequest implements IBaseRequests {
     traceRequestCallback
   }: MakeFetchType): Promise<IResponse> => {
     const isBlobOrTextRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text;
+
+    // set cookie to get them in trace functions
+    this.cookie = document.cookie;
 
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
@@ -406,8 +478,6 @@ export class BaseRequest implements IBaseRequests {
           : statusCode <= 500;
 
         const isResponseStatusSuccess = getIsStatusCodeSuccess(statusCode);
-        // disable all validations for "blob" and "text" requests
-        // because they always parse the response in necessary format even if error
 
         // add response to Request class to share if an error exist
         // if the request will crash - there will be null
@@ -425,7 +495,7 @@ export class BaseRequest implements IBaseRequests {
             progressOptions
           });
 
-          this.pureResponseData = parsedResponseData;
+          this.parsedResponseData = parsedResponseData;
 
           // validate the format of the request
           const formatDataTypeValidator = new FormatDataTypeValidator().getFormatValidateMethod(
@@ -444,7 +514,7 @@ export class BaseRequest implements IBaseRequests {
             isResponseStatusSuccess,
             isStatusEmpty,
             isBatchRequest,
-            isBlobOrTextRequest
+            isBlobOrTextRequest,
           });          
 
           if (isFormatValid) {
@@ -468,7 +538,11 @@ export class BaseRequest implements IBaseRequests {
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
             // check if needs to retry request          
-            if(formattedResponseData.error && typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry){
+            if (formattedResponseData.error && 
+              typeof retry !== 'undefined' &&  
+              typeof retryCounter !== 'undefined' && 
+              retryCounter < retry
+            ) {
               return getRequest(retryCounter + 1)
             }
 
@@ -481,31 +555,24 @@ export class BaseRequest implements IBaseRequests {
             // remove the abort listener
             this.removeAbortListenerFromRequest();
 
-            // fire additional callbacks with response and request data
-            BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
-              callback({
-                requestParams: fetchParams,
-                response: this.response,
-                pureResponseData: this.pureResponseData,
-                formattedResponseData: formattedResponseData,
-                requestError: false
-              })
-            });
-
-            // fire special tracing request callback
-            if(traceRequestCallback) {
-              traceRequestCallback({
-                requestParams: fetchParams,
-                response: this.response,
-                pureResponseData: this.pureResponseData,
-                formattedResponseData: formattedResponseData,
-                requestError: false
-              })
-            }
+            this.traceBaseRequest({
+              traceRequestCallback,
+              response,
+              responseError: formattedResponseData.error,
+              requestCookies:this.cookie,
+              requestBody:fetchParams.body,
+              requestHeaders:fetchParams.headers,
+              responseBody: parsedResponseData,
+              formattedResponse: formattedResponseData,
+              endpoint,
+              method
+            })
 
             // return data
             return selectedResponseData;
           }
+
+          this.validationError = true;
         }
 
         // if a status is above 500 or response not valid or response.statusText is empty 
@@ -545,27 +612,19 @@ export class BaseRequest implements IBaseRequests {
           statusCode: errorCode,
         })
 
-        // fire additional callbacks with response and request data
-        BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
-          callback({
-            requestParams: fetchParams,
-            response: this.response,
-            pureResponseData: this.pureResponseData,
-            formattedResponseData: formattedResponseError,
-            requestError: true
-          })
-        });
-
-        // fire special tracing request callback
-        if(traceRequestCallback) {
-          traceRequestCallback({
-            requestParams: fetchParams,
-            response: this.response,
-            pureResponseData: this.pureResponseData,
-            formattedResponseData: formattedResponseError,
-            requestError: true
-          })
-        }
+        this.traceBaseRequest({
+          validationError: this.validationError,
+          traceRequestCallback,
+          response: this.response,
+          requestError: true,
+          requestCookies:this.cookie,
+          requestBody:fetchParams.body,
+          requestHeaders:fetchParams.headers,
+          responseBody: this.parsedResponseData,
+          formattedResponse: formattedResponseError,
+          endpoint,
+          method
+        })
 
         return formattedResponseError
       });

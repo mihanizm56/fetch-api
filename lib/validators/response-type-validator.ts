@@ -140,7 +140,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       prev: prevId,
       curr: response.id,
     });
-
+    
     // if ids are not equal
     if (!idsAreEqual) {
       console.error('(fetch-api): request-response ids are not equal');

@@ -17,6 +17,7 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "strictFunctionTypes": false,
+    "downlevelIteration": true,
     "baseUrl": "./",
     "paths": {
       "@/*": [
