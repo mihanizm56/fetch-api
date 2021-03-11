@@ -244,7 +244,7 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
-  getFormattedHeaders = ({ body, headers = {}, isBlobOrTextRequest }: GetFormattedHeadersParamsType) => {
+  getFormattedHeaders = ({ body, headers = {}, isBlobOrTextRequest }: GetFormattedHeadersParamsType):Record<string,string> => {
     if(isBlobOrTextRequest || isFormData(body)){
       return headers
     }
@@ -339,6 +339,7 @@ export class BaseRequest implements IBaseRequest {
     }
 
     const {responseHeaders,responseCookies} = getResponseHeaders(response);
+
     const errorType = getErrorTracingType({
       requestError,
       responseError,
