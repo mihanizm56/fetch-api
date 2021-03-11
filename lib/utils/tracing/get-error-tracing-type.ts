@@ -1,14 +1,11 @@
 import { TRACING_ERRORS } from '@/constants';
+import { ErrorTracingType } from '@/types';
 
 type ParamsType = {
   requestError?: boolean;
   responseError?: boolean;
   validationError?: boolean;
 };
-
-export type ErrorTracingType =
-  | null
-  | typeof TRACING_ERRORS[keyof typeof TRACING_ERRORS];
 
 export const getErrorTracingType = ({
   requestError,

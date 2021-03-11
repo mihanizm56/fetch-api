@@ -1,5 +1,13 @@
-import { ICacheMap, parseTypesMap, requestProtocolsMap } from '@/constants';
-import { ErrorTracingType } from '@/utils/tracing/get-error-tracing-type';
+import {
+  ICacheMap,
+  parseTypesMap,
+  requestProtocolsMap,
+  TRACING_ERRORS,
+} from '@/constants';
+
+export type ErrorTracingType =
+  | null
+  | typeof TRACING_ERRORS[keyof typeof TRACING_ERRORS];
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
