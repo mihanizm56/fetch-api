@@ -18,7 +18,6 @@ import {
   GetFilteredDefaultErrorMessageParamsType,
   SetResponseTrackOptions,
   TraceBaseRequestParamsType,
-  SetResponseTrackCallback,
   SetResponseTrackCallbackOptions
 } from "@/types";
 import { isNode } from '@/utils/is-node';

@@ -11,7 +11,8 @@ export {
   IUtilResponse,
   ExtraValidationCallbackType,
   ProgressOptionsType,
-  CustomSelectorDataType
+  CustomSelectorDataType,
+  SetResponseTrackCallbackOptions
 } from './types';
 export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE, HAPI_CONSTANT } from '@/constants';
 export { ProxyController } from './utils/proxy-controller';
