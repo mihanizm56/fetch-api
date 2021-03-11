@@ -1,7 +1,12 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
 
-export const getResponseHeaders = (response: Response) => {
+type OutputType = {
+  responseHeaders: Record<string, string>;
+  responseCookies: Record<string, string>;
+};
+
+export const getResponseHeaders = (response: Response): OutputType => {
   const responseHeaders: Record<string, string> = {};
   const responseCookies: Record<string, string> = {};
 
