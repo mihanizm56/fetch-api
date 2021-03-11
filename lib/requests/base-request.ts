@@ -415,7 +415,7 @@ export class BaseRequest implements IBaseRequest {
     const isBlobOrTextRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text;
 
     // set cookie to get them in trace functions
-    this.cookie = document.cookie;
+    this.cookie = global.document ? global.document.cookie : '';
 
     const formattedEndpoint = this.getFormattedEndpoint({
       endpoint,
