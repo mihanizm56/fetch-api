@@ -18,7 +18,7 @@ export type SetResponseTrackCallbackOptions = {
   responseBody: any; // because we dont know about response body type yet
   formattedResponse: IResponse;
   responseHeaders: Record<string, string>;
-  responseCookies: Record<string, string>;
+  responseCookies: string;
   error: boolean;
   errorType: ErrorTracingType;
   code: number;
