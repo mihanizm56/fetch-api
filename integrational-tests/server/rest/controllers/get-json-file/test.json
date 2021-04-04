@@ -1,0 +1,8 @@
+{
+    "loadRef": {
+        "JS": "umd/index.6dbcc83480c5e393f89c.js",
+        "APP_STATIC_NAMESPACE": "suppliers-portal-business-card-frontend",
+        "WB_STATIC_URL": "https://mstatic.wbstatic.net",
+        "APP_VERSION": "v2.5.16"
+    }
+}

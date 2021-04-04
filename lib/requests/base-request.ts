@@ -243,8 +243,8 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
-  getFormattedHeaders = ({ body, headers = {}, isBlobOrTextRequest }: GetFormattedHeadersParamsType):Record<string,string> => {
-    if(isBlobOrTextRequest || isFormData(body)){
+  getFormattedHeaders = ({ body, headers = {}, pureFileRequest }: GetFormattedHeadersParamsType):Record<string,string> => {
+    if(pureFileRequest || isFormData(body)){
       return headers
     }
 
@@ -265,9 +265,10 @@ export class BaseRequest implements IBaseRequest {
     isBatchRequest,
     responseSchema,
     body,
-    isNotFound
+    isNotFound,
+    pureFileRequest
   }: GetPreparedResponseDataParams): FormatResponseParamsType => {
-    if ((parseType === 'blob' || parseType === 'text') && !isNotFound) {
+    if (pureFileRequest && !isNotFound) {
       return {
         data: response,
         translateFunction,
@@ -409,9 +410,10 @@ export class BaseRequest implements IBaseRequest {
     referrerPolicy,
     retry,
     traceRequestCallback,
-    tracingDisabled
+    tracingDisabled,
+    pureJsonFileResponse
   }: MakeFetchType): Promise<IResponse> => {
-    const isBlobOrTextRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text;
+    const pureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || pureJsonFileResponse;
 
     // set cookie to get them in trace functions
     this.cookie = global.document ? global.document.cookie : '';
@@ -425,7 +427,7 @@ export class BaseRequest implements IBaseRequest {
     const formattedHeaders = this.getFormattedHeaders({
       body,
       headers,
-      isBlobOrTextRequest
+      pureFileRequest
     });
 
     const fetchBody = this.getFetchBody({
@@ -468,9 +470,9 @@ export class BaseRequest implements IBaseRequest {
         // but does matter what code we get from the backend
         // alse 404 is useful that can contain some data 
         // and we need to provide that code to the client
-        const isValidStatus = isBlobOrTextRequest 
+        const isValidStatus = pureFileRequest 
           ? this.statusCode === 200 || this.statusCode === 304 || this.statusCode === 404
-          : this.statusCode <= 500;
+          : this.statusCode <= 500;          
 
         const isResponseStatusSuccess = getIsStatusCodeSuccess(this.statusCode);
 
@@ -488,8 +490,7 @@ export class BaseRequest implements IBaseRequest {
             isStatusEmpty,
             isNotFound,
             progressOptions
-          });
-          
+          });          
           this.parsedResponseData = parsedResponseData;
 
           // validate the format of the request
@@ -509,13 +510,14 @@ export class BaseRequest implements IBaseRequest {
             isResponseStatusSuccess,
             isStatusEmpty,
             isBatchRequest,
-            isBlobOrTextRequest,
+            pureFileRequest,
           });         
 
           if (isFormatValid) {
             // get the formatter func
             const responseFormatter = new FormatResponseFactory().createFormatter(
               this.getPreparedResponseData({
+                pureFileRequest,
                 response: parsedResponseData,
                 translateFunction,
                 protocol: requestProtocol,
@@ -543,7 +545,7 @@ export class BaseRequest implements IBaseRequest {
 
             // select the response data fields if all fields are not necessary
             // work only for json responses
-            const selectedResponseData = (selectData || customSelectorData) && !isBlobOrTextRequest 
+            const selectedResponseData = (selectData || customSelectorData) && !pureFileRequest 
               ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
               : formattedResponseData;
 

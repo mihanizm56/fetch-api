@@ -6,12 +6,14 @@ const { negativePostController } = require('../controllers/post/negative');
 const { negativePutController } = require('../controllers/put/negative');
 const { negativePatchController } = require('../controllers/patch/negative');
 const { negativeDeleteController } = require('../controllers/delete/negative');
+const { negativeGetJSONController } = require('../controllers/get-json-file');
 
 const negativeRouter = express.Router();
 
 negativeRouter.get('/', negativeGetController);
 negativeRouter.get('/blob', negativeGetBlobController);
 negativeRouter.get('/text', negativeGetTextController);
+negativeRouter.get('/json-file', negativeGetJSONController);
 negativeRouter.post('/', negativePostController);
 negativeRouter.put('/', negativePutController);
 negativeRouter.patch('/', negativePatchController);

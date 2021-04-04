@@ -76,14 +76,14 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   public getRestFormatIsValid = ({
     response,
     schema,
-    isBlobOrTextRequest,
+    pureFileRequest,
   }: any) => {
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
       return false;
     }
 
-    if (isBlobOrTextRequest) {
+    if (pureFileRequest) {
       return true;
     }
 
@@ -180,13 +180,13 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     schema,
     isResponseStatusSuccess,
     isStatusEmpty,
-    isBlobOrTextRequest,
+    pureFileRequest,
   }: FormatValidateParams) => {
     if (isStatusEmpty) {
       return true;
     }
 
-    if (isBlobOrTextRequest) {
+    if (pureFileRequest) {
       return true;
     }
 

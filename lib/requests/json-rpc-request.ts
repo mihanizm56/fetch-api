@@ -15,7 +15,7 @@ export class JSONRPCRequest extends BaseRequest {
   public makeRequest = (
     requestParams: Omit<
       IJSONPRCRequestParams,
-      "method" | "requestProtocol" | "id" | "version"
+      "method" | "requestProtocol" | "id" | "version" | 'pureJsonFileResponse'
     >
   ): Promise<IResponse> =>
     this.makeFetch({

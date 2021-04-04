@@ -166,6 +166,7 @@ export interface IRequestParams extends RequestInit {
   retry?: number;
   traceRequestCallback?: SetResponseTrackCallback;
   tracingDisabled?: boolean;
+  pureJsonFileResponse?: boolean;
 }
 
 export interface IResponse {
@@ -289,6 +290,7 @@ export type GetPreparedResponseDataParams = {
   responseSchema?: any;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
   isNotFound: boolean;
+  pureFileRequest?: boolean;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
@@ -342,7 +344,7 @@ export type FormatValidateParams = {
   isResponseStatusSuccess?: boolean;
   isStatusEmpty?: boolean;
   isBatchRequest?: boolean;
-  isBlobOrTextRequest?: boolean;
+  pureFileRequest?: boolean;
 };
 
 export type FormatValidateParamsMethod = (
@@ -359,7 +361,7 @@ export type FormatValidateParamsMehod = (
 ) => boolean;
 
 export type GetFormattedHeadersParamsType = {
-  isBlobOrTextRequest?: boolean;
+  pureFileRequest?: boolean;
   body: JSON | FormData;
   headers?: {
     [key: string]: any;

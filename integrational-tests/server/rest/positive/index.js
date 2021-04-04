@@ -6,12 +6,14 @@ const { positivePostController } = require('../controllers/post/positive');
 const { positivePutController } = require('../controllers/put/positive');
 const { positivePatchController } = require('../controllers/patch/positive');
 const { positiveDeleteController } = require('../controllers/delete/positive');
+const { positiveGetJSONController } = require('../controllers/get-json-file');
 
 const positiveRouter = express.Router();
 
 positiveRouter.get('/', positiveGetController);
 positiveRouter.get('/blob', positiveGetBlobController);
 positiveRouter.get('/text', positiveGetTextController);
+positiveRouter.get('/json-file', positiveGetJSONController);
 positiveRouter.post('/', positivePostController);
 positiveRouter.put('/', positivePutController);
 positiveRouter.patch('/', positivePatchController);

@@ -8,7 +8,7 @@ export class RestRequest extends BaseRequest {
   public getRequest = (
     requestParams: Omit<
       IRequestParams,
-      "method" | "requestProtocol" | "body"
+      "method" | "requestProtocol" | "body" | "pureJsonFileResponse"
     >
   ) =>
     this.makeFetch({
