@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "Fetch-API",
+    "description": "The title in the navbar"
+  },
+  "item.label.Documentation": {
+    "message": "Документация",
+    "description": "Navbar item with label Documentation"
+  },
+  "item.label.API": {
+    "message": "Описание API",
+    "description": "Navbar item with label API"
+  },
+  "item.label.Star me": {
+    "message": "Поставить звездочку",
+    "description": "Navbar item with label Star me"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}
