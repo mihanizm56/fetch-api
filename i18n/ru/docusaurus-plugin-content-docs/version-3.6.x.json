@@ -4,7 +4,7 @@
     "description": "The label for version 3.6.x"
   },
   "sidebar.someSidebar.category.Overview": {
-    "message": "Overview",
+    "message": "Обзор",
     "description": "The label for category Overview in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Request Types": {

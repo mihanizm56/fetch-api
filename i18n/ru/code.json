@@ -132,7 +132,7 @@
     "description": "The label used for the latest version suggestion link label"
   },
   "theme.common.editThisPage": {
-    "message": "Отредактировать эту страницу",
+    "message": "Редактировать эту страницу",
     "description": "The link label to edit the current page"
   },
   "theme.common.headingLinkTitle": {
@@ -190,5 +190,47 @@
   "theme.SearchBar.label": {
     "message": "Поиск",
     "description": "The ARIA label and placeholder for search button"
+  },
+  "Fetch-API provides the same interface for all types of requests.": {
+    "message": "Fetch-API предоставляет один интерфейс для всех типов запросов"
+  },
+  "All native window.fetch features are supported.": {
+    "message": "Поддерживаются все нативные возможности window.fetch"
+  },
+  "For browser this is usual window.fetch and for Node.js node-fetch is used.\"": {
+    "message": "Для браузерного окружения используется window.fetch и для окружения Node.js используется node-fetch"
+  },
+  "You can use shemas to validate responses or you can provide your own validate function\"": {
+    "message": "Вы можете использовать схемы валидации ответов с сервера либо использовать кастомную функцию для проверки правильности ответа."
+  },
+  "You're able to select only necessary data from JSON response": {
+    "message": "Вы можете выбрать только те поля из запроса, которые нужны для работы вашего модуля в приложении"
+  },
+  "Just provide translateFunction option that handles the response key and translate it\"": {
+    "message": "Вы можете передать параметр translateFunction и перевести текст ответа сервера"
+  },
+  "Get Started": {
+    "message": "Начать использование"
+  },
+  "Easy to Use": {
+    "message": "Простой"
+  },
+  "Fetch on steroids": {
+    "message": "Нативный"
+  },
+  "Universal library": {
+    "message": "Изоморфный"
+  },
+  "All types of validations": {
+    "message": "Валидирующий"
+  },
+  "Select the fields that are necessary": {
+    "message": "Избирательный"
+  },
+  "Translate your responses": {
+    "message": "Мультиязычный"
+  },
+  "Api client based of native fetch api with a lot of features": {
+    "message": "Библиотека запросов с широкими возможностями"
   }
 }

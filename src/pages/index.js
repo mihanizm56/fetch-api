@@ -9,58 +9,58 @@ import Translate, { translate } from "@docusaurus/Translate";
 
 const features = [
   {
-    title: "Easy to Use",
+    title: <Translate>Easy to Use</Translate>,
     imageUrl: "img/like.svg",
     description: (
-      <Translation>
+      <Translate>
         Fetch-API provides the same interface for all types of requests.
-      </Translation>
+      </Translate>
     ),
   },
   {
-    title: "Fetch on steroids",
+    title: <Translate>Fetch on steroids</Translate>,
     imageUrl: "img/like.svg",
     description: (
-      <Translation>All native window.fetch features are supported.</Translation>
+      <Translate>All native window.fetch features are supported.</Translate>
     ),
   },
   {
-    title: "Universal library",
+    title: <Translate>Universal library</Translate>,
     imageUrl: "img/like.svg",
     description: (
-      <Translation>
+      <Translate>
         For browser this is usual window.fetch and for Node.js node-fetch is
-        used.
-      </Translation>
+        used."
+      </Translate>
     ),
   },
   {
-    title: "All types of validations",
+    title: <Translate>All types of validations</Translate>,
     imageUrl: "img/like.svg",
     description: (
-      <Translation>
+      <Translate>
         You can use shemas to validate responses or you can provide your own
-        validate function
-      </Translation>
+        validate function"
+      </Translate>
     ),
   },
   {
-    title: "Select the fields that are necessary",
+    title: <Translate>Select the fields that are necessary</Translate>,
     imageUrl: "img/like.svg",
     description: (
-      <Translation>
+      <Translate>
         You're able to select only necessary data from JSON response
-      </Translation>
+      </Translate>
     ),
   },
   {
-    title: "Translate your responses",
+    title: <Translate>Translate your responses</Translate>,
     imageUrl: "img/like.svg",
     description: (
-      <Translation>
+      <Translate>
         Just provide translateFunction option that handles the response key and
-        translate it
-      </Translation>
+        translate it"
+      </Translate>
     ),
   },
 ];
@@ -69,13 +69,11 @@ function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
     <div className={clsx("col col--4", styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
-        </div>
-      )}
-      <h3>{title}</h3>
-      <p>{description}</p>
+      <div className="text--center">
+        <img className={styles.featureImage} src={imgUrl} alt={title} />
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
     </div>
   );
 }
@@ -85,13 +83,17 @@ function Home() {
   const { siteConfig = {} } = context;
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={siteConfig.title}
       description="Description will go into a meta tag in <head />"
     >
       <header className={clsx("hero hero--dark", styles.heroBanner)}>
         <div className="container">
           <h1 className={clsx(styles["hero__title"])}>{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <p className="hero__subtitle">
+            <Translate>
+              Api client based of native fetch api with a lot of features
+            </Translate>
+          </p>
           <div className={styles.buttons}>
             <Link
               className={clsx(
@@ -100,23 +102,21 @@ function Home() {
               )}
               to={useBaseUrl("/docs/overview")}
             >
-              <Translation>Get Started</Translation>
+              <Translate>Get Started</Translate>
             </Link>
           </div>
         </div>
       </header>
       <main>
-        {features && features.length > 0 && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
-              </div>
+        <section className={styles.features}>
+          <div className="container">
+            <div className="row">
+              {features.map((props, idx) => (
+                <Feature key={idx} {...props} />
+              ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
       </main>
     </Layout>
   );

@@ -3,10 +3,6 @@
     "message": "3.7.x",
     "description": "Лейбл версии"
   },
-  "sidebar.someSidebar.category.Overview": {
-    "message": "Обзор библиотеки",
-    "description": "Обзор библиотеки"
-  },
   "sidebar.someSidebar.category.Request Types": {
     "message": "Типы запросов",
     "description": "Типы запросов"
