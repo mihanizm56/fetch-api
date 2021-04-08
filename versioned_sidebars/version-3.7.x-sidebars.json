@@ -1,15 +1,8 @@
 {
   "version-3.7.x/someSidebar": [
     {
-      "collapsed": true,
-      "type": "category",
-      "label": "Overview",
-      "items": [
-        {
-          "type": "doc",
-          "id": "version-3.7.x/overview"
-        }
-      ]
+      "type": "doc",
+      "id": "version-3.7.x/overview"
     },
     {
       "collapsed": true,

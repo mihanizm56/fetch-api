@@ -16,7 +16,6 @@ You need to know that the retry parameter is binded with the timeoutValue parame
 |--retry1--retry2--retry3--|
 
 ```javascript
-import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (someData): Promise<IResponse> =>
@@ -25,6 +24,6 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
     responseSchema: Joi.object({
       test_string_field: Joi.string().required(),
     }),
-    retry: 3,
+    retry: 3
   });
 ```

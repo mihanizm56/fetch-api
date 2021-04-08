@@ -1,30 +1,26 @@
 {
   "version.label": {
     "message": "3.7.x",
-    "description": "The label for version 3.5.x"
-  },
-  "sidebar.someSidebar.category.Overview": {
-    "message": "Overview",
-    "description": "The label for category Overview in sidebar someSidebar"
+    "description": "The label for version 3.6.x"
   },
   "sidebar.someSidebar.category.Request Types": {
-    "message": "Request Types",
+    "message": "Типы запросов",
     "description": "The label for category Request Types in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.REST request": {
-    "message": "REST request",
+    "message": "REST запросы с жёсткой структурой",
     "description": "The label for category REST request in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Pure REST request": {
-    "message": "Pure REST request",
+    "message": "REST запросы с произвольной структурой",
     "description": "The label for category Pure REST request in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.JSON-RPC request": {
-    "message": "JSON-RPC request",
+    "message": "JSON-RPC запросы",
     "description": "The label for category JSON-RPC request in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Examples": {
-    "message": "Examples",
+    "message": "Примеры",
     "description": "The label for category Examples in sidebar someSidebar"
   }
 }
