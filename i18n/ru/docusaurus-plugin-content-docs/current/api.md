@@ -4,29 +4,29 @@ title: Описание API
 
 import Link from '@docusaurus/Link';
 
-## Request input options:
+## Параметры запросов:
 
-| Name                        | Type                             | Comments                                                                                                                              |
-| --------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| endpoint                    | `string`                         | the request url                                                                                                                       |
-| responseSchema              | `joi schema`                     | the response Schema that parsed by joi (you must use the joi in your project and insert the response Schema into this field)          |
-| body                        | `<YourType>`                     | the request body                                                                                                                      |
-| queryParams                 | `Record<string,any>`             | the object with the query parameters (they will be serialized automatically)                                                          |
-| translateFunction           | `(key,options) => string`        | function that will be called with error text key and params (key, params)                                                             |
-| isErrorTextStraightToOutput | `boolean`                        | flag not to prepare error text value - it goes straight from backend ("errorText" if REST and "message" if JSON-RPC)                  |
-| extraValidationCallback     | `(response:<YourType>)=>boolean` | callback that can be used for custom response data validation or if you don't want to use joi                                         |
-| customTimeout               | `number`                         | milliseconds for cancel the request on timeout (or a full package of requests if the "retry" parameter is activated)                  |
-| retry                       | `number`                         | number of requests try to request if the response is negative                                                                         |
-| pureJsonFileResponse        | `boolean`                        | removes any additional headers from request to make it possible to fetch the original json file (availiable only for PureRestRequest) |
+| Name                        | Type                             | Comments                                                                                                                            |
+| --------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| endpoint                    | `string`                         | URL запроса                                                                                                                         |
+| responseSchema              | `joi schema`                     | схема ответа joi                                                                                                                    |
+| body                        | `<YourType>`                     | тело запроса                                                                                                                        |
+| queryParams                 | `Record<string,any>`             | объект query параметров запроса                                                                                                     |
+| translateFunction           | `(key,options) => string`        | коллбек, который будет вызван для возможного перевода поля errorText                                                                |
+| isErrorTextStraightToOutput | `boolean`                        | флаг, выключающий преобразование текста ошибки - будет проброшен напрямую с бекенда без возможности перевода библиотекой            |
+| extraValidationCallback     | `(response:<YourType>)=>boolean` | коллбек, который можно использовать для кастомной валидации ответа                                                                  |
+| customTimeout               | `number`                         | количество миллисекунд до таймаута запроса (включая попытки повторного запроса если указан параметр retry и запрос прошёл неудачно) |
+| retry                       | `number`                         | количество попыток запрос данные еще раз если ответ не успешен                                                                      |
+| pureJsonFileResponse        | `boolean`                        | флаг, убирающий доп заголовки для возможности получения файла (доступно только для PureRestRequest)                                 |
 
-### Also consists of a lot of default fetch options (headers, mode, etc), see <Link to='https://developer.mozilla.org/ru/docs/Web/API/Fetch_API/Using_Fetch'>api docs</Link>
+### Также состоит из множества fetch параметров (headers, mode, итд), можно посмотреть <Link to='https://developer.mozilla.org/ru/docs/Web/API/Fetch_API/Using_Fetch'>тут</Link>
 
-## Request output options:
+## Получаемые поля из всех типов запросов:
 
-| Name             | Type         | Comments                                   |
-| ---------------- | ------------ | ------------------------------------------ |
-| error            | `boolean`    | flag if the request successful             |
-| errorText        | `string`     | main text of the error (can be translated) |
-| data             | `<YourType>` | response data                              |
-| additionalErrors | `any`        | additional error data from backend         |
-| code             | `number`     | response code number,always less than 501  |
+| Name             | Type         | Comments                              |
+| ---------------- | ------------ | ------------------------------------- |
+| error            | `boolean`    | флаг состояния ошибки                 |
+| errorText        | `string`     | текст ошибки                          |
+| data             | `<YourType>` | данные ответа                         |
+| additionalErrors | `any`        | любые дополнительные данные с бекенда |
+| code             | `number`     | код состояния ошибки                  |

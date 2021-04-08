@@ -6,6 +6,7 @@ sidebar_label: JSON-RPC запросы
 ### JSON-RPC Request
 
 ```javascript
+import Joi from "joi";
 import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const createItemsRequest = (someData): Promise<IResponse> =>

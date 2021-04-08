@@ -4,8 +4,8 @@ title: Query параметры
 
 import Link from '@docusaurus/Link';
 
-By default nor window.fetch nor node-fetch can serialize query params.
-But this library can do it for all types of requests!
+По умолчанию, window.fetch не умеет в сериализацию query параметров.
+Но данная библиотека имеет такую функциональность для всех типов запросов!
 
 ```javascript
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";

@@ -4,58 +4,66 @@ title: Валидации ответов сервера
 
 import Link from '@docusaurus/Link';
 
-You can use validations of the responses base on three types of validations
+Вы можете использовать валидации ответов сервера на основе трех типов проверок.
 
-- Format of the protocol (JSONRPCRequest requirement)
-- Requirements for the strictly typed fields in response from the backend (RestRequest requirement)
-- Client validation - <Link to='https://joi.dev/api/'>joi</Link> schemas or your custom validate callback
+- Формат протокола (JSONRPCRequest)
+- Формат требований о возращаемом формате данных (RestRequest)
+- Клиентская валидация по - <Link to='https://joi.dev/api/'>joi</Link> схемам или ваш кастомный коллбек для валидации ответа
 
-#### All of validations are non splitted from each other and make your response extremely safe!
+#### Все проверки работают совместно и это делает ваше приложение чрезвычайно устойчивым к неправильным ответам и данным!
 
-#### If one of those validations fails - all the response will fail with the default error structure
+#### Если одна из этих проверок не удалась - весь ответ не будет выполнен со структурой ошибок по умолчанию.
 
-### JSON-RPC requirements
+### JSON-RPC
 
-Your response must contain these fields in JSON <Link to='https://www.jsonrpc.org/specification'>see standart</Link>
-Result and Error field are mutually exclusive.
+Ваш ответ должен содержать эти поля в формате JSON <Link to='https://www.jsonrpc.org/specification'>по стандарту</Link>
+Поля result и error являются взаимоисключающими.
 
+```javascript
 {
-jsonrpc,
-result,
-error,
-id
+  jsonrpc, result, error, id;
 }
+```
 
-### RestRequest requirements
+### RestRequest
 
+```javascript
 {
-data,
-error,
-errorText,
-additionalErrors
+  data, error, errorText, additionalErrors;
 }
+```
 
-### RestRequest - do not make any requirements for requirement-free using
+Ответ будет представлять из себя объект с полями:
 
-### Schema validation
+- data - данные ответа (объект, если запрос прошёл успешно, если не успешно - null)
+- error - флаг состояния ошибки (всегда имеет тип boolean)
+- errorText - текст ошибки (пустая строка если запрос успешный)
+- additionalErrors - любые дополнительные данные с бекенда (для PureRestRequest это весь объект с данными об ошибке, для JSONRPCRequest это поле "errors.data" исходного ответа)
+- code - код состояния ошибки, всегда строка
+
+Если код состояния ответа от сервера больше чем 500 - то данные ответа не будут парситься, а будет просто отдан на клиент код ошибки 500 и дефолтный объект данных ошибки
+Если ваш клиент находится в оффлайн - вы получите код 600 и можете обработать его как вам нужно (может быть полезно для оффлайн-режимов работы приложения)
+
+### RestRequest - не накладывает никаких ограничений на возращаемый формат данных
+
+### Валидации по схеме
 
 ```javascript
 import Joi from "joi";
-import i18next from "i18next";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
-const schema = Joi.object({
+const responseSchema = Joi.object({
   username: Joi.string().required(),
 });
 
 export const getWhateverRequest = (): Promise<IResponse> =>
   new PureRestRequest().getRequest({
     endpoint: "http://localhost:3000",
-    responseSchema: schema,
+    responseSchema,
   });
 ```
 
-### Custom callback validation
+### Кастомная валидация
 
 ```javascript
 import Joi from "joi";
@@ -69,8 +77,8 @@ const schema = Joi.object({
 export const getWhateverRequest = (): Promise<IResponse> =>
   new PureRestRequest().getRequest({
     endpoint: "http://localhost:3000",
-    extraValidationCallback: (data:YourDataType) => {
-        // here you can validate the response and return boolean value
-        // joi validation will be disabled
+    extraValidationCallback: (data: YourDataType) => {
+      // здесь вы можете проверить ответ и вернуть boolean
+      // проверка по схеме joi будет отключена
   });
 ```

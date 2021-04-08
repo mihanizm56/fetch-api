@@ -3,7 +3,7 @@ title: JSON-RPC Запросы
 sidebar_label: JSON-RPC батчинг запросов
 ---
 
-### JSON-RPC Request with batching
+### JSON-RPC Request с батчингом
 
 ```javascript
 import { JSONRPCRequest, IResponse } from "@mihanizm56/fetch-api";

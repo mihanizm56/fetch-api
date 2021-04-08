@@ -2,13 +2,14 @@
 title: Браузерная поддержка и сборка
 ---
 
-All files from the library will be a combination of thanspiled .js filed with typings (.ts files),
+Импортируемые файлы библиотеки предоставляются в несобранном варианте вида .js файлов и файлов типизации
 
-.js files will be transpiled to es5 to be allowed to all modern browsers, enge40+, ie11
+.js файлы будут транспилированными в es5 для того, чтобы быть доступными для всех современных браузеров и старых
+версий edge и ie11
 
-You must to use bundler to get it to the browser.
+для доставки в браузер должен быть использован инструмент сборки
 
-But for ie11 you should install and add those packages below:
+Для поддержки ie11 - должны присуствовать следующие импорты
 
 ```javascript
 import "abortcontroller-polyfill/dist/polyfill-patch-fetch";

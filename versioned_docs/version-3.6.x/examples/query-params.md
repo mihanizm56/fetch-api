@@ -8,6 +8,7 @@ By default nor window.fetch nor node-fetch can serialize query params.
 But this library can do it for all types of requests!
 
 ```javascript
+import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (someData): Promise<IResponse> =>

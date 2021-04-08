@@ -4,15 +4,10 @@ title: Таймауты запросов
 
 import Link from '@docusaurus/Link';
 
-You can use request timeout. The default value is 60 seconds.
+Могут быть использованы таймауты для ограничения времени ожидания запросов.
+По умолчанию значение равно 60 секундам
 
-There is a race between request and default error response and if timeout is gone - the default error response wins and you will get is as the result.
-
-You need to know that the customTimeout parameter is binded with retry parameter (see <Link to='/docs/examples/request-timeout'>timeoutValue example</Link>)
-
-|-------timeoutValue--------|
-
-|--retry1--retry2--retry3--|
+Работает механизм таймаутов за счёт гонки между промисом запроса и промисом с таймером ошибки.
 
 ```javascript
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
@@ -20,9 +15,15 @@ import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 export const getWhateverRequest = (someData): Promise<IResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
-    responseSchema: Joi.object({
-      test_string_field: Joi.string().required(),
-    }),
-    customTimeout: 30000, // 30 seconds
+    customTimeout: 30000, // 30 секунд
   });
 ```
+
+Необходимо уточнить, что если вы используете парамтер retry то параметр таймаута не продлевается на попытку.
+Он один для всего ряда повторных запросов и основного.
+
+|-------timeoutValue--------|
+
+|--retry1--retry2--retry3--|
+
+(пример <Link to='/docs/examples/request-timeout'>тут</Link>)

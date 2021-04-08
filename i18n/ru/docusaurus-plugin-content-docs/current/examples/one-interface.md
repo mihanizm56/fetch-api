@@ -4,9 +4,9 @@ title: Единый тип интерфейса ответа
 
 import Link from '@docusaurus/Link';
 
-All request types provide the same interface to get data from them
+Все типы запросов предоставляют единый интерфейс получения данных
 
-(errorText field can be translated inside the Request function, see <Link to='/docs/examples/translation'>example</Link>)
+(errorText поле может быть переведено <Link to='/docs/examples/translation'>ссылка на пример</Link>)
 
 ```javascript
 import { RestRequest, IResponse, ABORT_REQUEST_EVENT_NAME } from "@mihanizm56/fetch-api";
@@ -14,25 +14,22 @@ import { RestRequest, IResponse, ABORT_REQUEST_EVENT_NAME } from "@mihanizm56/fe
 export const createWhateverRequest = (someData) =>
   new RestRequest().postRequest({
     endpoint: "http://localhost:3000",
-    body: someData,
-    abortRequestId: '1',
-    responseSchema: Joi.object({
-      username: Joi.string().required(),
-      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    }),
+    body: someData
   });
 );
 
 const someFunction = async () => {
-    const response = await createWhateverRequest(someData)
+    const response = await createWhateverRequest(someData);
 
-    // The response will be an object with fields:
-    // data - reponse data
-    // error - boolean flag to check if the response not success
-    // errorText - text of an error
-    // additionalErrors - any type of additional data from the backend (for PureRestRequest it is an object with all responded error data, for JSONRPCRequest it is field "errors.data" in the response)
-    // code - response code number
-    // if the browser gets code 501 and more then you will get the error response with 500 code and browser will not try to parse and validate responded data
-    // if you are offline - you will get 600 and you are able to do smth with that code for you offline-mode
+    const {data, error, errorText, additionalErrors, code} = response
+
+    // Ответ будет представлять из себя объект с полями:
+    // data - данные ответа (объект, если запрос прошёл успешно, если не успешно - null)
+    // error - флаг состояния ошибки (всегда имеет тип boolean)
+    // errorText - текст ошибки (пустая строка если запрос успешный)
+    // additionalErrors - любые дополнительные данные с бекенда (для PureRestRequest это весь объект с данными об ошибке, для JSONRPCRequest это поле "errors.data" исходного ответа)
+    // code - код состояния ошибки, всегда строка
+    // Если код состояния ответа от сервера больше чем 500 - то данные ответа не будут парситься, а будет просто отдан на клиент код ошибки 500 и дефолтный объект данных ошибки
+    //  Если ваш клиент находится в оффлайн - вы получите код 600 и можете обработать его как вам нужно (может быть полезно для оффлайн-режимов работы приложения)
 }
 ```

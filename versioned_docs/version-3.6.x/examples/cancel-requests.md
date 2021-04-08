@@ -3,6 +3,7 @@ title: Cancelling requests
 ---
 
 ```javascript
+import Joi from "joi";
 import { RestRequest, IResponse, ABORT_REQUEST_EVENT_NAME } from "@mihanizm56/fetch-api";
 
 export const createWhateverRequest = (someData): Promise<IResponse> =>

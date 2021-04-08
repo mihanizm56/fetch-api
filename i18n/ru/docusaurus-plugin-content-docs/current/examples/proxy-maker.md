@@ -7,18 +7,18 @@ import { FetchProxyMaker } from "@mihanizm56/fetch-api";
 
 new FetchProxyMaker().setResponseTrackCallback(
   ({
-    requestParams, // all request parameters
-    response, //  pure response protected object
-    pureResponseData, // response body without formatting
-    requestError: boolean, // is request crashed
-    formattedResponseData, // formatted response data in IResponse interface
+    requestParams, // все параметры запроса
+    response, //  полный объект ответа до обработки
+    pureResponseData, // полный объект тела ответа до обработки
+    requestError: boolean, // флаг состояния об ошибке самого запроса
+    formattedResponseData, // форматтированный объект ошибки (data, error, errorText, additionalErrors, code)
   }) => ({
-    // do some metrics or logging here
+    // ваши действия здесь
   })
 );
 ```
 
-#### Set callback for metrics for all requests
+#### Уставновка коллбека для всех запросов
 
 ```javascript
 import { FetchProxyMaker } from "@mihanizm56/fetch-api";
@@ -30,7 +30,7 @@ new FetchProxyMaker().setPersistentOptions(() => ({
 }));
 ```
 
-#### Set callback for metrics for one request
+#### Уставновка коллбека для одного запроса
 
 ```javascript
 import { RestRequest, IResponse, ABORT_REQUEST_EVENT_NAME } from "@mihanizm56/fetch-api";

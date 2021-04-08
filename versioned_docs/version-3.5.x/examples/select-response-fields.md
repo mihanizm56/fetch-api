@@ -9,8 +9,8 @@ you can use the data selection - select only needed fields from the response.
 
 This functionality is built on top of <Link to='https://github.com/nemtsov/json-mask'>json-mask</Link> library
 
-
 As an example - we have response with fields:
+
 ```javascript
 {
     username:"Police officer"
@@ -21,13 +21,15 @@ As an example - we have response with fields:
     }
 }
 ```
+
 But in our code we want to get only username field and info field with only killers array inside:
+
 ```javascript
 {
-    username:"Police officer"
-    info:{
-        killers:["Sam", "John"]
-    }
+  username: "Police officer";
+  info: {
+    killers: ["Sam", "John"];
+  }
 }
 ```
 
@@ -36,8 +38,6 @@ This can be possible because inside in the response formatter there will be call
 ```javascript
 import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
-
-
 
 export const getWhateverRequest = (): Promise<IResponse> =>
   new RestRequest().getRequest({
@@ -59,8 +59,6 @@ export const getWhateverRequest = (): Promise<IResponse> =>
 
 ### You can provide your own select function (customSelectorData field)
 
-
-
 ```javascript
 import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
@@ -70,9 +68,11 @@ export const getWhateverRequest = (): Promise<IResponse> =>
     endpoint: "http://localhost:3000",
     selectData: "username,info(killers)",
     customSelectorData: (
-        data: YourDataType, 
-        selectData: string /*"username,info(killers)" will be transferred*/
-    ) => {/*you must return the selected data here*/},
+      data: YourDataType,
+      selectData: string /*"username,info(killers)" will be transferred*/
+    ) => {
+      /*you must return the selected data here*/
+    },
 
     responseSchema: Joi.object({
       username: Joi.string().required(),

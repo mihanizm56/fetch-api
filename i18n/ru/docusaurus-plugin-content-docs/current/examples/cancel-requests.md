@@ -2,6 +2,8 @@
 title: Отмена запросов
 ---
 
+Работает только в браузерном окружении!!!
+
 ```javascript
 import { RestRequest, IResponse, ABORT_REQUEST_EVENT_NAME } from "@mihanizm56/fetch-api";
 
@@ -10,15 +12,12 @@ export const createWhateverRequest = (someData): Promise<IResponse> =>
     endpoint: "http://localhost:3000",
     body: someData,
     abortRequestId: '1',
-    responseSchema: Joi.object({
-      username: Joi.string().required(),
-      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    }),
   });
 );
 
-// at the moment you want cancel the request
-// you just dispatch an event with that name (ABORT_REQUEST_EVENT_NAME) and id (abortRequestId) of the request
+// в тот момент, когда вы хотите отменить запрос
+// вам нужно вызывать браузерное событие с именем ABORT_REQUEST_EVENT_NAME
+// и с id который был передан в секцию abortRequestId запроса
 document.dispatchEvent(
   new CustomEvent(ABORT_REQUEST_EVENT_NAME, {
     detail: { id: '1' },

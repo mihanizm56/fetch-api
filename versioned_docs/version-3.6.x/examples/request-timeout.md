@@ -15,6 +15,7 @@ You need to know that the customTimeout parameter is binded with retry parameter
 |--retry1--retry2--retry3--|
 
 ```javascript
+import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (someData): Promise<IResponse> =>
@@ -23,6 +24,6 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
     responseSchema: Joi.object({
       test_string_field: Joi.string().required(),
     }),
-    customTimeout: 30000 // 30 seconds
+    customTimeout: 30000, // 30 seconds
   });
 ```

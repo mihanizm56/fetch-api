@@ -48,7 +48,7 @@ module.exports = {
           type: "doc",
           label: "API",
           position: "left",
-          docId: "api/api",
+          docId: "api",
         },
         {
           to: "https://github.com/mihanizm56/fetch-api",

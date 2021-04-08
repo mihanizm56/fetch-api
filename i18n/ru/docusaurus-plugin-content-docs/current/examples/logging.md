@@ -1,11 +1,8 @@
 ---
-title: Логгирование
+title: Логгирование ошибочных запросов
 ---
 
-If the request fails (browser/node fail or the response not success),
-library will show the groupped information in console.
-
-In code it's just:
+Если запрос завершится неудачно - библиотека предоставит информацию об ошибке в консоль:
 
 ```javascript
 type ParamsType = {
@@ -20,6 +17,7 @@ export const makeErrorRequestLogs = ({
   fetchBody,
 }: ParamsType) => {
   console.error("(fetch-api): get error in the request", endpoint);
+
   console.group("Show error data");
   console.error("(fetch-api): message:", errorRequestMessage);
   console.error("(fetch-api): endpoint:", endpoint);

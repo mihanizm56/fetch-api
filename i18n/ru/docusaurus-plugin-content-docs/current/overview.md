@@ -5,42 +5,41 @@ sidebar_label: Обзор
 
 import Link from '@docusaurus/Link';
 
-### Why it is useful
+### Мотивация
 
-This library was written in purpose to make life easier with simple window.fetch API and not to write from project to project
-a lot of error catching and response validating. In common case we usually need to get structured respone from the backend
-and this library helps us with that. RestRequest needs some stricted fields to be in response and PureRestRequest is not need.
-What to use is up to you. JSONRPCRequest is build by standard of JSON-RPC with no additions.
+Эта библиотека была написана, чтобы упростить жизнь с помощью простого API window.fetch, а не писать из проекта в проект
+обработки ошибок и валидации ответов. В общем случае нам обычно нужно получить структурированный ответ от бэкэнда
+и обработать возможные ошибки некорректных данных и статусов - эта библиотека помогает в этом!
 
-Also the killer feature of this package is to validate responses with schemas and to select the responded fields
-if we don't need the full response.
+Для запросов RestRequest должны в ответе бэкенда присутствовать определенные поля, но для PureRestRequest поля могут быть произвольными. JSONRPCRequest построен по стандарту JSON-RPC без дополнений.
 
-### Full list of features
+Киллер-фича этой библиотеки - валидация ответов с помощью схем и выбор только нужных полей ответа если нам не нужен полный объект ответа.
 
-- Written in Typescript
-- Validation for the responses
-- Universal requests (nodejs 8+ and modern browsers)
-- Output is not built - you are to build it with your own builder(webpack, rollup, etc)
-- Translation for the responses
-- Logging in browser devtools in useful "group" format
-- One interface for all types of requests
-- Query-params serialize
-- Cancel-request if the timeout is higher than timeout value (60 seconds by default)
-- Error catching (you dont need to use try/catch)
-- The ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
-- The ability to handle the response progress
-- The ability to select necessary fields from the response
-- The ability to retry requests and use it with the timeouts
+### Полный список возможностей
 
-Please check out <Link to="docs/examples/cancel-requests">examples section</Link>
+- Написана на Typescript
+- предоставляет валидации ответов
+- Изоморфность запросов (nodejs 8+ и ie11+ браузеры)
+- Выходные файлы библиотеки не собранные - вам нужно собрать их самостоятельно с помощью инструмента сборки (webpack, rollup, итд)
+- Возможность перевода запрсов в соответствие с i18n
+- Удобное логгирование запросов в браузерную консоль
+- Единый интерфейс для всех типов запросов
+- Сериализация query параметры
+- Таймауты запросов
+- Удобная обработка ошибок (вам больше не нужно использовать try/catch)
+- Возможность отмены запросов
+- Возможность обрабатывать прогресс ответа
+- Возможность выбора необходимых полей в ответе
+- Возможность повторять запросы в случае их ошибки
+- Возможность перехвата ошибочного запроса и получение всей мета информации по нему для дальнейшей обработки пользователем или отправки в сторонний сервис логгирования
 
-## Attentions
+Пожалуйста, ознакомьтесь <Link to="docs/examples/cancel-requests">примеры</Link>
 
-- ### The request body will be serialized in JSON if body data NOT FormData
+## Обратите внимание
 
-- ### If you need to support ie11
+- ### Тело запроса будет сериализовано в JSON если данные тела не в формате FormData
 
-Please install and add the following polyfills to your project
+- ### Если нужна поддержка ie11 - установите пакеты ниже и подключите их в ваш проект
 
 ```javascript
 import "abortcontroller-polyfill/dist/polyfill-patch-fetch";

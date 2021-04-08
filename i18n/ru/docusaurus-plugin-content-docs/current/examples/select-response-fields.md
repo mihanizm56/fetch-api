@@ -4,12 +4,12 @@ title: Выборка нужных полей из данных ответа
 
 import Link from '@docusaurus/Link';
 
-When the response data object is very big and you don't need all fields or this is not secure for the development,
-you can use the data selection - select only needed fields from the response.
+Когда объект данных ответа очень большой и вам не нужны все поля или это небезопасно для разработки,
+вы можете использовать выборку данных - выбирайте только нужные поля из ответа.
 
-This functionality is built on top of <Link to='https://github.com/nemtsov/json-mask'>json-mask</Link> library
+Эта функциональность построена на основе <Link to='https://github.com/nemtsov/json-mask'>json-mask</Link> library
 
-As an example - we have response with fields:
+В качестве примера - у нас есть ответ с полями:
 
 ```javascript
 {
@@ -22,7 +22,7 @@ As an example - we have response with fields:
 }
 ```
 
-But in our code we want to get only username field and info field with only killers array inside:
+Но в нашем коде мы хотим получить только поле username и поле info, а внутри - только массив killers:
 
 ```javascript
 {
@@ -33,34 +33,21 @@ But in our code we want to get only username field and info field with only kill
 }
 ```
 
-This can be possible because inside in the response formatter there will be called: jsonMask(responseData.data, selectData)
+Это может быть возможно, потому что внутри модуля форматирования ответов будет вызываться: jsonMask(responseData.data, selectData)
 
 ```javascript
-import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (): Promise<IResponse> =>
   new RestRequest().getRequest({
     endpoint: "http://localhost:3000",
     selectData: "username,info(killers)",
-    responseSchema: Joi.object({
-      username: Joi.string().required(),
-      info: Joi.object({
-        killers: Joi.array().items(
-          Joi.object({
-            username: Joi.string().required(),
-            count: Joi.number().required(),
-          })
-        ),
-      }),
-    }),
   });
 ```
 
-### You can provide your own select function (customSelectorData field)
+### Вы можете предоставить свою собственную функцию выборки (поле customSelectorData)
 
 ```javascript
-import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (): Promise<IResponse> =>
@@ -69,21 +56,9 @@ export const getWhateverRequest = (): Promise<IResponse> =>
     selectData: "username,info(killers)",
     customSelectorData: (
       data: YourDataType,
-      selectData: string /*"username,info(killers)" will be transferred*/
+      selectData: string /*"username,info(killers) будет передано*/
     ) => {
-      /*you must return the selected data here*/
+      /*Вы должны вернуть выбранные данные из функции*/
     },
-
-    responseSchema: Joi.object({
-      username: Joi.string().required(),
-      info: Joi.object({
-        killers: Joi.array().items(
-          Joi.object({
-            username: Joi.string().required(),
-            count: Joi.number().required(),
-          })
-        ),
-      }),
-    }),
   });
 ```
