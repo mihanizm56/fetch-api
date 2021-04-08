@@ -80,7 +80,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.config.js"),
-          editUrl: "https://github.com/mihanizm56/fetch-api/tree/feature/docs",
+          editUrl: "https://github.com/mihanizm56/fetch-api/tree/docs",
           editLocalizedFiles:true,
         },
         theme: {
