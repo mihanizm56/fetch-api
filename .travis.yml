@@ -1,19 +1,19 @@
-# version: ~> 1.0
+version: ~> 1.0
 
-# language: node_js
+language: node_js
 
-# node_js:
-# - 12.13.0
+node_js:
+  - 12.13.0
 
-# cache: yarn
+cache: yarn
 
-# script:
-#     - npm run build
+script:
+  - npm run build
 
-# deploy:
-#     provider: pages
-#     local_dir: build
-#     skip-cleanup: true
-#     github-token: $GITHUB_TOKEN
-#     on:
-#       branch: feature/docs
+deploy:
+  provider: pages
+  local_dir: build
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  on:
+    branch: docs
