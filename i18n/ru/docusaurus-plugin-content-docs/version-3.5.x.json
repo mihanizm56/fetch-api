@@ -22,5 +22,9 @@
   "sidebar.someSidebar.category.Examples": {
     "message": "Примеры",
     "description": "The label for category Examples in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Overview": {
+    "message": "Overview",
+    "description": "The label for category Overview in sidebar someSidebar"
   }
 }

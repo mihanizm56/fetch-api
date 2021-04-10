@@ -1,7 +1,7 @@
 {
   "version.label": {
     "message": "3.7.x",
-    "description": "The label for version 3.6.x"
+    "description": "The label for version 3.7.x"
   },
   "sidebar.someSidebar.category.Request Types": {
     "message": "Типы запросов",

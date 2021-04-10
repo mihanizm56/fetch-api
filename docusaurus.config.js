@@ -51,6 +51,11 @@ module.exports = {
           docId: "api",
         },
         {
+          to: 'blog', 
+          label: 'Release notes', 
+          position: 'left'
+        },
+        {
           to: "https://github.com/mihanizm56/fetch-api",
           label: "Star me",
           position: "right",
@@ -91,6 +96,10 @@ module.exports = {
           changefreq: "weekly",
           priority: 0.5,
           trailingSlash: false,
+        },
+        blog: {
+          blogTitle: 'Docusaurus blog!',
+          blogDescription: 'A docusaurus powered blog!',
         },
       },
     ],
