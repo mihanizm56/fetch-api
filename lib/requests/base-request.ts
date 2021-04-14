@@ -43,6 +43,7 @@ import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-
 import { getIsStatusCodeSuccess } from "@/utils/get-is-status-code-success";
 import { getErrorTracingType } from "@/utils/tracing/get-error-tracing-type";
 import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
+import { ResponseStatusValidator } from "@/validators/response-status-validator";
 
 interface IBaseRequest {
   makeFetch: (
@@ -243,8 +244,8 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
-  getFormattedHeaders = ({ body, headers = {}, pureFileRequest }: GetFormattedHeadersParamsType):Record<string,string> => {
-    if(pureFileRequest || isFormData(body)){
+  getFormattedHeaders = ({ body, headers = {}, isPureFileRequest }: GetFormattedHeadersParamsType):Record<string,string> => {
+    if(isPureFileRequest || isFormData(body)){
       return headers
     }
 
@@ -266,9 +267,9 @@ export class BaseRequest implements IBaseRequest {
     responseSchema,
     body,
     isNotFound,
-    pureFileRequest
+    isPureFileRequest
   }: GetPreparedResponseDataParams): FormatResponseParamsType => {
-    if (pureFileRequest && !isNotFound) {
+    if (isPureFileRequest && !isNotFound) {
       return {
         data: response,
         translateFunction,
@@ -374,6 +375,7 @@ export class BaseRequest implements IBaseRequest {
     }
   }
 
+
   makeFetch = <
     MakeFetchType extends IRequestParams &
     Partial<IJSONPRCRequestParams> & {
@@ -413,7 +415,7 @@ export class BaseRequest implements IBaseRequest {
     tracingDisabled,
     pureJsonFileResponse
   }: MakeFetchType): Promise<IResponse> => {
-    const pureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || pureJsonFileResponse;
+    const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
 
     // set cookie to get them in trace functions
     this.cookie = global.document ? global.document.cookie : '';
@@ -427,7 +429,7 @@ export class BaseRequest implements IBaseRequest {
     const formattedHeaders = this.getFormattedHeaders({
       body,
       headers,
-      pureFileRequest
+      isPureFileRequest
     });
 
     const fetchBody = this.getFetchBody({
@@ -465,14 +467,15 @@ export class BaseRequest implements IBaseRequest {
         this.statusCode = response.status;
         const isStatusEmpty = this.statusCode === 204;
         const isNotFound = this.statusCode === 404;        
-        
-        // for text and blob response does not matter response to parse
-        // but does matter what code we get from the backend
-        // alse 404 is useful that can contain some data 
-        // and we need to provide that code to the client
-        const isValidStatus = pureFileRequest 
-          ? this.statusCode === 200 || this.statusCode === 304 || this.statusCode === 404
-          : this.statusCode <= 500;          
+          
+        const statusValidator = new ResponseStatusValidator().getFormatValidateMethod({
+          requestProtocol,
+          isBatchRequest,
+          isPureFileRequest,
+          status: this.statusCode,
+        })
+
+        const isValidStatus = statusValidator()
 
         const isResponseStatusSuccess = getIsStatusCodeSuccess(this.statusCode);
 
@@ -510,14 +513,14 @@ export class BaseRequest implements IBaseRequest {
             isResponseStatusSuccess,
             isStatusEmpty,
             isBatchRequest,
-            pureFileRequest,
+            isPureFileRequest,
           });         
 
           if (isFormatValid) {
             // get the formatter func
             const responseFormatter = new FormatResponseFactory().createFormatter(
               this.getPreparedResponseData({
-                pureFileRequest,
+                isPureFileRequest,
                 response: parsedResponseData,
                 translateFunction,
                 protocol: requestProtocol,
@@ -545,7 +548,7 @@ export class BaseRequest implements IBaseRequest {
 
             // select the response data fields if all fields are not necessary
             // work only for json responses
-            const selectedResponseData = (selectData || customSelectorData) && !pureFileRequest 
+            const selectedResponseData = (selectData || customSelectorData) && !isPureFileRequest 
               ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
               : formattedResponseData;
 

@@ -290,7 +290,7 @@ export type GetPreparedResponseDataParams = {
   responseSchema?: any;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
   isNotFound: boolean;
-  pureFileRequest?: boolean;
+  isPureFileRequest?: boolean;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
@@ -344,7 +344,7 @@ export type FormatValidateParams = {
   isResponseStatusSuccess?: boolean;
   isStatusEmpty?: boolean;
   isBatchRequest?: boolean;
-  pureFileRequest?: boolean;
+  isPureFileRequest?: boolean;
 };
 
 export type FormatValidateParamsMethod = (
@@ -361,7 +361,7 @@ export type FormatValidateParamsMehod = (
 ) => boolean;
 
 export type GetFormattedHeadersParamsType = {
-  pureFileRequest?: boolean;
+  isPureFileRequest?: boolean;
   body: JSON | FormData;
   headers?: {
     [key: string]: any;
@@ -389,3 +389,17 @@ export type DependencyType = {
   name: string;
   value: any;
 };
+
+export type StatusValidatorParamsType = {
+  requestProtocol: keyof typeof requestProtocolsMap;
+  isBatchRequest?: boolean;
+  isPureFileRequest: boolean;
+  status: number;
+};
+
+export type StatusValidatorMethodParamsType = Omit<
+  StatusValidatorParamsType,
+  'requestProtocol'
+>;
+
+export type StatusValidatorMethodOutputType = () => boolean;

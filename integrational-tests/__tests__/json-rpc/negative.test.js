@@ -192,8 +192,8 @@ describe('JSON-PRC request (negative)', () => {
       errorText: 'test value from translateFunction',
     });
   });
-  describe('JSON-PRC batching (negative)', () => {
-    test('test simply answer code not from whitelist', async () => {
+  describe.only('JSON-PRC batching (negative)', () => {
+    test.only('test simply answer code not from whitelist', async () => {
       const responseSchemaObjectOne = Joi.object({
         foo: Joi.string().required(),
       });
