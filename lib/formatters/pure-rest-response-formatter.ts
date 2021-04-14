@@ -5,8 +5,8 @@ import {
   AdditionalErrors,
   FormatResponsePureRESTDataOptionsType,
 } from '@/types';
-import { getIsStatusCodeSuccess } from '@/utils/get-is-status-code-success';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
+import { ResponseStatusValidator } from '@/validators/response-status-validator';
 
 export class PureRestResponseFormatter extends ResponseFormatter {
   data?: any;
@@ -63,7 +63,7 @@ export class PureRestResponseFormatter extends ResponseFormatter {
   }: FormatResponsePureRESTDataOptionsType) {
     super();
 
-    const isResponseStatusSuccess = getIsStatusCodeSuccess(statusCode);
+    const isResponseStatusSuccess = ResponseStatusValidator.getIsStatusCodeSuccess(statusCode);
     const errorTextKey = !isResponseStatusSuccess
       ? this.getPureRestErrorText(data)
       : '';

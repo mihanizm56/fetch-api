@@ -22,6 +22,8 @@ interface IResponseStatusValidator {
 }
 
 export class ResponseStatusValidator implements IResponseStatusValidator {
+  static getIsStatusCodeSuccess = (status: number) => status < 400;
+
   getPureRestStatusIsValid = ({
     isPureFileRequest,
     status,

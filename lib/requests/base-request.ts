@@ -40,7 +40,6 @@ import { OFFLINE_STATUS_CODE, REQUEST_ERROR_STATUS_CODE } from "@/constants";
 import { makeErrorRequestLogs } from "@/utils/make-error-request-logs";
 import { getIsRequestOnline } from "@/utils/get-is-request-online";
 import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-factory";
-import { getIsStatusCodeSuccess } from "@/utils/get-is-status-code-success";
 import { getErrorTracingType } from "@/utils/tracing/get-error-tracing-type";
 import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
 import { ResponseStatusValidator } from "@/validators/response-status-validator";
@@ -467,7 +466,8 @@ export class BaseRequest implements IBaseRequest {
         this.statusCode = response.status;
         const isStatusEmpty = this.statusCode === 204;
         const isNotFound = this.statusCode === 404;        
-          
+        
+        // check for different types of requests - is status valid or not
         const statusValidator = new ResponseStatusValidator().getFormatValidateMethod({
           requestProtocol,
           isBatchRequest,
@@ -475,9 +475,9 @@ export class BaseRequest implements IBaseRequest {
           status: this.statusCode,
         })
 
-        const isValidStatus = statusValidator()
+        const isValidStatus = statusValidator();
 
-        const isResponseStatusSuccess = getIsStatusCodeSuccess(this.statusCode);
+        const isResponseStatusSuccess = ResponseStatusValidator.getIsStatusCodeSuccess(this.statusCode);
 
         // add response to Request class to share if an error exist
         // if the request will crash - there will be null
