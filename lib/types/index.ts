@@ -167,6 +167,7 @@ export interface IRequestParams extends RequestInit {
   traceRequestCallback?: SetResponseTrackCallback;
   tracingDisabled?: boolean;
   pureJsonFileResponse?: boolean;
+  extraVerifyRetry?: ExtraVerifyRetryCallbackType;
 }
 
 export interface IResponse {
@@ -403,3 +404,7 @@ export type StatusValidatorMethodParamsType = Omit<
 >;
 
 export type StatusValidatorMethodOutputType = () => boolean;
+
+export type ExtraVerifyRetryCallbackType = (params: {
+  formattedResponseData: IResponse;
+}) => boolean;

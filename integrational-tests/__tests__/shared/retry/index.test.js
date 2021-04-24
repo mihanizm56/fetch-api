@@ -13,7 +13,7 @@ const requestBaseConfig = {
   retry: 3,
 };
 
-describe('retry tests (negative)', () => {
+describe('retry tests', () => {
   beforeEach(() => {
     delete global.window;
   });
@@ -70,6 +70,50 @@ describe('retry tests (negative)', () => {
         additionalErrors: null,
       });
     });
+
+    test('RestRequest not retry if extraVerifyRetry returned always false', async () => {
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/shared/retry/rest?retry=true&last=true&retrynumber=20',
+        extraVerifyRetry: () => false,
+      };
+
+      const response = await new RestRequest().getRequest(requestConfig);
+
+      expect(response).toEqual({
+        code: 400,
+        error: true,
+        errorText:
+          'translateFunction got key test retry error and options undefined',
+        data: {},
+        additionalErrors: null,
+      });
+    });
+    test('RestRequest not retry if extraVerifyRetry returned false if 400 response only', async () => {
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/shared/retry/rest?retry=true&last=true&retrynumber=3',
+        extraVerifyRetry: ({ formattedResponseData }) => {
+          if (formattedResponseData.code === 400) {
+            return false;
+          }
+          return true;
+        },
+      };
+
+      const response = await new RestRequest().getRequest(requestConfig);
+
+      expect(response).toEqual({
+        code: 400,
+        error: true,
+        errorText:
+          'translateFunction got key test retry error and options undefined',
+        data: {},
+        additionalErrors: null,
+      });
+    });
   });
 
   describe('test PureRestRequest', () => {
@@ -111,6 +155,48 @@ describe('retry tests (negative)', () => {
         ...requestBaseConfig,
         endpoint:
           'http://127.0.0.1:8080/shared/retry/pure-rest?notresponded=true',
+      };
+
+      const response = await new PureRestRequest().getRequest(requestConfig);
+
+      expect(response).toEqual({
+        code: 400,
+        error: true,
+        errorText: 'translateFunction got key  and options [object Object]',
+        data: {},
+        additionalErrors: {},
+      });
+    });
+
+    test('PureRestRequest not retry if extraVerifyRetry returned always false', async () => {
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/shared/retry/pure-rest?retry=true&last=true&retrynumber=20',
+        extraVerifyRetry: () => false,
+      };
+
+      const response = await new PureRestRequest().getRequest(requestConfig);
+
+      expect(response).toEqual({
+        code: 400,
+        error: true,
+        errorText: 'translateFunction got key  and options [object Object]',
+        data: {},
+        additionalErrors: {},
+      });
+    });
+    test('PureRestRequest not retry if extraVerifyRetry returned false if 400 response only', async () => {
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/shared/retry/pure-rest?retry=true&last=true&retrynumber=20',
+        extraVerifyRetry: ({ formattedResponseData }) => {
+          if (formattedResponseData.code === 400) {
+            return false;
+          }
+          return true;
+        },
       };
 
       const response = await new PureRestRequest().getRequest(requestConfig);
@@ -181,6 +267,65 @@ describe('retry tests (negative)', () => {
           options: {
             foo: 'bar',
           },
+        },
+      };
+
+      const response = await new JSONRPCRequest().makeRequest(requestConfig);
+
+      expect(response).toEqual({
+        code: 400,
+        error: true,
+        errorText:
+          'translateFunction got key test retry error trKey and options [object Object]',
+        data: {},
+        additionalErrors: {
+          err: 'test retry error err',
+        },
+      });
+    });
+    test('JSONRPCRequest not retry if extraVerifyRetry returned always false', async () => {
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/shared/retry/json-rpc?retry=true&last=true&retrynumber=20',
+        body: {
+          method: 'test_method',
+          options: {
+            foo: 'bar',
+          },
+        },
+        extraVerifyRetry: () => false,
+      };
+
+      const response = await new JSONRPCRequest().makeRequest(requestConfig);
+
+      expect(response).toEqual({
+        code: 400,
+        error: true,
+        errorText:
+          'translateFunction got key test retry error trKey and options [object Object]',
+        data: {},
+        additionalErrors: {
+          err: 'test retry error err',
+        },
+      });
+    });
+    test('JSONRPCRequest not retry if extraVerifyRetry returned false if 400 response only', async () => {
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/shared/retry/json-rpc?retry=true&last=true&retrynumber=20',
+        body: {
+          method: 'test_method',
+          options: {
+            foo: 'bar',
+          },
+        },
+        extraVerifyRetry: ({ formattedResponseData }) => {
+          if (formattedResponseData.code === 400) {
+            return false;
+          }
+          return true;
         },
       };
 

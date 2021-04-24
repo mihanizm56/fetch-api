@@ -43,6 +43,7 @@ import { ResponseDataParserFactory } from "@/utils/parsers/response-data-parser-
 import { getErrorTracingType } from "@/utils/tracing/get-error-tracing-type";
 import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
 import { ResponseStatusValidator } from "@/validators/response-status-validator";
+import { checkToDoRetry } from "@/utils/check-todo-retry";
 
 interface IBaseRequest {
   makeFetch: (
@@ -412,7 +413,8 @@ export class BaseRequest implements IBaseRequest {
     retry,
     traceRequestCallback,
     tracingDisabled,
-    pureJsonFileResponse
+    pureJsonFileResponse,
+    extraVerifyRetry
   }: MakeFetchType): Promise<IResponse> => {
     const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
 
@@ -537,15 +539,18 @@ export class BaseRequest implements IBaseRequest {
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
-            // check if needs to retry request          
-            if (formattedResponseData.error && 
-              typeof retry !== 'undefined' &&  
-              typeof retryCounter !== 'undefined' && 
-              retryCounter < retry
-            ) {
+            // check if needs to retry request     
+            const needsToRetry = checkToDoRetry({
+              formattedResponseData,
+              retry,
+              retryCounter,
+              extraVerifyRetry
+            })
+
+            if(needsToRetry && typeof retryCounter !== 'undefined'){
               return getRequest(retryCounter + 1)
             }
-
+ 
             // select the response data fields if all fields are not necessary
             // work only for json responses
             const selectedResponseData = (selectData || customSelectorData) && !isPureFileRequest 
