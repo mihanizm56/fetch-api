@@ -11,7 +11,7 @@
     "test": "npm run build && set CI=true && jest",
     "test:coverage": "jest --coverage",
     "build": "rm -fr ./dist && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./lib -o ./dist",
-    "lint": "npx eslint ./lib --ext .ts --fix",
+    "lint": "npx eslint ./lib --ext .ts --fix --max-warnings=0 --cache --cache-location .eslintinfo",
     "stop": "sudo kill $(sudo lsof -t -i:8080)",
     "commit": "git add . && git commit --no-edit",
     "packages-vulnerability-check": "check-audit",
