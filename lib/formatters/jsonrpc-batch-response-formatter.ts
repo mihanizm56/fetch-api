@@ -53,8 +53,8 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
   getSortedByIDsBatchResponse = () => {
     return  this.data.sort((next,prev)=>{
       try {
-        const prevNumber = ID_REGEX.test(prev.jsonrpc) ?  Number(prev.jsonrpc.replace(ID_REGEX,'')) : 0;
-        const nextNumber = ID_REGEX.test(next.jsonrpc) ?  Number(prev.jsonrpc.replace(ID_REGEX,'')) : 0;
+        const prevNumber = ID_REGEX.test(`${prev.id}`) ?  Number(`${prev.id}`.replace(ID_REGEX,'')) : 0;
+        const nextNumber = ID_REGEX.test(`${next.id}`) ?  Number(`${next.id}`.replace(ID_REGEX,'')) : 0;
       
         return nextNumber - prevNumber        
       } catch (error) {
@@ -66,7 +66,10 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
   }
 
   getFormattedData = () =>{
-    const sortedData = this.getSortedByIDsBatchResponse()
+    const sortedData = this.getSortedByIDsBatchResponse();
+
+    console.log('sortedData',sortedData);
+    
 
     return sortedData.map((responseItemData, index) => {
       const validator = new FormatDataTypeValidator();
