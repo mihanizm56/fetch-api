@@ -50,28 +50,34 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     this.body = body;
   }
 
-  getSortedByIDsBatchResponse = () => {
-    return  this.data.sort((next,prev)=>{
-      try {
-        const prevId = typeof prev.id === 'string' ? prev.id : `${prev.id}`;
-        const nextId = typeof next.id === 'string' ? next.id : `${next.id}`;
-
-        const prevNumber = ID_REGEX.test(prevId) ?  Number(prevId.replace(ID_REGEX,'')) : 0;
-        const nextNumber = ID_REGEX.test(nextId) ?  Number(nextId.replace(ID_REGEX,'')) : 0;
-      
-        return nextNumber - prevNumber        
-      } catch (error) {
-        console.error('error in getSortedByIDsBatchResponse',error);
-        return 0
+  getNumberId = (id:number|string): number => {
+    try {
+      if(typeof id === 'number'){
+        return id
       }
+
+      if(ID_REGEX.test(id)){
+        return Number(id.replace(ID_REGEX,''));
+      }
+
+      return 0;
+    } catch (error) {
+      console.error('error in getNumberId',error);
+      return 0
+    }
+  }
+
+  getSortedByIDsBatchResponse = (): Array<IJSONRPCPureResponse> => {
+    return this.data.sort((next,prev)=>{
+      const prevNumber = this.getNumberId(prev.id);
+      const nextNumber = this.getNumberId(next.id);
+    
+      return nextNumber - prevNumber;  
     })
   }
 
   getFormattedData = () =>{
     const sortedData = this.getSortedByIDsBatchResponse();
-
-    console.log('sortedData',sortedData);
-    
 
     return sortedData.map((responseItemData, index) => {
       const validator = new FormatDataTypeValidator();
