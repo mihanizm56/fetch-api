@@ -50,6 +50,7 @@ module.exports.positiveRPCController = (req, res) => {
     batch,
     oneSchema,
     twoSchemas,
+    randomIds
   } = req.query;
 
   const areQueryParamsForCheckExist =
@@ -97,6 +98,41 @@ module.exports.positiveRPCController = (req, res) => {
       );
 
       return res.status(200).json(enrichedData);
+    }
+    if(randomIds){
+      const enrichedData = mockPositiveBatchTwoItemsData.map(
+        (responseItem, index) => ({
+          ...responseItem,
+          jsonrpc: '2.0',
+          id: req.body[index].id,
+        }),
+      );
+
+      return res.status(200).json([
+        {
+          jsonrpc: '2.0',
+          id: req.body[1].id,
+          result: {
+            countries: [
+              {
+                id: 'e128ce0f-852b-5c3c-9b95-f3d9829cc2a2',
+                value: 'ru-RU',
+                label: 'country.label.RU',
+              },
+              {
+                id: '84fbd842-4051-5702-a638-79bdb73a8f7e',
+                value: 'pl-PL',
+                label: 'country.label.PL',
+              },
+            ],
+          },
+        },
+        {
+          jsonrpc: '2.0',
+          id: req.body[0].id,
+          result: mockPositiveData,
+        }
+      ]);
     }
   }
 
