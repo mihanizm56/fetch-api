@@ -7,7 +7,7 @@ import {
 } from '@/types';
 import { ErrorResponseFormatter } from '@/errors-formatter/error-response-formatter';
 import { FormatDataTypeValidator } from '@/validators/response-type-validator';
-import { NETWORK_ERROR_KEY } from '@/constants';
+import { ID_REGEX, NETWORK_ERROR_KEY } from '@/constants';
 import { JSONRPCResponseFormatter } from './jsonrpc-response-formatter';
 
 type ParamsType = {
@@ -18,6 +18,7 @@ type ParamsType = {
   responseSchema?: Array<any>;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
 };
+
 
 export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
   data: Array<IJSONRPCPureResponse>;
@@ -49,8 +50,25 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     this.body = body;
   }
 
-  getFormattedData = () =>
-    this.data.map((responseItemData, index) => {
+  getSortedByIDsBatchResponse = () => {
+    return  this.data.sort((next,prev)=>{
+      try {
+        const prevNumber = ID_REGEX.test(prev.jsonrpc) ?  Number(prev.jsonrpc.replace(ID_REGEX,'')) : 0;
+        const nextNumber = ID_REGEX.test(next.jsonrpc) ?  Number(prev.jsonrpc.replace(ID_REGEX,'')) : 0;
+      
+        return nextNumber - prevNumber        
+      } catch (error) {
+        console.error('error in getSortedByIDsBatchResponse',error);
+        return 0
+      }
+
+    })
+  }
+
+  getFormattedData = () =>{
+    const sortedData = this.getSortedByIDsBatchResponse()
+
+    return sortedData.map((responseItemData, index) => {
       const validator = new FormatDataTypeValidator();
       const prevId = this.body ? this.body[index].id : null;
       const schema = this.responseSchema ? this.responseSchema[index] : null;
@@ -81,6 +99,8 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
         statusCode: 500,
       });
     });
+  }
+
 
   getFormattedResponse = (): IResponse => {
     const formattedData = this.getFormattedData();
