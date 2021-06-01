@@ -53,15 +53,17 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
   getSortedByIDsBatchResponse = () => {
     return  this.data.sort((next,prev)=>{
       try {
-        const prevNumber = ID_REGEX.test(`${prev.id}`) ?  Number(`${prev.id}`.replace(ID_REGEX,'')) : 0;
-        const nextNumber = ID_REGEX.test(`${next.id}`) ?  Number(`${next.id}`.replace(ID_REGEX,'')) : 0;
+        const prevId = typeof prev.id === 'string' ? prev.id : `${prev.id}`;
+        const nextId = typeof next.id === 'string' ? next.id : `${next.id}`;
+
+        const prevNumber = ID_REGEX.test(prevId) ?  Number(prevId.replace(ID_REGEX,'')) : 0;
+        const nextNumber = ID_REGEX.test(nextId) ?  Number(nextId.replace(ID_REGEX,'')) : 0;
       
         return nextNumber - prevNumber        
       } catch (error) {
         console.error('error in getSortedByIDsBatchResponse',error);
         return 0
       }
-
     })
   }
 
