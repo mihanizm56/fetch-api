@@ -8,8 +8,7 @@ import {
   FormatValidateParams,
   FormatValidateParamsMethod,
 } from '@/types';
-import { HAPI_CONSTANT, requestProtocolsMap } from '@/constants';
-import { DependencyController } from '@/utils/dependency-controller';
+import { requestProtocolsMap } from '@/constants';
 
 interface IResponseFormatValidator {
   getIsRestFormatResponseValid: (response: IRESTPureResponse) => boolean;

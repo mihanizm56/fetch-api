@@ -83,6 +83,7 @@ export type FormatResponseRESTDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunctionType;
   statusCode: number;
+  responseHeaders: Record<string,string>;
 } & IRESTPureResponse;
 
 export type FormatResponsePureRESTDataOptionsType = {
@@ -90,12 +91,14 @@ export type FormatResponsePureRESTDataOptionsType = {
   translateFunction?: TranslateFunctionType;
   statusCode: number;
   data: any; // data here is pure response parsed data
+  responseHeaders: Record<string,string>;
 };
 
 export type FormatResponseJSONRPCDataOptionsType = {
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunctionType;
   statusCode: number;
+  responseHeaders: Record<string,string>;
 } & IJSONRPCPureResponse;
 
 export type ResponseValidateType = {
@@ -176,6 +179,7 @@ export interface IResponse {
   data: any;
   additionalErrors: Record<string, any> | null;
   code: number;
+  headers: Record<string, string>;
 }
 
 export type IUtilResponse<DataType> = Omit<IResponse, 'data'> & {
@@ -292,6 +296,7 @@ export type GetPreparedResponseDataParams = {
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
   isNotFound: boolean;
   isPureFileRequest?: boolean;
+  responseHeaders: Record<string,string>;
 };
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
@@ -317,6 +322,7 @@ export type FormatResponseParamsType = {
   translateFunction?: TranslateFunctionType;
   isErrorTextStraightToOutput?: boolean;
   statusCode: number;
+  responseHeaders: Record<string,string>;
   data: any | Blob | string | Array<IJSONRPCPureResponse>;
   error?: boolean | JSONRPCErrorType;
   isBatchRequest?: boolean;
@@ -336,6 +342,7 @@ export type IDType = string;
 export type GetFormattedErrorTextResponseParams = {
   errorDictionaryParams: ErrorResponseFormatterConstructorParams;
   statusCode: number;
+  responseHeaders: Record<string,string>;
 };
 
 export type FormatValidateParams = {
@@ -408,3 +415,7 @@ export type StatusValidatorMethodOutputType = () => boolean;
 export type ExtraVerifyRetryCallbackType = (params: {
   formattedResponseData: IResponse;
 }) => boolean;
+
+export abstract class Formatter<DataType,FormatType>{
+  public abstract getFormattedValue: (data:DataType) => FormatType;
+}

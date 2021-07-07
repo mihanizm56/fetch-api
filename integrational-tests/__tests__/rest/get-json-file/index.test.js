@@ -34,6 +34,14 @@ describe('get pure json file requests', () => {
       },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '190',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -52,6 +60,13 @@ describe('get pure json file requests', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 });

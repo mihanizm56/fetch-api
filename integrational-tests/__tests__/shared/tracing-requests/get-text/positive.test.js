@@ -20,6 +20,17 @@ describe('traceRequestCallback GET-TEXT positive tests', () => {
         '.page-119nIxfGdr{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-positive:1;flex-grow:1;height:100%;width:100%}.content-26JUP_FzJx{margin-top:20px}.page-3xcBAGm9dG{background-color:red;display:-ms-flexbox;display:flex;-ms-flex-positive:1;flex-grow:1;height:100%;width:100%}',
       error: false,
       errorText: '',
+      headers: {
+        'accept-ranges': 'bytes',
+        'cache-control': 'public, max-age=0',
+        connection: 'close',
+        'content-length': '315',
+        'content-type': 'text/css; charset=UTF-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'last-modified': 'Tue, 01 Jun 2021 13:44:29 GMT',
+      },
     };
 
     const requestConfig = {

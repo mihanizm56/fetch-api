@@ -23,6 +23,14 @@ describe('traceRequestCallback PATCH positive tests', () => {
       },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -79,6 +87,14 @@ describe('ProxyController positive tests', () => {
       },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {

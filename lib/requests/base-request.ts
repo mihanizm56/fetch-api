@@ -44,6 +44,7 @@ import { getErrorTracingType } from "@/utils/tracing/get-error-tracing-type";
 import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
 import { ResponseStatusValidator } from "@/validators/response-status-validator";
 import { checkToDoRetry } from "@/utils/check-todo-retry";
+import { HeadersFormatter } from "@/formatters/headers-formatter";
 
 interface IBaseRequest {
   makeFetch: (
@@ -78,8 +79,9 @@ export class BaseRequest implements IBaseRequest {
   parsedResponseData: any = null;
   statusCode: number = 0;
   fetchParams?: RequestInit & Pick<IRequestParams, 'headers'> & {endpoint: string};
-  validationError:boolean = false;
+  validationError: boolean = false;
   cookie: string = '';
+  responseHeaders: Record<string,string> = {}
 
   static dependencies: Record<string, any>
 
@@ -262,6 +264,7 @@ export class BaseRequest implements IBaseRequest {
     protocol,
     isErrorTextStraightToOutput,
     statusCode,
+    responseHeaders,
     parseType,
     isBatchRequest,
     responseSchema,
@@ -276,6 +279,7 @@ export class BaseRequest implements IBaseRequest {
         protocol,
         isErrorTextStraightToOutput,
         parseType,
+        responseHeaders,
         statusCode,
         error: false,
         additionalErrors: null,
@@ -287,6 +291,7 @@ export class BaseRequest implements IBaseRequest {
       return {
         data:response, 
         statusCode,
+        responseHeaders,
         translateFunction,
         protocol,
         isErrorTextStraightToOutput,
@@ -300,6 +305,7 @@ export class BaseRequest implements IBaseRequest {
         protocol,
         isErrorTextStraightToOutput,
         statusCode,
+        responseHeaders,
         parseType: parseTypesMap.json,
         data: response,
         isBatchRequest,
@@ -314,6 +320,7 @@ export class BaseRequest implements IBaseRequest {
       protocol,
       isErrorTextStraightToOutput,
       statusCode,
+      responseHeaders
     };
   };
 
@@ -486,6 +493,14 @@ export class BaseRequest implements IBaseRequest {
         // if not - there will be pure response object
         this.response = response;
 
+        // transform responded headers to the object
+        // this.responseHeaders = new HeadersFormatter(response.headers).getFormattedValue();
+        this.responseHeaders = new HeadersFormatter(response.headers).getFormattedValue();
+
+
+        // console.log('this.responseHeaders', this.responseHeaders);
+        
+
         if (isValidStatus) {
           // any type because we did not know about data structure
           const parsedResponseData: any = await this.parseResponseData({
@@ -529,6 +544,7 @@ export class BaseRequest implements IBaseRequest {
                 isErrorTextStraightToOutput,
                 parseType,
                 statusCode: this.statusCode,
+                responseHeaders: this.responseHeaders,
                 isBatchRequest,
                 responseSchema,
                 body,
@@ -614,9 +630,10 @@ export class BaseRequest implements IBaseRequest {
             translateFunction,
             errorTextKey: errorRequestMessage,
             isErrorTextStraightToOutput,
-            statusCode: errorCode
+            statusCode: errorCode,
           },
           statusCode: errorCode,
+          responseHeaders: this.responseHeaders
         })        
 
         this.traceBaseRequest({
@@ -665,6 +682,7 @@ export class BaseRequest implements IBaseRequest {
               statusCode: REQUEST_ERROR_STATUS_CODE
             },
             statusCode: REQUEST_ERROR_STATUS_CODE,
+            responseHeaders: this.responseHeaders
           }
         );
 

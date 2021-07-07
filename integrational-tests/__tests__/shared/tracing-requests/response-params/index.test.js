@@ -33,9 +33,7 @@ describe('Tracing response params tests', () => {
       expect(resultOptions.responseHeaders['content-type']).toEqual(
         'application/json; charset=utf-8',
       );
-      expect(resultOptions.responseHeaders.etag).toEqual(
-        'W/"5b-bBnGZlOnHFWuH8kEvASyCj2Xzck"',
-      );
+      expect(resultOptions.responseHeaders.etag).toEqual('mock-etag');
       expect(resultOptions.responseHeaders['x-powered-by']).toEqual('Express');
     });
     test('check response cookies', async () => {
@@ -85,9 +83,7 @@ describe('Tracing response params tests', () => {
       expect(resultOptions.responseHeaders['content-type']).toEqual(
         'application/json; charset=utf-8',
       );
-      expect(resultOptions.responseHeaders.etag).toEqual(
-        'W/"5b-bBnGZlOnHFWuH8kEvASyCj2Xzck"',
-      );
+      expect(resultOptions.responseHeaders.etag).toEqual('mock-etag');
       expect(resultOptions.responseHeaders['x-powered-by']).toEqual('Express');
     });
     test('check response cookies', async () => {

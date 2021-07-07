@@ -31,6 +31,14 @@ describe('JSON-PRC request (negative)', () => {
       data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express'
+      }
     });
   });
   test('set headers', async () => {
@@ -62,6 +70,14 @@ describe('JSON-PRC request (negative)', () => {
       data: { bar: { baz: 0 }, foo: 'foo', specialheader: 'specialheader' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '106',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express'
+      }
     });
   });
   test('set queryParams full check', async () => {
@@ -106,6 +122,14 @@ describe('JSON-PRC request (negative)', () => {
       },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '213',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express'
+      }
     });
   });
   test('set extra validation callback and this returns true', async () => {
@@ -140,6 +164,14 @@ describe('JSON-PRC request (negative)', () => {
       },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express'
+      }
     });
   });
   describe('JSON-PRC batching (positive)', () => {
@@ -171,10 +203,26 @@ describe('JSON-PRC request (negative)', () => {
             },
             error: false,
             errorText: '',
+            headers: {
+              connection: 'close',
+              'content-length': '76',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express'
+            }
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '76',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express'
+        }
       });
     });
     test('test answer two objects', async () => {
@@ -216,6 +264,14 @@ describe('JSON-PRC request (negative)', () => {
             },
             error: false,
             errorText: '',
+            headers: {
+              connection: 'close',
+              'content-length': '315',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express'
+            }
           },
           {
             additionalErrors: null,
@@ -236,10 +292,26 @@ describe('JSON-PRC request (negative)', () => {
                 },
               ],
             },
+            headers: {
+              connection: 'close',
+              'content-length': '315',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express'
+            }
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '315',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express'
+        }
       });
     });
     test('test answer random order in response', async () => {
@@ -281,6 +353,14 @@ describe('JSON-PRC request (negative)', () => {
             },
             error: false,
             errorText: '',
+            headers: {
+              connection: 'close',
+              'content-length': '317',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express'
+            }
           },
           {
             additionalErrors: null,
@@ -301,10 +381,26 @@ describe('JSON-PRC request (negative)', () => {
                 },
               ],
             },
+            headers: {
+              connection: 'close',
+              'content-length': '317',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express'
+            }
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '317',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express'
+        }
       });
     });
   });

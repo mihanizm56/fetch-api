@@ -9,18 +9,13 @@ import { ErrorResponseFormatter } from '@/errors-formatter/error-response-format
 
 export class RestResponseFormatter extends ResponseFormatter {
   data?: any;
-
   error: boolean;
-
   translateFunction?: TranslateFunctionType;
-
   errorText: string;
-
   additionalErrors: AdditionalErrors | null;
-
   isErrorTextStraightToOutput?: boolean;
-
   statusCode: number;
+  responseHeaders: Record<string,string>;
 
   constructor({
     error,
@@ -30,6 +25,7 @@ export class RestResponseFormatter extends ResponseFormatter {
     data,
     isErrorTextStraightToOutput,
     statusCode,
+    responseHeaders
   }: FormatResponseRESTDataOptionsType) {
     super();
 
@@ -48,6 +44,7 @@ export class RestResponseFormatter extends ResponseFormatter {
           statusCode,
         })
       : '';
+    this.responseHeaders = responseHeaders;
   }
 
   getFormattedResponse = (): IResponse => ({
@@ -56,5 +53,6 @@ export class RestResponseFormatter extends ResponseFormatter {
     errorText: this.errorText,
     additionalErrors: this.additionalErrors,
     code: this.statusCode,
+    headers: this.responseHeaders
   });
 }

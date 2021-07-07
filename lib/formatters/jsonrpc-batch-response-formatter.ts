@@ -17,21 +17,18 @@ type ParamsType = {
   translateFunction?: TranslateFunctionType;
   responseSchema?: Array<any>;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
+  responseHeaders: Record<string,string>;
 };
 
 
 export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
   data: Array<IJSONRPCPureResponse>;
-
   isErrorTextStraightToOutput?: boolean;
-
   statusCode: number;
-
   responseSchema?: Array<any>;
-
   translateFunction?: TranslateFunctionType;
-
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
+  responseHeaders: Record<string,string>;
 
   constructor({
     data,
@@ -40,6 +37,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     translateFunction,
     responseSchema,
     body,
+    responseHeaders
   }: ParamsType) {
     super();
     this.data = data;
@@ -48,6 +46,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     this.translateFunction = translateFunction;
     this.responseSchema = responseSchema;
     this.body = body;
+    this.responseHeaders = responseHeaders;
   }
 
   getNumberId = (id:number|string): number => {
@@ -97,6 +96,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
           statusCode: dataItemCode,
           translateFunction: this.translateFunction,
+          responseHeaders:this.responseHeaders
         }).getFormattedResponse();
       }
 
@@ -108,6 +108,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
           statusCode: 500,
         },
         statusCode: 500,
+        responseHeaders:this.responseHeaders
       });
     });
   }
@@ -122,6 +123,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
       data: formattedData,
       additionalErrors: null,
       code: this.statusCode,
+      headers:this.responseHeaders
     };
   };
 }

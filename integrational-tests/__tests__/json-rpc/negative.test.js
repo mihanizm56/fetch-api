@@ -29,6 +29,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '198',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('simple response error 500 (not parsed)', async () => {
@@ -54,6 +62,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '199',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -80,6 +96,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '199',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -108,6 +132,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('test get straight error', async () => {
@@ -133,6 +165,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'Тестовая ошибка 4',
+      headers: {
+        connection: 'close',
+        'content-length': '198',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('set extra validation callback and this returns false', async () => {
@@ -156,6 +196,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('test errors translation', async () => {
@@ -190,6 +238,14 @@ describe('JSON-PRC request (negative)', () => {
       data: {},
       error: true,
       errorText: 'test value from translateFunction',
+      headers: {
+        connection: 'close',
+        'content-length': '198',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   describe('JSON-PRC batching (negative)', () => {
@@ -212,6 +268,14 @@ describe('JSON-PRC request (negative)', () => {
         data: {},
         error: true,
         errorText: 'network-error',
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('test not correct one schema', async () => {
@@ -243,6 +307,14 @@ describe('JSON-PRC request (negative)', () => {
             errorText: 'network-error',
             data: {},
             code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '119',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
           {
             additionalErrors: null,
@@ -252,10 +324,26 @@ describe('JSON-PRC request (negative)', () => {
             },
             errorText: '',
             error: false,
+            headers: {
+              connection: 'close',
+              'content-length': '119',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '119',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('test not correct all (two) schemas', async () => {
@@ -287,6 +375,14 @@ describe('JSON-PRC request (negative)', () => {
             errorText: 'network-error',
             data: {},
             code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '117',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
           {
             additionalErrors: null,
@@ -294,10 +390,26 @@ describe('JSON-PRC request (negative)', () => {
             errorText: 'network-error',
             data: {},
             code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '117',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '117',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('test get backend error in one item response', async () => {
@@ -323,10 +435,26 @@ describe('JSON-PRC request (negative)', () => {
             errorText: 'network-error',
             data: {},
             code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '113',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '113',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('test get backend error in two items response', async () => {
@@ -359,6 +487,14 @@ describe('JSON-PRC request (negative)', () => {
             errorText: 'network-error',
             data: {},
             code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '225',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
           {
             additionalErrors: null,
@@ -366,10 +502,26 @@ describe('JSON-PRC request (negative)', () => {
             errorText: 'network-error',
             data: {},
             code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '225',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '225',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });

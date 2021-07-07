@@ -1,7 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, PureRestRequest, DependencyController, HAPI_CONSTANT } = require('../../../../dist');
-
-
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -71,6 +69,14 @@ describe('get request (positive)', () => {
         data: { bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' },
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '47',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -99,6 +105,14 @@ describe('get request (positive)', () => {
           data: { delta: ['1', '2'] },
           error: false,
           errorText: '',
+          headers: {
+            connection: 'close',
+            'content-length': '47',
+            'content-type': 'application/json; charset=utf-8',
+            date: 'mock-date',
+            etag: 'mock-etag',
+            'x-powered-by': 'Express',
+          },
         });
       });
 
@@ -130,6 +144,14 @@ describe('get request (positive)', () => {
           },
           error: false,
           errorText: '',
+          headers: {
+            connection: 'close',
+            'content-length': '47',
+            'content-type': 'application/json; charset=utf-8',
+            date: 'mock-date',
+            etag: 'mock-etag',
+            'x-powered-by': 'Express',
+          },
         });
       });
 
@@ -157,6 +179,14 @@ describe('get request (positive)', () => {
           data: {},
           error: false,
           errorText: '',
+          headers: {
+            connection: 'close',
+            'content-length': '47',
+            'content-type': 'application/json; charset=utf-8',
+            date: 'mock-date',
+            etag: 'mock-etag',
+            'x-powered-by': 'Express',
+          },
         });
       });
 
@@ -184,6 +214,14 @@ describe('get request (positive)', () => {
           data: ['1', '2'],
           error: false,
           errorText: '',
+          headers: {
+            connection: 'close',
+            'content-length': '47',
+            'content-type': 'application/json; charset=utf-8',
+            date: 'mock-date',
+            etag: 'mock-etag',
+            'x-powered-by': 'Express',
+          },
         });
       });
     });
@@ -220,6 +258,14 @@ describe('get request (positive)', () => {
         },
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '82',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -256,6 +302,14 @@ describe('get request (positive)', () => {
       error: false,
       errorText: '',
       code: 200,
+      headers: {
+        connection: 'close',
+        'content-length': '144',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -297,6 +351,14 @@ describe('get request (positive)', () => {
       },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '248',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -319,6 +381,14 @@ describe('get request (positive)', () => {
       error: false,
       errorText: '',
       code: 200,
+      headers: {
+        connection: 'close',
+        'content-length': '109',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -348,6 +418,14 @@ describe('get request (positive)', () => {
       error: false,
       errorText: '',
       code: 200,
+      headers: {
+        connection: 'close',
+        'content-length': '109',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   describe('extra cases', () => {
@@ -377,6 +455,12 @@ describe('get request (positive)', () => {
         error: false,
         errorText: '',
         code: 204,
+        headers: {
+          connection: 'close',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('get simple array', async () => {
@@ -414,6 +498,14 @@ describe('get request (positive)', () => {
         error: false,
         errorText: '',
         code: 200,
+        headers: {
+          connection: 'close',
+          'content-length': '71',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });

@@ -23,6 +23,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
         err: 'Тестовая ошибка 4 err',
         param4: 'test param 4',
       },
+      headers: {
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'content-length': '198',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -87,6 +95,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
         err: 'Тестовая ошибка 1 err',
         param1: 'test param 1',
       },
+      headers: {
+        connection: 'close',
+        'content-length': '198',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -144,6 +160,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -207,6 +231,13 @@ describe('traceRequestCallback DELETE negative tests', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -267,6 +298,14 @@ describe('ProxyController negative tests', () => {
       additionalErrors: {
         err: 'Тестовая ошибка 4 err',
         param4: 'test param 4',
+      },
+      headers: {
+        connection: 'close',
+        'content-length': '198',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
       },
     };
 
@@ -336,6 +375,14 @@ describe('ProxyController negative tests', () => {
         err: 'Тестовая ошибка 1 err',
         param1: 'test param 1',
       },
+      headers: {
+        connection: 'close',
+        'content-length': '198',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -397,6 +444,14 @@ describe('ProxyController negative tests', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -464,6 +519,13 @@ describe('ProxyController negative tests', () => {
       data: {},
       error: true,
       errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {

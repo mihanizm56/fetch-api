@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, PureRestRequest, DependencyController, HAPI_CONSTANT } = require('../../../../dist');
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -31,6 +31,14 @@ describe('put request (negative)', () => {
       data: {},
       error: true,
       errorText: 'translateFunction got key test error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '75',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -55,6 +63,14 @@ describe('put request (negative)', () => {
       data: {},
       error: true,
       errorText: 'test value from translateFunction',
+      headers: {
+        connection: 'close',
+        'content-length': '110',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -75,6 +91,14 @@ describe('put request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '98',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('response with not valid schema', async () => {
@@ -99,6 +123,14 @@ describe('put request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('extra validation callback test returns false', async () => {
@@ -121,6 +153,14 @@ describe('put request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
       code: 500,
     });
   });
@@ -143,6 +183,14 @@ describe('put request (negative)', () => {
       data: {},
       error: true,
       errorText: 'test special key',
+      headers: {
+        connection: 'close',
+        'content-length': '98',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -166,6 +214,13 @@ describe('put request (negative)', () => {
         error: true,
         errorText: 'not-found-error',
         code: 404,
+        headers: {
+          connection: 'close',
+          'content-length': '111',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -186,6 +241,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText: 'not-found-error',
         code: 404,
+        headers: {
+          connection: 'close',
+          'content-length': '83',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
         data: {},
       });
     });
@@ -209,6 +272,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key test errors with additional params and options [object Object]',
+        headers: {
+          connection: 'close',
+          'content-length': '50',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('simple pure response with not valid schema', async () => {
@@ -233,6 +304,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        headers: {
+          connection: 'close',
+          'content-length': '91',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('simple pure response with straight output', async () => {
@@ -263,6 +342,14 @@ describe('put request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test straight error',
+        headers: {
+          connection: 'close',
+          'content-length': '64',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -284,6 +371,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key text in error and options [object Object]',
+        headers: {
+          connection: 'close',
+          'content-length': '25',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -304,6 +399,14 @@ describe('put request (negative)', () => {
         data: {},
         error: true,
         errorText: 'translateFunction got key  and options [object Object]',
+        headers: {
+          connection: 'close',
+          'content-length': '56',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -330,6 +433,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        headers: {
+          connection: 'close',
+          'content-length': '50',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -356,6 +467,14 @@ describe('put request (negative)', () => {
         code: 400,
         data: {},
         error: true,
+        headers: {
+          connection: 'close',
+          'content-length': '75',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
         errorText: 'test value from translateFunction',
       });
     });
@@ -387,6 +506,14 @@ describe('put request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        headers: {
+          connection: 'close',
+          'content-length': '110',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -409,6 +536,14 @@ describe('put request (negative)', () => {
         errorText:
           'translateFunction got key network-error and options undefined',
         code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '63',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('error was not sent', async () => {
@@ -428,6 +563,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        headers: {
+          connection: 'close',
+          'content-length': '63',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('errorText was not sent', async () => {
@@ -447,6 +590,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        headers: {
+          connection: 'close',
+          'content-length': '63',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('additionalErrors was not sent', async () => {
@@ -466,6 +617,14 @@ describe('put request (negative)', () => {
         error: true,
         errorText:
           'translateFunction got key network-error and options undefined',
+        headers: {
+          connection: 'close',
+          'content-length': '63',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });

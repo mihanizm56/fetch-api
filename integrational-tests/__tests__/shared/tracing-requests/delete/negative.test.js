@@ -20,6 +20,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
       error: true,
       errorText: 'network-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '98',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -37,6 +45,7 @@ describe('traceRequestCallback DELETE negative tests', () => {
 
     const response = await new RestRequest().deleteRequest(requestConfig);
 
+    // expect(response).toStrictEqual(formattedResponse);
     expect(response).toEqual(formattedResponse);
     expect(resultOptions.endpoint).toEqual(requestConfig.endpoint);
     expect(resultOptions.method).toEqual('DELETE');
@@ -47,13 +56,7 @@ describe('traceRequestCallback DELETE negative tests', () => {
     expect(resultOptions.requestCookies).toEqual('');
     expect(resultOptions.response).toBeDefined();
     expect(resultOptions.responseBody).toEqual(null);
-    expect(resultOptions.formattedResponse).toEqual({
-      code: 500,
-      data: {},
-      error: true,
-      errorText: 'network-error',
-      additionalErrors: null,
-    });
+    expect(resultOptions.formattedResponse).toEqual(formattedResponse);
     expect(resultOptions.responseHeaders).toBeDefined();
     expect(resultOptions.responseCookies).toBeDefined();
     expect(resultOptions.error).toBeTruthy();
@@ -70,6 +73,13 @@ describe('traceRequestCallback DELETE negative tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -121,6 +131,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
       additionalErrors: {
         foo: 'bar',
       },
+      headers: {
+        connection: 'close',
+        'content-length': '83',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -171,6 +189,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
       error: true,
       errorText: 'test error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '75',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -220,6 +246,14 @@ describe('traceRequestCallback DELETE negative tests', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -287,6 +321,14 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'network-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '98',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -335,6 +377,13 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -387,6 +436,14 @@ describe('ProxyController negative tests', () => {
       errorText: 'not found',
       additionalErrors: {
         foo: 'bar',
+      },
+      headers: {
+        connection: 'close',
+        'content-length': '83',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
       },
     };
 
@@ -441,6 +498,14 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'test error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '75',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -494,6 +559,14 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText:
         'translateFunction got key network-error and options undefined',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {

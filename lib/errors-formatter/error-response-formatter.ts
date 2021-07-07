@@ -54,6 +54,7 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
   getFormattedErrorResponse = ({
     errorDictionaryParams,
     statusCode,
+    responseHeaders,
   }: GetFormattedErrorTextResponseParams): IResponse => {
     const isAbortError =
       errorDictionaryParams.errorTextKey === ABORTED_ERROR_TEXT_CHROME ||
@@ -68,6 +69,7 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
       data: {},
       additionalErrors: errorDictionaryParams.errorTextData || null,
       code: statusCode,
+      headers: responseHeaders,
     };
   };
 }

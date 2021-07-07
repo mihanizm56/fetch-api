@@ -1,7 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, PureRestRequest, DependencyController, HAPI_CONSTANT } = require('../../../../dist');
-
-
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -36,6 +34,14 @@ describe('patch request (positive)', () => {
       data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -65,6 +71,14 @@ describe('patch request (positive)', () => {
       data: { bar: { baz: 0 }, foo: 'foo', bodyparam: 'bodyparam' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '115',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -94,6 +108,14 @@ describe('patch request (positive)', () => {
       data: { bar: { baz: 0 }, foo: 'foo', queryparam: 'queryparam' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '117',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -123,6 +145,14 @@ describe('patch request (positive)', () => {
       data: { bar: { baz: 0 }, foo: 'foo', specialheader: 'specialheader' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '123',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -146,6 +176,14 @@ describe('patch request (positive)', () => {
       data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '91',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -171,6 +209,14 @@ describe('patch request (positive)', () => {
       data: { bar: { baz: 0 }, foo: 'foo', queryparam: 'queryparam' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        'content-length': '117',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -197,6 +243,14 @@ describe('patch request (positive)', () => {
         data: { bar: { baz: 0 }, foo: 'foo' },
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '29',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -226,10 +280,18 @@ describe('patch request (positive)', () => {
         data: { bar: { baz: 0 }, foo: 'foo', bodyparam: 'bodyparam' },
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '53',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
-    test('response extra validation callback returns \'true\' and was called', async () => {
+    test('response extra validation callback returns true and was called', async () => {
       const responseSchema = Joi.object({
         foo: Joi.string().required(),
         testNonValidField: {
@@ -256,6 +318,14 @@ describe('patch request (positive)', () => {
         data: { bar: { baz: 0 }, foo: 'foo', bodyparam: 'bodyparam' },
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '53',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -285,6 +355,14 @@ describe('patch request (positive)', () => {
         data: { bar: { baz: 0 }, foo: 'foo', specialheader: 'specialheader' },
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '123',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });

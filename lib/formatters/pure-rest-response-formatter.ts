@@ -10,18 +10,13 @@ import { ResponseStatusValidator } from '@/validators/response-status-validator'
 
 export class PureRestResponseFormatter extends ResponseFormatter {
   data?: any;
-
   error: boolean;
-
   translateFunction?: TranslateFunctionType;
-
   errorText: string;
-
   additionalErrors: AdditionalErrors | null;
-
   isErrorTextStraightToOutput?: boolean;
-
   statusCode: number;
+  responseHeaders: Record<string,string>;
 
   getPureRestErrorText = (response: any) => {
     const { error, errorText, data } = response;
@@ -60,6 +55,7 @@ export class PureRestResponseFormatter extends ResponseFormatter {
     statusCode,
     translateFunction,
     data,
+    responseHeaders
   }: FormatResponsePureRESTDataOptionsType) {
     super();
 
@@ -76,6 +72,7 @@ export class PureRestResponseFormatter extends ResponseFormatter {
     this.data = isResponseStatusSuccess ? data : {};
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
     this.statusCode = statusCode;
+    this.responseHeaders = responseHeaders;
 
     this.errorText = !isResponseStatusSuccess
       ? new ErrorResponseFormatter().getFormattedErrorTextResponse({
@@ -95,5 +92,6 @@ export class PureRestResponseFormatter extends ResponseFormatter {
     errorText: this.errorText,
     additionalErrors: this.additionalErrors,
     code: this.statusCode,
+    headers: this.responseHeaders
   });
 }

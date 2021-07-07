@@ -16,6 +16,6 @@ export {
   ErrorTracingType,
   BatchResponseType
 } from './types';
-export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE, HAPI_CONSTANT } from '@/constants';
+export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE } from '@/constants';
 export { ProxyController } from './utils/proxy-controller';
 export { DependencyController } from './utils/dependency-controller'

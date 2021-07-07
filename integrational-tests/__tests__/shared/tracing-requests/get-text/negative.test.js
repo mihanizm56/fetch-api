@@ -19,6 +19,13 @@ describe('traceRequestCallback GET-TEXT positive tests', () => {
       error: true,
       errorText: '',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '111',
+      },
     };
 
     const requestConfig = {
@@ -55,6 +62,13 @@ describe('traceRequestCallback GET-TEXT positive tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '111',
+      },
     };
 
     const requestConfig = {
@@ -108,6 +122,13 @@ describe('ProxyController positive tests', () => {
       error: true,
       errorText: '',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '111',
+      },
     };
 
     new ProxyController().setResponseTrackCallback({
@@ -148,6 +169,13 @@ describe('ProxyController positive tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '111',
+      },
     };
 
     new ProxyController().setResponseTrackCallback({

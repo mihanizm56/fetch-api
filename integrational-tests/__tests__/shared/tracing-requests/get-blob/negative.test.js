@@ -27,6 +27,13 @@ describe('traceRequestCallback GET-BLOB positive tests', () => {
       error: true,
       errorText: '',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const response = await new RestRequest().getRequest(requestConfig);
@@ -63,6 +70,13 @@ describe('traceRequestCallback GET-BLOB positive tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const response = await new RestRequest().getRequest(requestConfig);
@@ -115,6 +129,13 @@ describe('ProxyController positive tests', () => {
       error: true,
       errorText: '',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-length': '111',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const response = await new RestRequest().getRequest(requestConfig);

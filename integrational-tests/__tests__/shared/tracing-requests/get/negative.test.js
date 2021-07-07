@@ -20,6 +20,14 @@ describe('traceRequestCallback GET negative tests', () => {
       error: true,
       errorText: 'network-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '86',
+      },
     };
 
     const requestConfig = {
@@ -44,13 +52,7 @@ describe('traceRequestCallback GET negative tests', () => {
     expect(resultOptions.requestCookies).toEqual('');
     expect(resultOptions.response).toBeDefined();
     expect(resultOptions.responseBody).toEqual(null);
-    expect(resultOptions.formattedResponse).toEqual({
-      code: 500,
-      data: {},
-      error: true,
-      errorText: 'network-error',
-      additionalErrors: null,
-    });
+    expect(resultOptions.formattedResponse).toEqual(formattedResponse);
     expect(resultOptions.responseHeaders).toBeDefined();
     expect(resultOptions.responseCookies).toBeDefined();
     expect(resultOptions.error).toBeTruthy();
@@ -67,6 +69,13 @@ describe('traceRequestCallback GET negative tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '111',
+      },
     };
 
     const requestConfig = {
@@ -115,6 +124,14 @@ describe('traceRequestCallback GET negative tests', () => {
       additionalErrors: {
         foo: 'bar',
       },
+      headers: {
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '83',
+      },
     };
 
     const requestConfig = {
@@ -162,6 +179,14 @@ describe('traceRequestCallback GET negative tests', () => {
       error: true,
       errorText: 'not valid data',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '79',
+      },
     };
 
     const requestConfig = {
@@ -207,6 +232,14 @@ describe('traceRequestCallback GET negative tests', () => {
       error: true,
       errorText: 'network-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '126',
+      },
     };
 
     const requestConfig = {
@@ -264,6 +297,14 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'network-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '86',
+      },
     };
 
     const requestConfig = {
@@ -309,6 +350,13 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'not-found-error',
       additionalErrors: null,
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'content-length': '111',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -358,6 +406,14 @@ describe('ProxyController negative tests', () => {
       errorText: 'not found',
       additionalErrors: {
         foo: 'bar',
+      },
+      headers: {
+        'content-length': '83',
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
       },
     };
 
@@ -409,6 +465,14 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'not valid data',
       additionalErrors: null,
+      headers: {
+        'content-length': '79',
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {
@@ -457,6 +521,14 @@ describe('ProxyController negative tests', () => {
       error: true,
       errorText: 'network-error',
       additionalErrors: null,
+      headers: {
+        'content-length': '126',
+        connection: 'close',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     };
 
     const requestConfig = {

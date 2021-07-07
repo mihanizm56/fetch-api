@@ -1,7 +1,5 @@
 const Joi = require('@hapi/joi');
-const { RestRequest, PureRestRequest, DependencyController, HAPI_CONSTANT } = require('../../../../dist');
-
-
+const { RestRequest, PureRestRequest } = require('../../../../dist');
 
 const requestBaseConfig = {
   mode: 'cors',
@@ -34,6 +32,14 @@ describe('get request (negative)', () => {
       errorText:
         'translateFunction got key not valid data and options undefined',
       code: 400,
+      headers: {
+        connection: 'close',
+        'content-length': '79',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -53,6 +59,14 @@ describe('get request (negative)', () => {
       error: true,
       errorText: 'not-found-error',
       code: 404,
+      headers: {
+        connection: 'close',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -73,6 +87,14 @@ describe('get request (negative)', () => {
       errorText:
         'translateFunction got key network-error and options undefined',
       code: 500,
+      headers: {
+        connection: 'close',
+        'content-length': '86',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -94,6 +116,14 @@ describe('get request (negative)', () => {
       errorText:
         'translateFunction got key network-error and options undefined',
       code: 500,
+      headers: {
+        connection: 'close',
+        'content-length': '57',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -121,6 +151,14 @@ describe('get request (negative)', () => {
       errorText:
         'translateFunction got key network-error and options undefined',
       code: 500,
+      headers: {
+        connection: 'close',
+        'content-length': '126',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -145,6 +183,14 @@ describe('get request (negative)', () => {
       errorText:
         'translateFunction got key network-error and options undefined',
       code: 500,
+      headers: {
+        connection: 'close',
+        'content-length': '109',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -167,6 +213,14 @@ describe('get request (negative)', () => {
       error: true,
       errorText: 'test special key',
       code: 400,
+      headers: {
+        connection: 'close',
+        'content-length': '98',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -189,6 +243,13 @@ describe('get request (negative)', () => {
         error: true,
         errorText: 'not-found-error',
         code: 404,
+        headers: {
+          connection: 'close',
+          'content-length': '111',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -211,6 +272,13 @@ describe('get request (negative)', () => {
         error: true,
         errorText: 'not-found-error',
         code: 404,
+        headers: {
+          connection: 'close',
+          'content-length': '111',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -231,6 +299,14 @@ describe('get request (negative)', () => {
         errorText: 'not-found-error',
         code: 404,
         data: {},
+        headers: {
+          connection: 'close',
+          'content-length': '83',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -258,6 +334,14 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        headers: {
+          connection: 'close',
+          'content-length': '55',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -289,6 +373,14 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        headers: {
+          connection: 'close',
+          'content-length': '109',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -315,6 +407,14 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'straighterror',
+        headers: {
+          connection: 'close',
+          'content-length': '68',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -341,6 +441,14 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        headers: {
+          connection: 'close',
+          'content-length': '109',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -367,6 +475,14 @@ describe('get request (negative)', () => {
         data: {},
         error: true,
         errorText: 'test value from translateFunction',
+        headers: {
+          connection: 'close',
+          'content-length': '109',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -389,6 +505,14 @@ describe('get request (negative)', () => {
       error: true,
       errorText:
         'translateFunction got key text in error and options [object Object]',
+      headers: {
+        connection: 'close',
+        'content-length': '25',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -409,6 +533,14 @@ describe('get request (negative)', () => {
       data: {},
       error: true,
       errorText: 'translateFunction got key  and options [object Object]',
+      headers: {
+        connection: 'close',
+        'content-length': '56',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
     });
   });
 
@@ -435,6 +567,14 @@ describe('get request (negative)', () => {
         error: true,
         errorText: 'test value from translateFunction',
         code: 401,
+        headers: {
+          connection: 'close',
+          'content-length': '77',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -464,6 +604,14 @@ describe('get request (negative)', () => {
         error: true,
         errorText: 'test value from translateFunction',
         code: 400,
+        headers: {
+          connection: 'close',
+          'content-length': '98',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -487,6 +635,14 @@ describe('get request (negative)', () => {
         errorText:
           'translateFunction got key network-error and options undefined',
         code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '130',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('error was not sent', async () => {
@@ -507,6 +663,14 @@ describe('get request (negative)', () => {
         errorText:
           'translateFunction got key network-error and options undefined',
         code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '112',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('errorText was not sent', async () => {
@@ -527,6 +691,14 @@ describe('get request (negative)', () => {
         errorText:
           'translateFunction got key network-error and options undefined',
         code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '111',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('additionalErrors was not sent', async () => {
@@ -547,6 +719,14 @@ describe('get request (negative)', () => {
         errorText:
           'translateFunction got key network-error and options undefined',
         code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '102',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });

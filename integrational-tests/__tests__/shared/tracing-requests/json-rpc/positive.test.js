@@ -20,6 +20,14 @@ describe('traceRequestCallback JSON-RPC positive tests', () => {
       data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+      },
     };
 
     const requestConfig = {
@@ -80,6 +88,14 @@ describe('ProxyController positive tests', () => {
       data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
+      },
     };
 
     const requestConfig = {

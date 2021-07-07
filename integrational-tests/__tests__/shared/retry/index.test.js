@@ -33,6 +33,14 @@ describe('retry tests', () => {
         data: {},
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '64',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -51,6 +59,14 @@ describe('retry tests', () => {
         data: {},
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '64',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('RestRequest not responded with retry if there were more bad responses', async () => {
@@ -68,6 +84,14 @@ describe('retry tests', () => {
           'translateFunction got key test retry error and options undefined',
         data: {},
         additionalErrors: null,
+        headers: {
+          connection: 'close',
+          'content-length': '81',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -88,6 +112,14 @@ describe('retry tests', () => {
           'translateFunction got key test retry error and options undefined',
         data: {},
         additionalErrors: null,
+        headers: {
+          connection: 'close',
+          'content-length': '81',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('RestRequest not retry if extraVerifyRetry returned false if 400 response only', async () => {
@@ -112,6 +144,14 @@ describe('retry tests', () => {
           'translateFunction got key test retry error and options undefined',
         data: {},
         additionalErrors: null,
+        headers: {
+          connection: 'close',
+          'content-length': '81',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -131,6 +171,14 @@ describe('retry tests', () => {
         data: {},
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('PureRestRequest responded with last retry', async () => {
@@ -148,6 +196,14 @@ describe('retry tests', () => {
         data: {},
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('PureRestRequest not responded with retry if there were more bad responses', async () => {
@@ -165,6 +221,14 @@ describe('retry tests', () => {
         errorText: 'translateFunction got key  and options [object Object]',
         data: {},
         additionalErrors: {},
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
 
@@ -184,6 +248,14 @@ describe('retry tests', () => {
         errorText: 'translateFunction got key  and options [object Object]',
         data: {},
         additionalErrors: {},
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('PureRestRequest not retry if extraVerifyRetry returned false if 400 response only', async () => {
@@ -207,6 +279,14 @@ describe('retry tests', () => {
         errorText: 'translateFunction got key  and options [object Object]',
         data: {},
         additionalErrors: {},
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });
@@ -232,6 +312,14 @@ describe('retry tests', () => {
         data: {},
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '47',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('JSONRPCRequest responded with last retry', async () => {
@@ -255,6 +343,14 @@ describe('retry tests', () => {
         data: {},
         error: false,
         errorText: '',
+        headers: {
+          connection: 'close',
+          'content-length': '47',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('JSONRPCRequest not responded with retry if there were more bad responses', async () => {
@@ -280,6 +376,14 @@ describe('retry tests', () => {
         data: {},
         additionalErrors: {
           err: 'test retry error err',
+        },
+        headers: {
+          connection: 'close',
+          'content-length': '156',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
         },
       });
     });
@@ -307,6 +411,14 @@ describe('retry tests', () => {
         data: {},
         additionalErrors: {
           err: 'test retry error err',
+        },
+        headers: {
+          connection: 'close',
+          'content-length': '156',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
         },
       });
     });
@@ -339,6 +451,14 @@ describe('retry tests', () => {
         data: {},
         additionalErrors: {
           err: 'test retry error err',
+        },
+        headers: {
+          connection: 'close',
+          'content-length': '156',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
         },
       });
     });
