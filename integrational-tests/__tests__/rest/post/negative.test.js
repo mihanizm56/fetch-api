@@ -628,4 +628,116 @@ describe('get request (negative)', () => {
       });
     });
   });
+
+  describe('response with not valid response structure AT ALL (try to break response)', () => {
+    test('test breakableRestData', async () => {
+      const responseSchema = Joi.any();
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/negative?breakableRestData=true',
+        responseSchema,
+      };
+
+      const data = await new RestRequest().deleteRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText:
+          'translateFunction got key network-error and options undefined',
+        code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '60',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
+      });
+    });
+    test('test breakableRestError', async () => {
+      const responseSchema = Joi.any();
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/negative?breakableRestError=true',
+        responseSchema,
+      };
+
+      const data = await new RestRequest().deleteRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText:
+          'translateFunction got key network-error and options undefined',
+        code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '70',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
+      });
+    });
+    test('test breakableRestErrorText', async () => {
+      const responseSchema = Joi.any();
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint:
+          'http://127.0.0.1:8080/rest/negative?breakableRestErrorText=true',
+        responseSchema,
+      };
+
+      const data = await new RestRequest().deleteRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText:
+          'translateFunction got key network-error and options undefined',
+        code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '53',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
+      });
+    });
+    test('test breakableRestAll', async () => {
+      const responseSchema = Joi.any();
+      const requestConfig = {
+        ...requestBaseConfig,
+        endpoint: 'http://127.0.0.1:8080/rest/negative?breakableRestAll=true',
+        responseSchema,
+      };
+
+      const data = await new RestRequest().deleteRequest(requestConfig);
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        data: {},
+        error: true,
+        errorText:
+          'translateFunction got key network-error and options undefined',
+        code: 500,
+        headers: {
+          connection: 'close',
+          'content-length': '2',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
+      });
+    });
+  });
 });

@@ -16,7 +16,42 @@ module.exports.negativeGetController = (req, res) => {
     errortextexist,
     notfoundwithoutbody,
     notfoundwithbody,
+    breakableRestData,
+    breakableRestError,
+    breakableRestErrorText,
+    breakableRestAll,
   } = req.query;
+
+  if (breakableRestData) {
+    return res.status(200).json({
+      data: undefined,
+      errorText: 'not found',
+      error: true,
+      additionalErrors: {},
+    });
+  }
+
+  if (breakableRestError) {
+    return res.status(200).json({
+      data: {},
+      errorText: 'not found',
+      error: null,
+      additionalErrors: {},
+    });
+  }
+
+  if (breakableRestErrorText) {
+    return res.status(200).json({
+      data: undefined,
+      errorText: null,
+      error: true,
+      additionalErrors: {},
+    });
+  }
+
+  if (breakableRestAll) {
+    return res.status(200).json({});
+  }
 
   if (notfoundwithoutbody) {
     return res.status(404).end();

@@ -29,13 +29,30 @@ interface IResponseFormatValidator {
 }
 
 export class FormatDataTypeValidator implements IResponseFormatValidator {
-  public getIsRestFormatResponseValid = (response: IRESTPureResponse) =>
-    'error' in response &&
-    'errorText' in response &&
-    'additionalErrors' in response &&
-    'data' in response;
+  public getIsRestFormatResponseValid = (
+    response: IRESTPureResponse,
+  ): boolean => {
+    const baseChecksValid =
+      'error' in response &&
+      'errorText' in response &&
+      'additionalErrors' in response &&
+      'data' in response;
 
-  public getIsJSONRPCFormatResponseValid = (response: IJSONRPCPureResponse) =>
+    if (!baseChecksValid) {
+      return false;
+    }
+
+    const additionalChecks =
+      typeof response.error === 'boolean' &&
+      typeof response.errorText === 'string' &&
+      typeof response.data === 'object';
+
+    return additionalChecks;
+  };
+
+  public getIsJSONRPCFormatResponseValid = (
+    response: IJSONRPCPureResponse,
+  ): boolean =>
     Boolean(
       ('result' in response ||
         (response.error &&
@@ -68,15 +85,17 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     };
   };
 
-  public getCompareIds = ({ requestId, responceId }: GetCompareIdsParams) =>
-    requestId === responceId;
+  public getCompareIds = ({
+    requestId,
+    responceId,
+  }: GetCompareIdsParams): boolean => requestId === responceId;
 
   // todo fix any type
   public getRestFormatIsValid = ({
     response,
     schema,
     isPureFileRequest,
-  }: any) => {
+  }: any): boolean => {
     if (!Boolean(response)) {
       console.error('(fetch-api): response is empty');
       return false;
@@ -114,8 +133,8 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     return true;
   };
 
-  checkIdsEquality = ({ prev, curr }: { prev: IDType; curr: IDType }) =>
-    prev === curr;
+  checkIdsEquality = (params: { prev: IDType; curr: IDType }): boolean =>
+    params.prev === params.curr;
 
   // todo fix any type
   public getJSONRPCFormatIsValid = ({
@@ -123,7 +142,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     schema,
     prevId,
     isBatchRequest,
-  }: any) => {
+  }: any): boolean => {
     // return true because all validation will be prepared in Formatter
     if (isBatchRequest) {
       return true;
@@ -139,7 +158,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       prev: prevId,
       curr: response.id,
     });
-    
+
     // if ids are not equal
     if (!idsAreEqual) {
       console.error('(fetch-api): request-response ids are not equal');
@@ -180,7 +199,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     isResponseStatusSuccess,
     isStatusEmpty,
     isPureFileRequest,
-  }: FormatValidateParams) => {
+  }: FormatValidateParams): boolean => {
     if (isStatusEmpty) {
       return true;
     }
@@ -214,19 +233,19 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     return true;
   };
 
-  private truthyValidator = () => true
+  private truthyValidator = (): boolean => true;
 
   public getFormatValidateMethod = ({
     protocol,
     extraValidationCallback,
-    responseSchema
+    responseSchema,
   }: GetFormatValidateMethodParams): FormatValidateParamsMethod => {
     // if there is an extra callback for validations
     if (extraValidationCallback) {
       return extraValidationCallback;
     }
-    
-    if(!Boolean(responseSchema)){
+
+    if (!Boolean(responseSchema)) {
       return this.truthyValidator;
     }
 
