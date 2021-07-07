@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[124],{196:function(o){o.exports=JSON.parse('{"permalink":"/fetch-api/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":4,"previousPage":null,"nextPage":null,"blogDescription":"A docusaurus powered blog!","blogTitle":"Docusaurus blog!"}')}}]);
