@@ -9,7 +9,6 @@ const { sharedRootRouter } = require('../server/shared');
 const app = express();
 const PORT = 8080;
 
-
 // middlewares
 // app.use(cors({ origin: '*' }));
 app.use(logger('dev'));

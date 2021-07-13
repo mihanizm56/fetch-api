@@ -44,8 +44,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
     const additionalChecks =
       typeof response.error === 'boolean' &&
-      typeof response.errorText === 'string' &&
-      typeof response.data === 'object';
+      typeof response.errorText === 'string';
 
     return additionalChecks;
   };

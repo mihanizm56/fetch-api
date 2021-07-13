@@ -29,7 +29,6 @@ describe('traceRequestCallback GET-TEXT positive tests', () => {
         date: 'mock-date',
         etag: 'mock-etag',
         'x-powered-by': 'Express',
-        'last-modified': 'Tue, 01 Jun 2021 13:44:29 GMT',
       },
     };
 
@@ -42,6 +41,8 @@ describe('traceRequestCallback GET-TEXT positive tests', () => {
     };
 
     const response = await new RestRequest().getRequest(requestConfig);
+
+    delete response.headers['last-modified'];
 
     expect(response).toEqual(formattedResponse);
     expect(resultOptions.endpoint).toEqual(requestConfig.endpoint);
