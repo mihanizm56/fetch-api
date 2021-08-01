@@ -45,6 +45,8 @@ import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
 import { ResponseStatusValidator } from "@/validators/response-status-validator";
 import { checkToDoRetry } from "@/utils/check-todo-retry";
 import { HeadersFormatter } from "@/formatters/headers-formatter";
+import { getSleepTimeBeforeRetry } from "@/utils/get-sleep-time-before-retry";
+import { sleep } from "@/utils/sleep";
 
 interface IBaseRequest {
   makeFetch: (
@@ -421,7 +423,9 @@ export class BaseRequest implements IBaseRequest {
     traceRequestCallback,
     tracingDisabled,
     pureJsonFileResponse,
-    extraVerifyRetry
+    extraVerifyRetry,
+    retryTimeInterval,
+    retryIntervalNonIncrement
   }: MakeFetchType): Promise<IResponse> => {
     const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
 
@@ -470,7 +474,16 @@ export class BaseRequest implements IBaseRequest {
       fetchParams
     });
 
-    const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
+    const getRequest = (retryCounter?: number): Promise<IResponse> => {
+      // waiting time before to make the retry
+      // some cases need to be done with incremental timeout before retry, some are not
+      const sleepTime = getSleepTimeBeforeRetry({
+        retryCounter,
+        retryTimeInterval,
+        retryIntervalNonIncrement
+      })
+
+      return requestFetch()
       .then(async (response: Response) => {
         this.statusCode = response.status;
         const isStatusEmpty = this.statusCode === 204;
@@ -496,10 +509,6 @@ export class BaseRequest implements IBaseRequest {
         // transform responded headers to the object
         // this.responseHeaders = new HeadersFormatter(response.headers).getFormattedValue();
         this.responseHeaders = new HeadersFormatter(response.headers).getFormattedValue();
-
-
-        // console.log('this.responseHeaders', this.responseHeaders);
-        
 
         if (isValidStatus) {
           // any type because we did not know about data structure
@@ -564,6 +573,8 @@ export class BaseRequest implements IBaseRequest {
             })
 
             if(needsToRetry && typeof retryCounter !== 'undefined'){
+              await sleep(sleepTime);
+
               return getRequest(retryCounter + 1)
             }
  
@@ -604,11 +615,16 @@ export class BaseRequest implements IBaseRequest {
 
         throw new Error(validationErrorMessage);
       })
-      .catch((error: Error) => {
+      .catch(async(error: Error) => {
         const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY;
         
         // check if needs to retry request   
-        if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
+        if ( typeof retry !== 'undefined'
+            && typeof retryCounter !== 'undefined'
+            && retryCounter < retry
+        ) {
+          await sleep(sleepTime);
+          
           return getRequest(retryCounter + 1)
         }
 
@@ -653,7 +669,8 @@ export class BaseRequest implements IBaseRequest {
         })
 
         return formattedResponseError
-      });
+      })
+    };
 
     return this.requestRacer({
       request: getRequest(1),

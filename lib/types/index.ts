@@ -173,6 +173,8 @@ export interface IRequestParams extends RequestInit {
   tracingDisabled?: boolean;
   pureJsonFileResponse?: boolean;
   extraVerifyRetry?: ExtraVerifyRetryCallbackType;
+  retryTimeInterval?: number;
+  retryIntervalNonIncrement?: boolean;
 }
 
 export interface IResponse {
