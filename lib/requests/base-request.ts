@@ -478,6 +478,7 @@ export class BaseRequest implements IBaseRequest {
       // waiting time before to make the retry
       // some cases need to be done with incremental timeout before retry, some are not
       const sleepTime = getSleepTimeBeforeRetry({
+        retry,
         retryCounter,
         retryTimeInterval,
         retryIntervalNonIncrement

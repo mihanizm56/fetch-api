@@ -14,4 +14,6 @@ module.exports = {
   collectCoverageFrom: ['lib/**/*.ts', '!**/node_modules/**', '!**/vendor/**'],
   coverageDirectory: '<rootDir>/coverage',
   browser: false,
+  maxWorkers: 1,
+  maxConcurrency: 1,
 };
