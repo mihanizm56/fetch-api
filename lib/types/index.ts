@@ -34,12 +34,18 @@ export type SetResponseTrackCallbackOptions = {
   code: number;
 };
 
-export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
+
 export type SetResponseTrackCallback = (
   options: SetResponseTrackCallbackOptions,
 ) => void;
 export type SetResponseTrackOptions = {
   callback: SetResponseTrackCallback;
+  name: string;
+};
+
+export type PersistentFetchOptionsCallback = (params: RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>)=>PersistentFetchParamsType;
+export type SetResponsePersistentParamsOptions = {
+  callback: PersistentFetchOptionsCallback;
   name: string;
 };
 
@@ -275,7 +281,7 @@ export type GetIsomorphicFetchReturnsType = {
 
 export type GetIsomorphicFetchParamsType = {
   endpoint: string;
-  fetchParams: RequestInit & Pick<IRequestParams, 'headers'>;
+  fetchParams: RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>;
   abortRequestId?: string;
 };
 

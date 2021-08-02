@@ -12,13 +12,13 @@ import {
   GetFetchBodyParamsType,
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
-  PersistentFetchParamsType,
   AbortListenersParamsType,
   GetFormattedHeadersParamsType,
   GetFilteredDefaultErrorMessageParamsType,
   SetResponseTrackOptions,
   TraceBaseRequestParamsType,
-  SetResponseTrackCallbackOptions
+  SetResponseTrackCallbackOptions,
+  SetResponsePersistentParamsOptions
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -87,7 +87,7 @@ export class BaseRequest implements IBaseRequest {
 
   static dependencies: Record<string, any>
 
-  static persistentOptions?: PersistentFetchParamsType;
+  static persistentOptionsGetters: Array<SetResponsePersistentParamsOptions> = [];
 
   static responseTrackCallbacks: Array<SetResponseTrackOptions> = [];
 
@@ -151,15 +151,23 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
+  getFetchParams = (params:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>) => {
+    if(!BaseRequest.persistentOptionsGetters?.length){
+      return params
+    }
+
+    return BaseRequest.persistentOptionsGetters.reduce((acc:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>, { callback }) => {
+      return { ...acc, ...callback(params) };
+    }, params);
+  }
+
   // get an isomorfic fetch
   getIsomorphicFetch = ({
     endpoint,
     fetchParams,
     abortRequestId,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    const requestParams = BaseRequest.persistentOptions 
-      ? {...fetchParams,...BaseRequest.persistentOptions} 
-      : fetchParams;
+    const requestParams = this.getFetchParams(fetchParams);
 
     if (isNode()) {
       const requestFetch = (
@@ -466,6 +474,7 @@ export class BaseRequest implements IBaseRequest {
       redirect,
       referrer,
       referrerPolicy,
+      parseType
     }
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({

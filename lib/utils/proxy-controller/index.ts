@@ -1,5 +1,5 @@
 import { BaseRequest } from "@/requests/base-request"
-import { SetResponseTrackOptions } from "@/types"
+import { PersistentFetchOptionsCallback, SetResponsePersistentParamsOptions, SetResponseTrackOptions } from "@/types"
 
 interface IProxyController {
     // setPersistentOptions: (callback:PersistentFetchOptionsCallback) => void;
@@ -23,11 +23,20 @@ export class ProxyController implements IProxyController{
     }
 
     // adds params to all requests
-    // setPersistentOptions(callback:PersistentFetchOptionsCallback){
-    //     try {
-    //     BaseRequest.persistentOptions = callback();
-    //     } catch (error) {
-    //         console.error('setPersistentOptions gets an error', error);
-    //     }
-    // }
+    setPersistentOptions(callbackParams:SetResponsePersistentParamsOptions){
+        try {
+            BaseRequest.persistentOptionsGetters.push(callbackParams);
+        } catch (error) {
+            console.error('setPersistentOptions gets an error', error);
+        }
+    }
+
+    // remove one of setPersistentOptions
+    deletePersistentOptions(callbackName:string){
+        try {
+            BaseRequest.persistentOptionsGetters = BaseRequest.persistentOptionsGetters.filter((responseTrackCallback)=>responseTrackCallback.name !== callbackName);
+        } catch (error) {
+            console.error('setPersistentOptions gets an error', error);
+        }
+    }
 }
