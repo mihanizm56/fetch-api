@@ -349,7 +349,8 @@ export class BaseRequest implements IBaseRequest {
       endpoint,
       method,
       code,
-      tracingDisabled
+      tracingDisabled,
+      retryRequest
     }: TraceBaseRequestParamsType) => {    
     // special check if we need to configure tracking object
     if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response || tracingDisabled){
@@ -379,7 +380,8 @@ export class BaseRequest implements IBaseRequest {
       responseCookies,
       error,
       errorType,
-      code
+      code,
+      retryRequest
     }
 
     BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
@@ -398,43 +400,46 @@ export class BaseRequest implements IBaseRequest {
     Partial<IJSONPRCRequestParams> & {
       requestProtocol: keyof typeof requestProtocolsMap;
     } & { method: Pick<RequestInit,'method'> }
-  >({
-    id,
-    version,
-    headers,
-    body,
-    mode,
-    method,
-    endpoint,
-    parseType = parseTypesMap.json,
-    queryParams,
-    responseSchema,
-    requestProtocol,
-    isErrorTextStraightToOutput,
-    extraValidationCallback,
-    translateFunction,
-    customTimeout,
-    abortRequestId,
-    arrayFormat,
-    isBatchRequest,
-    progressOptions,
-    customSelectorData,
-    selectData,
-    cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр,
-    credentials,
-    integrity,
-    keepalive,
-    redirect,
-    referrer,
-    referrerPolicy,
-    retry,
-    traceRequestCallback,
-    tracingDisabled,
-    pureJsonFileResponse,
-    extraVerifyRetry,
-    retryTimeInterval,
-    retryIntervalNonIncrement
-  }: MakeFetchType): Promise<IResponse> => {
+  >(mainParams: MakeFetchType): Promise<IResponse> => {
+    const {
+      id,
+      version,
+      headers,
+      body,
+      mode,
+      method,
+      endpoint,
+      parseType = parseTypesMap.json,
+      queryParams,
+      responseSchema,
+      requestProtocol,
+      isErrorTextStraightToOutput,
+      extraValidationCallback,
+      translateFunction,
+      customTimeout,
+      abortRequestId,
+      arrayFormat,
+      isBatchRequest,
+      progressOptions,
+      customSelectorData,
+      selectData,
+      cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр,
+      credentials,
+      integrity,
+      keepalive,
+      redirect,
+      referrer,
+      referrerPolicy,
+      retry,
+      traceRequestCallback,
+      tracingDisabled,
+      pureJsonFileResponse,
+      extraVerifyRetry,
+      retryTimeInterval,
+      retryIntervalNonIncrement
+    } = mainParams;
+
+
     const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
 
     // set cookie to get them in trace functions
@@ -475,7 +480,7 @@ export class BaseRequest implements IBaseRequest {
       referrer,
       referrerPolicy,
       parseType
-    }
+    };
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
@@ -609,7 +614,8 @@ export class BaseRequest implements IBaseRequest {
               endpoint,
               method,
               code: this.statusCode,
-              tracingDisabled
+              tracingDisabled,
+              retryRequest: () => this.makeFetch(mainParams)
             })
 
             // return data
@@ -675,7 +681,8 @@ export class BaseRequest implements IBaseRequest {
           endpoint,
           method,
           code: this.statusCode,
-          tracingDisabled
+          tracingDisabled,
+          retryRequest: () => this.makeFetch(mainParams)
         })
 
         return formattedResponseError
