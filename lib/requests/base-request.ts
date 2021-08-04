@@ -151,13 +151,21 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
-  getFetchParams = (params:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>) => {
+  getFetchParams = (params:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>):RequestInit => {
     if(!BaseRequest.persistentOptionsGetters?.length){
       return params
     }
 
-    return BaseRequest.persistentOptionsGetters.reduce((acc:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>, { callback }) => {
-      return { ...acc, ...callback(params) };
+    return BaseRequest.persistentOptionsGetters.reduce((acc:RequestInit, { callback }) => {
+      const persistentRequestParams = callback(params);
+      
+      return { 
+        ...acc, 
+        ...persistentRequestParams,
+        headers: {
+          ...acc.headers,
+          ...persistentRequestParams.headers
+        }};
     }, params);
   }
 
@@ -171,7 +179,8 @@ export class BaseRequest implements IBaseRequest {
 
     if (isNode()) {
       const requestFetch = (
-        () => nodeFetch(endpoint,requestParams) as unknown
+        // TODO fix any type
+        () => nodeFetch(endpoint, requestParams as any) as unknown
       ) as () => Promise<Response>
 
       return { requestFetch };
