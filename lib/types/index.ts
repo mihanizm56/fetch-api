@@ -32,7 +32,7 @@ export type SetResponseTrackCallbackOptions = {
   error: boolean;
   errorType: ErrorTracingType;
   code: number;
-  retryRequest: () => Promise<IResponse>;
+  retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
 };
 
 export type SetResponseTrackCallback = (
@@ -67,7 +67,7 @@ export type TraceBaseRequestParamsType = {
   method: Pick<RequestInit, 'method'>;
   code: number;
   tracingDisabled?: boolean;
-  retryRequest: () => Promise<IResponse>;
+  retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
 };
 
 export type AdditionalErrors = Record<string, any>;
@@ -181,6 +181,7 @@ export interface IRequestParams extends RequestInit {
   retry?: number;
   traceRequestCallback?: SetResponseTrackCallback;
   tracingDisabled?: boolean;
+  middlewaresAreDisabled?: boolean;
   pureJsonFileResponse?: boolean;
   extraVerifyRetry?: ExtraVerifyRetryCallbackType;
   retryTimeInterval?: number;
@@ -314,12 +315,37 @@ export type GetPreparedResponseDataParams = {
   responseHeaders: Record<string, string>;
 };
 
+export type GetMiddlewareCombinedResponseParamsType = {
+  response: IResponse;
+  endpoint: string;
+  method: Pick<RequestInit, 'method'>;
+  middlewaresAreDisabled?: boolean;
+  retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
+};
+
+export type IMiddleware = (
+  params: Omit<GetMiddlewareCombinedResponseParamsType, 'middlewaresAreDisabled'> ,
+) => Promise<IResponse>;
+
 export type GetCompareIdsParams = { requestId: string; responceId: string };
 
 export type GetIsSchemaResponseValidParams = {
   data: any;
   error: boolean;
   schema: any;
+};
+
+export type MiddlewareParams = {
+  middleware: IMiddleware;
+  name: string;
+};
+
+export type GetTimeoutExceptionParamsType = {
+  fetchController?: any;
+  requestId?: string | number;
+  isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunctionType;
+  customTimeout?: number;
 };
 
 export abstract class ResponseFormatter {

@@ -19,3 +19,4 @@ export {
 export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE } from '@/constants';
 export { ProxyController } from './utils/proxy-controller';
 export { DependencyController } from './utils/dependency-controller'
+export { MiddlewaresController } from './utils/middleware-controller'

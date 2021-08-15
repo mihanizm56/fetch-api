@@ -18,7 +18,10 @@ import {
   SetResponseTrackOptions,
   TraceBaseRequestParamsType,
   SetResponseTrackCallbackOptions,
-  SetResponsePersistentParamsOptions
+  SetResponsePersistentParamsOptions,
+  GetMiddlewareCombinedResponseParamsType,
+  MiddlewareParams,
+  GetTimeoutExceptionParamsType
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -90,6 +93,9 @@ export class BaseRequest implements IBaseRequest {
   static persistentOptionsGetters: Array<SetResponsePersistentParamsOptions> = [];
 
   static responseTrackCallbacks: Array<SetResponseTrackOptions> = [];
+
+  static middlewares: Array<MiddlewareParams> = [];
+
 
   parseResponseData = async ({
     response,
@@ -236,6 +242,27 @@ export class BaseRequest implements IBaseRequest {
 
     return NETWORK_ERROR_KEY;
   }
+
+  getMiddlewareCombinedResponse = async ({middlewaresAreDisabled,response,...middlewareParams}:GetMiddlewareCombinedResponseParamsType): Promise<IResponse> => {
+    // if((!BaseRequest.middlewares.length && !requestMiddleware) || params.middlewaresAreDisabled){
+    if (
+      !BaseRequest.middlewares.length || 
+      middlewaresAreDisabled
+    ){
+      return response
+    }
+
+    return await BaseRequest.middlewares.reduce(async (acc: Promise<IResponse> | IResponse, middleware: MiddlewareParams)=>{
+      const awaitedAcc = await acc;
+
+      const result = await middleware.middleware({
+        ...middlewareParams,
+        response: awaitedAcc
+      });
+
+      return result;
+    }, response);
+  };
 
   // get formatted fetch body in needed
   getFetchBody = ({
@@ -445,7 +472,8 @@ export class BaseRequest implements IBaseRequest {
       pureJsonFileResponse,
       extraVerifyRetry,
       retryTimeInterval,
-      retryIntervalNonIncrement
+      retryIntervalNonIncrement,
+      middlewaresAreDisabled
     } = mainParams;
 
 
@@ -601,15 +629,15 @@ export class BaseRequest implements IBaseRequest {
 
               return getRequest(retryCounter + 1)
             }
- 
+
+            // remove the abort listener
+            this.removeAbortListenerFromRequest();
+            
             // select the response data fields if all fields are not necessary
             // work only for json responses
             const selectedResponseData = (selectData || customSelectorData) && !isPureFileRequest 
               ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
               : formattedResponseData;
-
-            // remove the abort listener
-            this.removeAbortListenerFromRequest();
 
             this.traceBaseRequest({
               traceRequestCallback,
@@ -624,11 +652,19 @@ export class BaseRequest implements IBaseRequest {
               method,
               code: this.statusCode,
               tracingDisabled,
-              retryRequest: () => this.makeFetch(mainParams)
+              retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
             })
 
+            const responseFromMiddlewares = await this.getMiddlewareCombinedResponse({
+              response: selectedResponseData,
+              endpoint,
+              method,
+              middlewaresAreDisabled,
+              retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
+            });
+
             // return data
-            return selectedResponseData;
+            return responseFromMiddlewares;
           }
 
           this.validationError = true;
@@ -644,14 +680,17 @@ export class BaseRequest implements IBaseRequest {
         const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY;
         
         // check if needs to retry request   
-        if ( typeof retry !== 'undefined'
-            && typeof retryCounter !== 'undefined'
-            && retryCounter < retry
+        if (typeof retry !== 'undefined' && 
+            typeof retryCounter !== 'undefined' && 
+            retryCounter < retry
         ) {
           await sleep(sleepTime);
           
           return getRequest(retryCounter + 1)
         }
+
+        // remove the abort listener
+        this.removeAbortListenerFromRequest();
 
         // make error logs
         makeErrorRequestLogs({
@@ -660,10 +699,8 @@ export class BaseRequest implements IBaseRequest {
           fetchBody,
         });
 
-        // remove the abort listener
-        this.removeAbortListenerFromRequest();
-
-        const isOnlineRequest = getIsRequestOnline()
+        // check if there was no connection
+        const isOnlineRequest = getIsRequestOnline();
         const errorCode = isOnlineRequest ? REQUEST_ERROR_STATUS_CODE : OFFLINE_STATUS_CODE;
         
         const formattedResponseError = new ErrorResponseFormatter().getFormattedErrorResponse({
@@ -691,10 +728,19 @@ export class BaseRequest implements IBaseRequest {
           method,
           code: this.statusCode,
           tracingDisabled,
-          retryRequest: () => this.makeFetch(mainParams)
-        })
+          retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
+        });
 
-        return formattedResponseError
+        const responseFromMiddlewares = await this.getMiddlewareCombinedResponse({
+          response: formattedResponseError,
+          endpoint,
+          method,
+          middlewaresAreDisabled,
+          retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
+        });
+
+        // return error response data
+        return responseFromMiddlewares;
       })
     };
 
@@ -707,15 +753,14 @@ export class BaseRequest implements IBaseRequest {
     });
   };
 
-  requestRacer = ({
-    request,
-    fetchController,
+  getTimeoutException = ({
     translateFunction,
     isErrorTextStraightToOutput,
-    customTimeout
-  }: RequestRacerParams): Promise<IResponse> => {
-    const timeoutException: Promise<IResponse> = new Promise((resolve) =>
-      setTimeout(() => {
+    fetchController,
+    customTimeout,
+  }: GetTimeoutExceptionParamsType): Promise<IResponse> => {
+    return new Promise((resolve) => {
+      return setTimeout(() => {
         const requestTimeoutError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
           {
             errorDictionaryParams: {
@@ -736,7 +781,22 @@ export class BaseRequest implements IBaseRequest {
 
         resolve(requestTimeoutError);
       }, customTimeout || TIMEOUT_VALUE)
-    );
+    });
+  }
+
+  requestRacer = ({
+    request,
+    fetchController,
+    translateFunction,
+    isErrorTextStraightToOutput,
+    customTimeout
+  }: RequestRacerParams): Promise<IResponse> => {
+    const timeoutException = this.getTimeoutException({
+      fetchController,
+      translateFunction,
+      isErrorTextStraightToOutput,
+      customTimeout
+    });
 
     return Promise.race([request, timeoutException]);
   };
