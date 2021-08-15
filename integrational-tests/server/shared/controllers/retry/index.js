@@ -20,7 +20,13 @@ const sendSuccessDataRPC = (code, res, id, data) =>
 
 module.exports.retryRPCController = (req, res) => {
   const { id } = req.body;
-  const { success, last, notresponded, retrynumber } = req.query;
+  const { success, last, notresponded, retrynumber, clear } = req.query;
+
+  if (clear) {
+    COUNTERS['json-rpc'] = 1;
+
+    return sendSuccessDataRPC(200, res, req.body.id, {});
+  }
 
   if (success) {
     return sendSuccessDataRPC(200, res, req.body.id, {});
@@ -56,7 +62,18 @@ module.exports.retryRPCController = (req, res) => {
 };
 
 module.exports.retryRestController = (req, res) => {
-  const { success, last, notresponded, retrynumber } = req.query;
+  const { success, last, notresponded, retrynumber, clear } = req.query;
+
+  if (clear) {
+    COUNTERS.rest = 1;
+
+    return res.status(200).json({
+      error: false,
+      errorText: '',
+      data: {},
+      additionalErrors: null,
+    });
+  }
 
   if (success) {
     return res.status(200).json({
@@ -98,7 +115,13 @@ module.exports.retryRestController = (req, res) => {
 };
 
 module.exports.retryPureRestController = (req, res) => {
-  const { success, last, notresponded, retrynumber } = req.query;
+  const { success, last, notresponded, retrynumber, clear } = req.query;
+
+  if (clear) {
+    COUNTERS['pure-rest'] = 1;
+
+    return res.status(200).json({});
+  }
 
   if (success) {
     return res.status(200).json({});
@@ -110,6 +133,8 @@ module.exports.retryPureRestController = (req, res) => {
 
   if (last && retrynumber) {
     if (COUNTERS['pure-rest'] === Number(retrynumber)) {
+      COUNTERS['pure-rest'] = 1;
+
       return res.status(200).json({});
     }
 

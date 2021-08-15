@@ -32,14 +32,23 @@ export type SetResponseTrackCallbackOptions = {
   error: boolean;
   errorType: ErrorTracingType;
   code: number;
+  retryRequest: () => Promise<IResponse>;
 };
 
-export type PersistentFetchOptionsCallback = () => PersistentFetchParamsType;
 export type SetResponseTrackCallback = (
   options: SetResponseTrackCallbackOptions,
 ) => void;
 export type SetResponseTrackOptions = {
   callback: SetResponseTrackCallback;
+  name: string;
+};
+
+export type PersistentFetchOptionsCallback = (
+  params: RequestInit &
+    Pick<IRequestParams, 'headers' | 'endpoint' | 'parseType'>,
+) => PersistentFetchParamsType;
+export type SetResponsePersistentParamsOptions = {
+  callback: PersistentFetchOptionsCallback;
   name: string;
 };
 
@@ -58,6 +67,7 @@ export type TraceBaseRequestParamsType = {
   method: Pick<RequestInit, 'method'>;
   code: number;
   tracingDisabled?: boolean;
+  retryRequest: () => Promise<IResponse>;
 };
 
 export type AdditionalErrors = Record<string, any>;
@@ -173,6 +183,8 @@ export interface IRequestParams extends RequestInit {
   tracingDisabled?: boolean;
   pureJsonFileResponse?: boolean;
   extraVerifyRetry?: ExtraVerifyRetryCallbackType;
+  retryTimeInterval?: number;
+  retryIntervalNonIncrement?: boolean;
 }
 
 export interface IResponse {
@@ -273,7 +285,8 @@ export type GetIsomorphicFetchReturnsType = {
 
 export type GetIsomorphicFetchParamsType = {
   endpoint: string;
-  fetchParams: RequestInit & Pick<IRequestParams, 'headers'>;
+  fetchParams: RequestInit &
+    Pick<IRequestParams, 'headers' | 'endpoint' | 'parseType'>;
   abortRequestId?: string;
 };
 

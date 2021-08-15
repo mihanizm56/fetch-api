@@ -12,13 +12,13 @@ import {
   GetFetchBodyParamsType,
   GetPreparedResponseDataParams,
   FormatResponseParamsType,
-  PersistentFetchParamsType,
   AbortListenersParamsType,
   GetFormattedHeadersParamsType,
   GetFilteredDefaultErrorMessageParamsType,
   SetResponseTrackOptions,
   TraceBaseRequestParamsType,
-  SetResponseTrackCallbackOptions
+  SetResponseTrackCallbackOptions,
+  SetResponsePersistentParamsOptions
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -45,6 +45,8 @@ import { getResponseHeaders } from "@/utils/tracing/get-response-headers";
 import { ResponseStatusValidator } from "@/validators/response-status-validator";
 import { checkToDoRetry } from "@/utils/check-todo-retry";
 import { HeadersFormatter } from "@/formatters/headers-formatter";
+import { getSleepTimeBeforeRetry } from "@/utils/get-sleep-time-before-retry";
+import { sleep } from "@/utils/sleep";
 
 interface IBaseRequest {
   makeFetch: (
@@ -85,7 +87,7 @@ export class BaseRequest implements IBaseRequest {
 
   static dependencies: Record<string, any>
 
-  static persistentOptions?: PersistentFetchParamsType;
+  static persistentOptionsGetters: Array<SetResponsePersistentParamsOptions> = [];
 
   static responseTrackCallbacks: Array<SetResponseTrackOptions> = [];
 
@@ -149,19 +151,36 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
+  getFetchParams = (params:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>):RequestInit => {
+    if(!BaseRequest.persistentOptionsGetters?.length){
+      return params
+    }
+
+    return BaseRequest.persistentOptionsGetters.reduce((acc:RequestInit, { callback }) => {
+      const persistentRequestParams = callback(params);
+      
+      return { 
+        ...acc, 
+        ...persistentRequestParams,
+        headers: {
+          ...acc.headers,
+          ...persistentRequestParams.headers
+        }};
+    }, params);
+  }
+
   // get an isomorfic fetch
   getIsomorphicFetch = ({
     endpoint,
     fetchParams,
     abortRequestId,
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    const requestParams = BaseRequest.persistentOptions 
-      ? {...fetchParams,...BaseRequest.persistentOptions} 
-      : fetchParams;
+    const requestParams = this.getFetchParams(fetchParams);
 
     if (isNode()) {
       const requestFetch = (
-        () => nodeFetch(endpoint,requestParams) as unknown
+        // TODO fix any type
+        () => nodeFetch(endpoint, requestParams as any) as unknown
       ) as () => Promise<Response>
 
       return { requestFetch };
@@ -339,7 +358,8 @@ export class BaseRequest implements IBaseRequest {
       endpoint,
       method,
       code,
-      tracingDisabled
+      tracingDisabled,
+      retryRequest
     }: TraceBaseRequestParamsType) => {    
     // special check if we need to configure tracking object
     if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response || tracingDisabled){
@@ -369,7 +389,8 @@ export class BaseRequest implements IBaseRequest {
       responseCookies,
       error,
       errorType,
-      code
+      code,
+      retryRequest
     }
 
     BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
@@ -388,41 +409,46 @@ export class BaseRequest implements IBaseRequest {
     Partial<IJSONPRCRequestParams> & {
       requestProtocol: keyof typeof requestProtocolsMap;
     } & { method: Pick<RequestInit,'method'> }
-  >({
-    id,
-    version,
-    headers,
-    body,
-    mode,
-    method,
-    endpoint,
-    parseType = parseTypesMap.json,
-    queryParams,
-    responseSchema,
-    requestProtocol,
-    isErrorTextStraightToOutput,
-    extraValidationCallback,
-    translateFunction,
-    customTimeout,
-    abortRequestId,
-    arrayFormat,
-    isBatchRequest,
-    progressOptions,
-    customSelectorData,
-    selectData,
-    cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр,
-    credentials,
-    integrity,
-    keepalive,
-    redirect,
-    referrer,
-    referrerPolicy,
-    retry,
-    traceRequestCallback,
-    tracingDisabled,
-    pureJsonFileResponse,
-    extraVerifyRetry
-  }: MakeFetchType): Promise<IResponse> => {
+  >(mainParams: MakeFetchType): Promise<IResponse> => {
+    const {
+      id,
+      version,
+      headers,
+      body,
+      mode,
+      method,
+      endpoint,
+      parseType = parseTypesMap.json,
+      queryParams,
+      responseSchema,
+      requestProtocol,
+      isErrorTextStraightToOutput,
+      extraValidationCallback,
+      translateFunction,
+      customTimeout,
+      abortRequestId,
+      arrayFormat,
+      isBatchRequest,
+      progressOptions,
+      customSelectorData,
+      selectData,
+      cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр,
+      credentials,
+      integrity,
+      keepalive,
+      redirect,
+      referrer,
+      referrerPolicy,
+      retry,
+      traceRequestCallback,
+      tracingDisabled,
+      pureJsonFileResponse,
+      extraVerifyRetry,
+      retryTimeInterval,
+      retryIntervalNonIncrement
+    } = mainParams;
+
+
     const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
 
     // set cookie to get them in trace functions
@@ -462,7 +488,8 @@ export class BaseRequest implements IBaseRequest {
       redirect,
       referrer,
       referrerPolicy,
-    }
+      parseType
+    };
 
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
@@ -470,7 +497,17 @@ export class BaseRequest implements IBaseRequest {
       fetchParams
     });
 
-    const getRequest = (retryCounter?: number): Promise<IResponse> => requestFetch()
+    const getRequest = (retryCounter?: number): Promise<IResponse> => {
+      // waiting time before to make the retry
+      // some cases need to be done with incremental timeout before retry, some are not
+      const sleepTime = getSleepTimeBeforeRetry({
+        retry,
+        retryCounter,
+        retryTimeInterval,
+        retryIntervalNonIncrement
+      })
+
+      return requestFetch()
       .then(async (response: Response) => {
         this.statusCode = response.status;
         const isStatusEmpty = this.statusCode === 204;
@@ -496,10 +533,6 @@ export class BaseRequest implements IBaseRequest {
         // transform responded headers to the object
         // this.responseHeaders = new HeadersFormatter(response.headers).getFormattedValue();
         this.responseHeaders = new HeadersFormatter(response.headers).getFormattedValue();
-
-
-        // console.log('this.responseHeaders', this.responseHeaders);
-        
 
         if (isValidStatus) {
           // any type because we did not know about data structure
@@ -564,6 +597,8 @@ export class BaseRequest implements IBaseRequest {
             })
 
             if(needsToRetry && typeof retryCounter !== 'undefined'){
+              await sleep(sleepTime);
+
               return getRequest(retryCounter + 1)
             }
  
@@ -588,7 +623,8 @@ export class BaseRequest implements IBaseRequest {
               endpoint,
               method,
               code: this.statusCode,
-              tracingDisabled
+              tracingDisabled,
+              retryRequest: () => this.makeFetch(mainParams)
             })
 
             // return data
@@ -604,11 +640,16 @@ export class BaseRequest implements IBaseRequest {
 
         throw new Error(validationErrorMessage);
       })
-      .catch((error: Error) => {
+      .catch(async(error: Error) => {
         const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY;
         
         // check if needs to retry request   
-        if (typeof retry !== 'undefined' &&  typeof retryCounter !== 'undefined' &&  retryCounter < retry) {
+        if ( typeof retry !== 'undefined'
+            && typeof retryCounter !== 'undefined'
+            && retryCounter < retry
+        ) {
+          await sleep(sleepTime);
+          
           return getRequest(retryCounter + 1)
         }
 
@@ -649,11 +690,13 @@ export class BaseRequest implements IBaseRequest {
           endpoint,
           method,
           code: this.statusCode,
-          tracingDisabled
+          tracingDisabled,
+          retryRequest: () => this.makeFetch(mainParams)
         })
 
         return formattedResponseError
-      });
+      })
+    };
 
     return this.requestRacer({
       request: getRequest(1),
