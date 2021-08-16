@@ -30,3 +30,4 @@ import Link from '@docusaurus/Link';
 | data             | `<YourType>` | данные ответа                         |
 | additionalErrors | `any`        | любые дополнительные данные с бекенда |
 | code             | `number`     | код состояния ошибки                  |
+| headers             | `object`     | объект с передаваемыми заголовками от бекенда                  |
