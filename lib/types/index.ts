@@ -32,7 +32,6 @@ export type SetResponseTrackCallbackOptions = {
   error: boolean;
   errorType: ErrorTracingType;
   code: number;
-  retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
 };
 
 export type SetResponseTrackCallback = (
@@ -67,7 +66,6 @@ export type TraceBaseRequestParamsType = {
   method: Pick<RequestInit, 'method'>;
   code: number;
   tracingDisabled?: boolean;
-  retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
 };
 
 export type AdditionalErrors = Record<string, any>;
@@ -321,6 +319,19 @@ export type GetMiddlewareCombinedResponseParamsType = {
   method: Pick<RequestInit, 'method'>;
   middlewaresAreDisabled?: boolean;
   retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
+  pureRequestParams:{
+    response: Response | null;
+    validationError?: boolean;
+    responseError?: boolean;
+    requestBody: Pick<RequestInit, 'body'>;
+    requestHeaders: Record<string, string>;
+    requestCookies: string;
+    responseBody: any; // because we dont know about response body type yet
+    formattedResponse: IResponse;
+    endpoint: string;
+    method: Pick<RequestInit, 'method'>;
+    code: number;
+  }
 };
 
 export type IMiddleware = (

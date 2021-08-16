@@ -386,7 +386,6 @@ export class BaseRequest implements IBaseRequest {
       method,
       code,
       tracingDisabled,
-      retryRequest
     }: TraceBaseRequestParamsType) => {    
     // special check if we need to configure tracking object
     if((!BaseRequest.responseTrackCallbacks.length && !traceRequestCallback) || !response || tracingDisabled){
@@ -417,7 +416,6 @@ export class BaseRequest implements IBaseRequest {
       error,
       errorType,
       code,
-      retryRequest
     }
 
     BaseRequest.responseTrackCallbacks.forEach(({callback})=>{
@@ -639,8 +637,7 @@ export class BaseRequest implements IBaseRequest {
               ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
               : formattedResponseData;
 
-            this.traceBaseRequest({
-              traceRequestCallback,
+            const proxyBaseParams = {
               response,
               responseError: formattedResponseData.error,
               requestCookies:this.cookie,
@@ -651,8 +648,12 @@ export class BaseRequest implements IBaseRequest {
               endpoint,
               method,
               code: this.statusCode,
+            }
+
+            this.traceBaseRequest({
+              ...proxyBaseParams,
+              traceRequestCallback,
               tracingDisabled,
-              retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
             })
 
             const responseFromMiddlewares = await this.getMiddlewareCombinedResponse({
@@ -661,6 +662,7 @@ export class BaseRequest implements IBaseRequest {
               method,
               middlewaresAreDisabled,
               retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
+              pureRequestParams:proxyBaseParams
             });
 
             // return data
@@ -712,13 +714,11 @@ export class BaseRequest implements IBaseRequest {
           },
           statusCode: errorCode,
           responseHeaders: this.responseHeaders
-        })        
-
-        this.traceBaseRequest({
+        });
+        
+        const proxyBaseParams = {
           validationError: this.validationError,
-          traceRequestCallback,
           response: this.response,
-          requestError: true,
           requestCookies:this.cookie,
           requestBody:fetchParams.body,
           requestHeaders:fetchParams.headers,
@@ -727,8 +727,13 @@ export class BaseRequest implements IBaseRequest {
           endpoint,
           method,
           code: this.statusCode,
+        }
+
+        this.traceBaseRequest({
+          ...proxyBaseParams,
+          traceRequestCallback,
+          requestError: true,
           tracingDisabled,
-          retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
         });
 
         const responseFromMiddlewares = await this.getMiddlewareCombinedResponse({
@@ -737,6 +742,7 @@ export class BaseRequest implements IBaseRequest {
           method,
           middlewaresAreDisabled,
           retryRequest: (additionalParams:Partial<IRequestParams>) => this.makeFetch({...mainParams,...additionalParams}),
+          pureRequestParams:proxyBaseParams
         });
 
         // return error response data
