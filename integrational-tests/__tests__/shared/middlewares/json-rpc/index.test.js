@@ -1,5 +1,7 @@
-const Joi = require('@hapi/joi');
-const { RestRequest, MiddlewaresController } = require('../../../../dist');
+const {
+  MiddlewaresController,
+  JSONRPCRequest,
+} = require('../../../../../dist');
 
 describe('MiddlewaresController tests', () => {
   beforeEach(() => {
@@ -8,28 +10,30 @@ describe('MiddlewaresController tests', () => {
   });
 
   test('test without middleware', async () => {
-    const response = await new RestRequest().getRequest({
+    const response = await new JSONRPCRequest().makeRequest({
       isErrorTextStraightToOutput: true,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: 'http://127.0.0.1:8080/json-rpc/positive',
+      body: {
+        method: 'test_method',
+        options: {
+          foo: 'bar',
+        },
+      },
     });
 
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: {
-        bar: { baz: 0 },
-        delta: ['1', '2'],
-        foo: 'foo',
-      },
+      data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
       headers: {
-        'content-length': '109',
         connection: 'close',
-        'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
         'x-powered-by': 'Express',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
       },
     });
   });
@@ -40,37 +44,39 @@ describe('MiddlewaresController tests', () => {
       name: 'test',
     });
 
-    const response = await new RestRequest().getRequest({
+    const response = await new JSONRPCRequest().makeRequest({
       isErrorTextStraightToOutput: true,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: 'http://127.0.0.1:8080/json-rpc/positive',
+      body: {
+        method: 'test_method',
+        options: {
+          foo: 'bar',
+        },
+      },
     });
 
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: {
-        bar: { baz: 0 },
-        delta: ['1', '2'],
-        foo: 'foo',
-      },
+      data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
       headers: {
-        'content-length': '109',
         connection: 'close',
-        'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
         'x-powered-by': 'Express',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
       },
     });
   });
 
   test('test with middleware negative and additional request inside', async () => {
     const middleware = async () => {
-      const responseNegative = await new RestRequest().getRequest({
+      const responseNegative = await new JSONRPCRequest().makeRequest({
         isErrorTextStraightToOutput: true,
-        endpoint: 'http://127.0.0.1:8080/rest/negative',
+        endpoint: 'http://127.0.0.1:8080/json-rpc/negative?notsameversion=true',
         middlewaresAreDisabled: true,
       });
 
@@ -82,20 +88,29 @@ describe('MiddlewaresController tests', () => {
       name: 'test',
     });
 
-    const response = await new RestRequest().getRequest({
+    const response = await new JSONRPCRequest().makeRequest({
       isErrorTextStraightToOutput: true,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: 'http://127.0.0.1:8080/json-rpc/positive',
+      body: {
+        method: 'test_method',
+        options: {
+          foo: 'bar',
+        },
+      },
     });
 
     expect(response).toEqual({
       data: {},
       error: true,
-      errorText: 'test error key',
-      additionalErrors: null,
-      code: 401,
+      errorText: 'Тестовая ошибка 1',
+      additionalErrors: {
+        err: 'Тестовая ошибка 1 err',
+        param1: 'test param 1',
+      },
+      code: 400,
       headers: {
         connection: 'close',
-        'content-length': '77',
+        'content-length': '198',
         'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
@@ -118,28 +133,30 @@ describe('MiddlewaresController tests', () => {
       name: 'test',
     });
 
-    const response = await new RestRequest().getRequest({
+    const response = await new JSONRPCRequest().makeRequest({
       isErrorTextStraightToOutput: true,
-      endpoint: 'http://127.0.0.1:8080/rest/positive',
+      endpoint: 'http://127.0.0.1:8080/json-rpc/positive',
+      body: {
+        method: 'test_method',
+        options: {
+          foo: 'bar',
+        },
+      },
     });
 
     expect(response).toEqual({
       additionalErrors: null,
       code: 200,
-      data: {
-        bar: { baz: 0 },
-        delta: ['1', '2'],
-        foo: 'foo',
-      },
+      data: { bar: { baz: 0 }, foo: 'foo' },
       error: false,
       errorText: '',
       headers: {
-        'content-length': '109',
         connection: 'close',
-        'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
         'x-powered-by': 'Express',
+        'content-length': '74',
+        'content-type': 'application/json; charset=utf-8',
       },
     });
   });
