@@ -140,6 +140,10 @@
         {
           "type": "doc",
           "id": "version-3.8.x/examples/proxy-maker"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.8.x/examples/middlewares"
         }
       ]
     }
