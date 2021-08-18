@@ -243,13 +243,15 @@ export class BaseRequest implements IBaseRequest {
     return NETWORK_ERROR_KEY;
   }
 
-  getMiddlewareCombinedResponse = async ({middlewaresAreDisabled,response,...middlewareParams}:GetMiddlewareCombinedResponseParamsType): Promise<IResponse> => {
+  getMiddlewareCombinedResponse = async ({
+      middlewaresAreDisabled,
+      response,
+      ...middlewareParams}:GetMiddlewareCombinedResponseParamsType
+  ): Promise<IResponse> => {
+    // todo middleware per each request
     // if((!BaseRequest.middlewares.length && !requestMiddleware) || params.middlewaresAreDisabled){
-    if (
-      !BaseRequest.middlewares.length || 
-      middlewaresAreDisabled
-    ){
-      return response
+    if (!BaseRequest.middlewares.length ||  middlewaresAreDisabled) {
+      return response;
     }
 
     return await BaseRequest.middlewares.reduce(async (acc: Promise<IResponse> | IResponse, middleware: MiddlewareParams)=>{

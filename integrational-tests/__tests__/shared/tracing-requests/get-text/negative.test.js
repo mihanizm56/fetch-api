@@ -30,7 +30,7 @@ describe('traceRequestCallback GET-TEXT positive tests', () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/negative/blob',
+      endpoint: 'http://127.0.0.1:8080/rest/negative/text',
       traceRequestCallback: setResponseTrackCallbackOptions => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
@@ -113,7 +113,7 @@ describe('ProxyController positive tests', () => {
 
     const requestConfig = {
       ...requestBaseConfig,
-      endpoint: 'http://127.0.0.1:8080/rest/negative/blob',
+      endpoint: 'http://127.0.0.1:8080/rest/negative/text',
     };
 
     const formattedResponse = {

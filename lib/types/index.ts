@@ -318,8 +318,10 @@ export type GetMiddlewareCombinedResponseParamsType = {
   endpoint: string;
   method: Pick<RequestInit, 'method'>;
   middlewaresAreDisabled?: boolean;
-  retryRequest: (additionalParams:Partial<IRequestParams>) => Promise<IResponse>;
-  pureRequestParams:{
+  retryRequest: (
+    additionalParams: Partial<IRequestParams>,
+  ) => Promise<IResponse>;
+  pureRequestParams: {
     response: Response | null;
     validationError?: boolean;
     responseError?: boolean;
@@ -331,11 +333,14 @@ export type GetMiddlewareCombinedResponseParamsType = {
     endpoint: string;
     method: Pick<RequestInit, 'method'>;
     code: number;
-  }
+  };
 };
 
 export type IMiddleware = (
-  params: Omit<GetMiddlewareCombinedResponseParamsType, 'middlewaresAreDisabled'> ,
+  params: Omit<
+    GetMiddlewareCombinedResponseParamsType,
+    'middlewaresAreDisabled'
+  >,
 ) => Promise<IResponse>;
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
