@@ -533,7 +533,7 @@ export class BaseRequest implements IBaseRequest {
         retryCounter,
         retryTimeInterval,
         retryIntervalNonIncrement
-      })
+      });
 
       return requestFetch()
       .then(async (response: Response) => {
