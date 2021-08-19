@@ -11,8 +11,12 @@ export const getSleepTimeBeforeRetry = ({
   retryTimeInterval = 1000,
   retryIntervalNonIncrement,
 }: ParamsType): number => {
-  if (retryIntervalNonIncrement || !retry) {
+  if (!retry) {
     return 0;
+  }
+
+  if (retryIntervalNonIncrement) {
+    return retryTimeInterval;
   }
 
   return retryCounter * retryTimeInterval;
