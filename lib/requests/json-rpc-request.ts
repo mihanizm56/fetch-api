@@ -16,11 +16,11 @@ export class JSONRPCRequest extends BaseRequest {
     requestParams: Omit<
       IJSONPRCRequestParams,
       "method" | "requestProtocol" | "id" | "version" | 'pureJsonFileResponse'
-    >
+    > & { id?: string }
   ): Promise<IResponse> =>
     this.makeFetch({
       ...requestParams,
-      id: uniqueId("json-rpc_"),
+      id: requestParams.id || uniqueId("json-rpc_"),
       version: {
         jsonrpc: "2.0"
       },
