@@ -21,7 +21,9 @@ import {
   SetResponsePersistentParamsOptions,
   GetMiddlewareCombinedResponseParamsType,
   MiddlewareParams,
-  GetTimeoutExceptionParamsType
+  GetTimeoutExceptionParamsType,
+  GetCachedResponseParamsType,
+  CacheParams
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -96,6 +98,7 @@ export class BaseRequest implements IBaseRequest {
 
   static middlewares: Array<MiddlewareParams> = [];
 
+  static caches: Array<CacheParams> = [];
 
   parseResponseData = async ({
     response,
@@ -264,6 +267,18 @@ export class BaseRequest implements IBaseRequest {
 
       return result;
     }, response);
+  };
+
+  getCacheResponse = async (params:GetCachedResponseParamsType): Promise<IResponse|null> => {
+    if (!BaseRequest.caches.length || params.cacheIsDisabled) {
+      return null
+    }
+
+    return await BaseRequest.caches.reduce(async (acc: any, cache: CacheParams)=>{
+      const result = await cache.cache(params) || null
+
+      return result;
+    }, null)
   };
 
   // get formatted fetch body in needed
@@ -473,7 +488,8 @@ export class BaseRequest implements IBaseRequest {
       extraVerifyRetry,
       retryTimeInterval,
       retryIntervalNonIncrement,
-      middlewaresAreDisabled
+      middlewaresAreDisabled,
+      cacheIsDisabled
     } = mainParams;
 
 
@@ -525,7 +541,7 @@ export class BaseRequest implements IBaseRequest {
       fetchParams
     });
 
-    const getRequest = (retryCounter?: number): Promise<IResponse> => {
+    const getRequest = async (retryCounter?: number): Promise<IResponse> => {
       // waiting time before to make the retry
       // some cases need to be done with incremental timeout before retry, some are not
       const sleepTime = getSleepTimeBeforeRetry({
@@ -534,6 +550,19 @@ export class BaseRequest implements IBaseRequest {
         retryTimeInterval,
         retryIntervalNonIncrement
       });
+
+      const cachedResponse = await this.getCacheResponse({
+        endpoint,
+        method,
+        cacheIsDisabled,
+        requestBody:fetchParams.body,
+        requestHeaders:fetchParams.headers,
+        requestCookies:this.cookie,
+      });
+
+      if (cachedResponse) {
+        return cachedResponse;
+      }
 
       return requestFetch()
       .then(async (response: Response) => {

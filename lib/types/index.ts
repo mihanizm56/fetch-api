@@ -179,6 +179,7 @@ export interface IRequestParams extends RequestInit {
   retry?: number;
   traceRequestCallback?: SetResponseTrackCallback;
   tracingDisabled?: boolean;
+  cacheIsDisabled?: boolean;
   middlewaresAreDisabled?: boolean;
   pureJsonFileResponse?: boolean;
   extraVerifyRetry?: ExtraVerifyRetryCallbackType;
@@ -336,12 +337,25 @@ export type GetMiddlewareCombinedResponseParamsType = {
   };
 };
 
+export type GetCachedResponseParamsType = {
+  endpoint: string;
+  method: Pick<RequestInit, 'method'>;
+  cacheIsDisabled?: boolean;
+  requestBody: Pick<RequestInit, 'body'>;
+  requestHeaders: Record<string, string>;
+  requestCookies: string;
+};
+
 export type IMiddleware = (
   params: Omit<
     GetMiddlewareCombinedResponseParamsType,
     'middlewaresAreDisabled'
   >,
 ) => Promise<IResponse>;
+
+export type ICache = (
+  params: Omit<GetCachedResponseParamsType, 'cacheIsDisabled'>,
+) => Promise<IResponse | null>;
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
 
@@ -353,6 +367,11 @@ export type GetIsSchemaResponseValidParams = {
 
 export type MiddlewareParams = {
   middleware: IMiddleware;
+  name: string;
+};
+
+export type CacheParams = {
+  cache: ICache;
   name: string;
 };
 
