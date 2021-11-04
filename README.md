@@ -4,7 +4,7 @@
 ### [Documentation here](https://mihanizm56.github.io/fetch-api/)
 
 ### Benefits:
-- Provides validation for responses (based on @hapi/joi Schema validation and may use your own validation function)
+- Provides validation for responses (based on joi Schema validation and may use your own validation function)
 - Provides the ability to make rest-api and json-rpc protocol requests in One interface
 - Provides query-params serialize (booleans,strings,numbers,arrays of numbers or strings and variable serialize options for different backend services, https://www.npmjs.com/package/query-string is used)
 - Provides cancel-request if the timeout is higher than timeout value (60 seconds by default) 
@@ -24,7 +24,7 @@
 
 #### Request input options:
 - endpoint(string): the request url
-- responseSchema: the response Schema that parsed by @hapi/joi <br/>(you must use the @hapi/joi in your project and insert the response Schema into this field)
+- responseSchema: the response Schema that parsed by joi <br/>(you must use the joi in your project and insert the response Schema into this field)
 - body(JSON | FormData): the request body
 - mode('cors' | 'no-cors'): the cors type
 - queryParams(object): the object with the query parameters (they will be serialized automatically)
@@ -33,7 +33,7 @@
 - isErrorTextStraightToOutput(boolean): flag not to prepare error text value - it <br/>
   goes straight from backend ("errorText" if REST and "message" if JSON-RPC)
 - extraValidationCallback(function): callback that can be used for custom response <br/>
-  data validation or if you don't want to use @hapi/joi
+  data validation or if you don't want to use joi
 - customTimeout(number) - milliseconds for cancel the request on timeout (or a full package of requests if the "retry" parameter is activated) 
 - retry - number of requests try to request if the response is negative
 
