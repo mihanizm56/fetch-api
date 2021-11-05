@@ -469,7 +469,7 @@ export class BaseRequest implements IBaseRequest {
     cacheIsDisabled,
     cacheNoStore,
     requestCache,
-    data
+    response
   }: SetResponseFromCacheParamsType) => {
     if(cacheNoStore || cacheIsDisabled) {
       return;
@@ -483,7 +483,7 @@ export class BaseRequest implements IBaseRequest {
       requestBody,
       requestHeaders,
       requestCookies,
-      data
+      response
     });
 
     return cachedResponse;
@@ -753,7 +753,7 @@ export class BaseRequest implements IBaseRequest {
               cacheIsDisabled,
               cacheNoStore,
               requestCache,
-              data: responseFromMiddlewares
+              response: responseFromMiddlewares
             }) 
 
             // return response data

@@ -352,7 +352,7 @@ export type GetResponseFromCacheParamsType = CacheParamsType & {
 };
 
 export type SetResponseFromCacheParamsType = GetResponseFromCacheParamsType & {
-  data: IResponse;
+  response: IResponse;
 };
 
 export type CacheParamsType = {
@@ -364,7 +364,7 @@ export type CacheParamsType = {
 };
 export interface ICache {
   getFromCache: (params: CacheParamsType) => Promise<IResponse | null>;
-  setToCache: (params: CacheParamsType & { data: IResponse }) => void;
+  setToCache: (params: CacheParamsType & { response: IResponse }) => void;
 }
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
