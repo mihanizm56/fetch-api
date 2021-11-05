@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.8.6",
+  "version": "3.8.7",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,13 +30,13 @@
   },
   "homepage": "https://github.com/mihanizm56/fetch-api#readme",
   "dependencies": {
+    "colors": "1.4.0",
     "json-mask": "1.0.4",
     "node-fetch": "2.6.1",
     "query-string": "7.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
-    "colors": "1.4.0",
     "@types/jest": "25.1.0",
     "@types/joi": "14.3.4",
     "@types/node-fetch": "2.5.7",
