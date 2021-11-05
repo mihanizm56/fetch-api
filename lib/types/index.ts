@@ -185,6 +185,7 @@ export interface IRequestParams extends RequestInit {
   extraVerifyRetry?: ExtraVerifyRetryCallbackType;
   retryTimeInterval?: number;
   retryIntervalNonIncrement?: boolean;
+  requestCache?: ICache;
 }
 
 export interface IResponse {
@@ -337,15 +338,6 @@ export type GetMiddlewareCombinedResponseParamsType = {
   };
 };
 
-export type GetCachedResponseParamsType = {
-  endpoint: string;
-  method: Pick<RequestInit, 'method'>;
-  cacheIsDisabled?: boolean;
-  requestBody: Pick<RequestInit, 'body'>;
-  requestHeaders: Record<string, string>;
-  requestCookies: string;
-};
-
 export type IMiddleware = (
   params: Omit<
     GetMiddlewareCombinedResponseParamsType,
@@ -353,9 +345,27 @@ export type IMiddleware = (
   >,
 ) => Promise<IResponse>;
 
-export type ICache = (
-  params: Omit<GetCachedResponseParamsType, 'cacheIsDisabled'>,
-) => Promise<IResponse | null>;
+export type GetResponseFromCacheParamsType = CacheParamsType & {
+  cacheIsDisabled?: boolean;
+  cacheNoStore?: boolean;
+  requestCache?: ICache;
+};
+
+export type SetResponseFromCacheParamsType = GetResponseFromCacheParamsType & {
+  data: IResponse;
+};
+
+export type CacheParamsType = {
+  endpoint: string;
+  method: Pick<RequestInit, 'method'>;
+  requestBody: Pick<RequestInit, 'body'>;
+  requestHeaders: Record<string, string>;
+  requestCookies: string;
+};
+export interface ICache {
+  getFromCache: (params: CacheParamsType) => Promise<IResponse | null>;
+  setToCache: (params: CacheParamsType & { data: IResponse }) => void;
+}
 
 export type GetCompareIdsParams = { requestId: string; responceId: string };
 

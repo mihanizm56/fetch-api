@@ -22,8 +22,10 @@ import {
   GetMiddlewareCombinedResponseParamsType,
   MiddlewareParams,
   GetTimeoutExceptionParamsType,
-  GetCachedResponseParamsType,
-  CacheParams
+  ICache,
+  CacheParamsType,
+  SetResponseFromCacheParamsType,
+  GetResponseFromCacheParamsType
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -71,8 +73,6 @@ interface IBaseRequest {
 
   addAbortListenerToRequest: (params: AbortListenersParamsType) => void;
 
-  abortRequestListener?: any
-
   getFormattedEndpoint:(params: FormattedEndpointParams) => string;
 
   getFetchBody: (params: GetFetchBodyParamsType) => any
@@ -98,7 +98,7 @@ export class BaseRequest implements IBaseRequest {
 
   static middlewares: Array<MiddlewareParams> = [];
 
-  static caches: Array<CacheParams> = [];
+  static cache?: ICache;
 
   parseResponseData = async ({
     response,
@@ -269,18 +269,6 @@ export class BaseRequest implements IBaseRequest {
     }, response);
   };
 
-  getCacheResponse = async (params:GetCachedResponseParamsType): Promise<IResponse|null> => {
-    if (!BaseRequest.caches.length || params.cacheIsDisabled) {
-      return null
-    }
-
-    return await BaseRequest.caches.reduce(async (acc: any, cache: CacheParams)=>{
-      const result = await cache.cache(params) || null
-
-      return result;
-    }, null)
-  };
-
   // get formatted fetch body in needed
   getFetchBody = ({
     requestProtocol,
@@ -445,6 +433,61 @@ export class BaseRequest implements IBaseRequest {
     }
   }
 
+  getResponseFromCache = async({
+    endpoint,
+    method,
+    requestBody,
+    requestHeaders,
+    requestCookies,
+    cacheIsDisabled,
+    cacheNoStore,
+    requestCache
+  }: GetResponseFromCacheParamsType) => {
+    if(cacheNoStore || cacheIsDisabled) {
+      return;
+    }
+
+    const cache = requestCache || BaseRequest.cache;
+
+    const cachedResponse = await cache?.getFromCache({
+      endpoint,
+      method,
+      requestBody,
+      requestHeaders,
+      requestCookies
+    });
+
+    return cachedResponse;
+  }
+
+  setResponseToCache = ({
+    endpoint,
+    method,
+    requestBody,
+    requestHeaders,
+    requestCookies,
+    cacheIsDisabled,
+    cacheNoStore,
+    requestCache,
+    data
+  }: SetResponseFromCacheParamsType) => {
+    if(cacheNoStore || cacheIsDisabled) {
+      return;
+    }
+
+    const cache = requestCache || BaseRequest.cache;
+
+    const cachedResponse = cache?.setToCache({
+      endpoint,
+      method,
+      requestBody,
+      requestHeaders,
+      requestCookies,
+      data
+    });
+
+    return cachedResponse;
+  }
 
   makeFetch = <
     MakeFetchType extends IRequestParams &
@@ -489,11 +532,14 @@ export class BaseRequest implements IBaseRequest {
       retryTimeInterval,
       retryIntervalNonIncrement,
       middlewaresAreDisabled,
-      cacheIsDisabled
+      cacheIsDisabled,
+      requestCache
     } = mainParams;
 
 
     const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
+
+    const cacheNoStore = cache === 'no-store' || cache ==='no-cache';
 
     // set cookie to get them in trace functions
     this.cookie = global.document ? global.document.cookie : '';
@@ -551,13 +597,15 @@ export class BaseRequest implements IBaseRequest {
         retryIntervalNonIncrement
       });
 
-      const cachedResponse = await this.getCacheResponse({
+      const cachedResponse = await this.getResponseFromCache({
         endpoint,
         method,
+        requestBody: fetchParams.body,
+        requestHeaders: fetchParams.headers,
+        requestCookies: this.cookie,
         cacheIsDisabled,
-        requestBody:fetchParams.body,
-        requestHeaders:fetchParams.headers,
-        requestCookies:this.cookie,
+        cacheNoStore: cacheNoStore,
+        requestCache
       });
 
       if (cachedResponse) {
@@ -696,7 +744,19 @@ export class BaseRequest implements IBaseRequest {
               pureRequestParams:proxyBaseParams
             });
 
-            // return data
+            this.setResponseToCache({
+              endpoint,
+              method,
+              requestBody:fetchParams.body,
+              requestHeaders:fetchParams.headers,
+              requestCookies:this.cookie,
+              cacheIsDisabled,
+              cacheNoStore,
+              requestCache,
+              data: responseFromMiddlewares
+            }) 
+
+            // return response data
             return responseFromMiddlewares;
           }
 

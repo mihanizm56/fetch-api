@@ -1,23 +1,23 @@
-import { BaseRequest } from "@/requests/base-request"
-import { CacheParams, MiddlewareParams } from "@/types"
+import { BaseRequest } from '@/requests/base-request';
+import { ICache } from '@/types';
 
 interface ICachesController {
-    setCache: (cacheParams:CacheParams) => void;
-    // deleteResponseTrackCallback: (callbackName:string) => void;
+  setCache: (cacheParams: ICache) => void;
+  deleteCache: () => void;
 }
 
-export class CachesController implements ICachesController{
-    // adds cache for each response
-    setCache(cacheParams: CacheParams){
-        try {
-            BaseRequest.caches.push(cacheParams);  
-        } catch (error) {
-            console.error('setResponseTrackCallback gets an error', error);
-        }
+export class CachesController implements ICachesController {
+  // adds cache for each request
+  setCache(cache: ICache) {
+    try {
+      BaseRequest.cache = cache;
+    } catch (error) {
+      console.error('setCache gets an error', error);
     }
+  }
 
-    // remove one of caches
-    deleteCache(cacheName:string){
-        BaseRequest.caches = BaseRequest.caches.filter((cache)=>cache.name !== cacheName);
-    }
+  // remove cache for each request
+  deleteCache() {
+    delete BaseRequest.cache;
+  }
 }
