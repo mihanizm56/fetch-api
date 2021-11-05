@@ -14,7 +14,9 @@ export {
   CustomSelectorDataType,
   SetResponseTrackCallbackOptions,
   ErrorTracingType,
-  BatchResponseType
+  BatchResponseType,
+  ICache,
+  CacheParamsType
 } from './types';
 export { ABORT_REQUEST_EVENT_NAME, OFFLINE_STATUS_CODE } from '@/constants';
 export { ProxyController } from './utils/proxy-controller';
