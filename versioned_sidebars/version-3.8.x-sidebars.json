@@ -144,6 +144,10 @@
         {
           "type": "doc",
           "id": "version-3.8.x/examples/middlewares"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.8.x/examples/caching"
         }
       ]
     }
