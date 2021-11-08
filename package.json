@@ -1,6 +1,6 @@
 {
   "name": "fetch-api",
-  "version": "3.8.3",
+  "version": "3.8.8",
   "private": true,
   "scripts": {
     "start": "docusaurus start --no-open",

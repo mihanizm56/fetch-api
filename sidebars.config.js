@@ -58,6 +58,7 @@ module.exports = {
         "examples/browser-support",
         "examples/request-timeout",
         "examples/proxy-maker",
+        "examples/caching",
       ],
     },
   ],
