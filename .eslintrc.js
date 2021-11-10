@@ -3,7 +3,6 @@ module.exports = {
   extends: [
     'airbnb-base',
     'plugin:prettier/recommended',
-    'prettier/@typescript-eslint',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
     'plugin:security/recommended',
@@ -47,13 +46,22 @@ module.exports = {
         ],
       },
     ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     'no-console': ['error', { allow: ['error', 'info'] }],
     quotes: ['error', 'single'],
     'function-paren-newline': 2,
     'consistent-return': 0,
     '@typescript-eslint/indent': 0, // Conflicts with Prettier
     '@typescript-eslint/explicit-member-accessibility': 0,
-    '@typescript-eslint/interface-name-prefix': ['error', 'always'],
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
@@ -72,7 +80,7 @@ module.exports = {
     'import/resolver': {
       alias: {
         map: [['@', './lib']],
-        extensions: ['.ts'],
+        extensions: ['.ts', '.js'],
       },
     },
   },

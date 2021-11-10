@@ -66,4 +66,4 @@ export const TRACING_ERRORS: Record<
   VALIDATION_ERROR: 'validation-error',
 };
 
-export const ID_REGEX = /^json-rpc_/
+export const ID_REGEX = /^json-rpc_/;

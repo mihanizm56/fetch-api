@@ -15,9 +15,10 @@ interface IResponseFormatValidator {
 
   getIsJSONRPCFormatResponseValid: (params: IJSONRPCPureResponse) => boolean;
 
-  getIsSchemaResponseValid: (
-    params: GetIsSchemaResponseValidParams,
-  ) => { error: boolean; errorText: string };
+  getIsSchemaResponseValid: (params: GetIsSchemaResponseValidParams) => {
+    error: boolean;
+    errorText: string;
+  };
 
   getCompareIds: ({ requestId, responceId }: GetCompareIdsParams) => boolean;
 
@@ -113,14 +114,12 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       return false;
     }
 
-    const {
-      error: isSchemaError,
-      errorText: schemaErrorValue,
-    } = this.getIsSchemaResponseValid({
-      data: response.data,
-      error: response.error,
-      schema,
-    });
+    const { error: isSchemaError, errorText: schemaErrorValue } =
+      this.getIsSchemaResponseValid({
+        data: response.data,
+        error: response.error,
+        schema,
+      });
 
     // if the schema format is not valid
     if (isSchemaError) {
@@ -173,14 +172,12 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       return false;
     }
 
-    const {
-      error: isSchemaError,
-      errorText: schemaErrorValue,
-    } = this.getIsSchemaResponseValid({
-      data: response.result,
-      error: Boolean(response.error),
-      schema,
-    });
+    const { error: isSchemaError, errorText: schemaErrorValue } =
+      this.getIsSchemaResponseValid({
+        data: response.result,
+        error: Boolean(response.error),
+        schema,
+      });
 
     // if the schema format is not valid
     if (isSchemaError) {
@@ -213,14 +210,12 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
       return false;
     }
 
-    const {
-      error: isSchemaError,
-      errorText: schemaErrorValue,
-    } = this.getIsSchemaResponseValid({
-      data: response,
-      error: !isResponseStatusSuccess,
-      schema,
-    });
+    const { error: isSchemaError, errorText: schemaErrorValue } =
+      this.getIsSchemaResponseValid({
+        data: response,
+        error: !isResponseStatusSuccess,
+        schema,
+      });
 
     // if the schema format is not valid
     if (isSchemaError) {

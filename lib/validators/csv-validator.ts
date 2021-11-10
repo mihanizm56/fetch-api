@@ -12,7 +12,7 @@ export class CSVValidator extends FileValidator {
   }
 
   public validateFile = (): Promise<string> =>
-    new Promise(resolve => {
+    new Promise((resolve) => {
       if (Boolean(this.file)) {
         const isFileTypeCSV = this.getValidateFileType(this.FILE_TYPE);
         const isFileNotBigger = this.getValidateFileSize(this.MAX_SIZE_CSV);

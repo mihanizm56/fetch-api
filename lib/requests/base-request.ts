@@ -23,7 +23,6 @@ import {
   MiddlewareParams,
   GetTimeoutExceptionParamsType,
   ICache,
-  CacheParamsType,
   SetResponseFromCacheParamsType,
   GetResponseFromCacheParamsType
 } from "@/types";

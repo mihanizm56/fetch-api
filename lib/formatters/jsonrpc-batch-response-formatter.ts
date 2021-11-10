@@ -17,18 +17,23 @@ type ParamsType = {
   translateFunction?: TranslateFunctionType;
   responseSchema?: Array<any>;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
-  responseHeaders: Record<string,string>;
+  responseHeaders: Record<string, string>;
 };
-
 
 export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
   data: Array<IJSONRPCPureResponse>;
+
   isErrorTextStraightToOutput?: boolean;
+
   statusCode: number;
+
   responseSchema?: Array<any>;
+
   translateFunction?: TranslateFunctionType;
+
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
-  responseHeaders: Record<string,string>;
+
+  responseHeaders: Record<string, string>;
 
   constructor({
     data,
@@ -37,7 +42,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     translateFunction,
     responseSchema,
     body,
-    responseHeaders
+    responseHeaders,
   }: ParamsType) {
     super();
     this.data = data;
@@ -49,33 +54,33 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     this.responseHeaders = responseHeaders;
   }
 
-  getNumberId = (id:number|string): number => {
+  getNumberId = (id: number | string): number => {
     try {
-      if(typeof id === 'number'){
-        return id
+      if (typeof id === 'number') {
+        return id;
       }
 
-      if(ID_REGEX.test(id)){
-        return Number(id.replace(ID_REGEX,''));
+      if (ID_REGEX.test(id)) {
+        return Number(id.replace(ID_REGEX, ''));
       }
 
       return 0;
     } catch (error) {
-      console.error('error in getNumberId',error);
-      return 0
+      console.error('error in getNumberId', error);
+      return 0;
     }
-  }
+  };
 
   getSortedByIDsBatchResponse = (): Array<IJSONRPCPureResponse> => {
-    return this.data.sort((next,prev)=>{
+    return this.data.sort((next, prev) => {
       const prevNumber = this.getNumberId(prev.id);
       const nextNumber = this.getNumberId(next.id);
-    
-      return nextNumber - prevNumber;  
-    })
-  }
 
-  getFormattedData = () =>{
+      return nextNumber - prevNumber;
+    });
+  };
+
+  getFormattedData = () => {
     const sortedData = this.getSortedByIDsBatchResponse();
 
     return sortedData.map((responseItemData, index) => {
@@ -96,7 +101,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
           isErrorTextStraightToOutput: this.isErrorTextStraightToOutput,
           statusCode: dataItemCode,
           translateFunction: this.translateFunction,
-          responseHeaders:this.responseHeaders
+          responseHeaders: this.responseHeaders,
         }).getFormattedResponse();
       }
 
@@ -108,11 +113,10 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
           statusCode: 500,
         },
         statusCode: 500,
-        responseHeaders:this.responseHeaders
+        responseHeaders: this.responseHeaders,
       });
     });
-  }
-
+  };
 
   getFormattedResponse = (): IResponse => {
     const formattedData = this.getFormattedData();
@@ -123,7 +127,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
       data: formattedData,
       additionalErrors: null,
       code: this.statusCode,
-      headers:this.responseHeaders
+      headers: this.responseHeaders,
     };
   };
 }

@@ -24,32 +24,38 @@ interface IResponseStatusValidator {
 export class ResponseStatusValidator implements IResponseStatusValidator {
   static getIsStatusCodeSuccess = (status: number) => status < 400;
 
-  getPureRestStatusIsValid = ({
-    isPureFileRequest,
-    status,
-  }: StatusValidatorMethodParamsType): StatusValidatorMethodOutputType => () => {
-    // for text and blob response does not matter response to parse
-    // but does matter what code we get from the backend
-    // also 404 is useful that can contain some data
-    // and we need to provide that code to the client
+  getPureRestStatusIsValid =
+    ({
+      isPureFileRequest,
+      status,
+    }: StatusValidatorMethodParamsType): StatusValidatorMethodOutputType =>
+    () => {
+      // for text and blob response does not matter response to parse
+      // but does matter what code we get from the backend
+      // also 404 is useful that can contain some data
+      // and we need to provide that code to the client
 
-    return isPureFileRequest
-      ? status === 200 || status === 304 || status === 404
-      : status <= 500;
-  };
+      return isPureFileRequest
+        ? status === 200 || status === 304 || status === 404
+        : status <= 500;
+    };
 
-  getRestStatusIsValid = ({
-    status,
-  }: StatusValidatorMethodParamsType): StatusValidatorMethodOutputType => () => {
-    return status <= 500;
-  };
+  getRestStatusIsValid =
+    ({
+      status,
+    }: StatusValidatorMethodParamsType): StatusValidatorMethodOutputType =>
+    () => {
+      return status <= 500;
+    };
 
-  getJSONRPCStatusIsValid = ({
-    isBatchRequest,
-    status,
-  }: StatusValidatorMethodParamsType): StatusValidatorMethodOutputType => () => {
-    return isBatchRequest ? status < 400 : status <= 500;
-  };
+  getJSONRPCStatusIsValid =
+    ({
+      isBatchRequest,
+      status,
+    }: StatusValidatorMethodParamsType): StatusValidatorMethodOutputType =>
+    () => {
+      return isBatchRequest ? status < 400 : status <= 500;
+    };
 
   getFormatValidateMethod = ({
     requestProtocol,

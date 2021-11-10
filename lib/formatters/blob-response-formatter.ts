@@ -2,13 +2,20 @@ import { ResponseFormatter, IResponse } from '@/types';
 
 export class BlobResponseFormatter extends ResponseFormatter {
   data: Blob;
-  responseHeaders: Record<string,string>;
 
-  constructor({data,responseHeaders}:{data: Blob,responseHeaders: Record<string,string>}) {
+  responseHeaders: Record<string, string>;
+
+  constructor({
+    data,
+    responseHeaders,
+  }: {
+    data: Blob;
+    responseHeaders: Record<string, string>;
+  }) {
     super();
 
     this.data = data;
-    this.responseHeaders = responseHeaders
+    this.responseHeaders = responseHeaders;
   }
 
   getFormattedResponse = (): IResponse => ({
@@ -17,6 +24,6 @@ export class BlobResponseFormatter extends ResponseFormatter {
     data: this.data,
     additionalErrors: null,
     code: 200,
-    headers:this.responseHeaders
+    headers: this.responseHeaders,
   });
 }

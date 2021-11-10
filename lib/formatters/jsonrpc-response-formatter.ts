@@ -10,11 +10,16 @@ import { getOmittedObject } from '@/utils/omit';
 
 export class JSONRPCResponseFormatter extends ResponseFormatter {
   result?: any;
+
   error?: JSONRPCErrorType;
+
   translateFunction?: TranslateFunctionType;
+
   isErrorTextStraightToOutput?: boolean;
+
   statusCode: number;
-  responseHeaders: Record<string,string>;
+
+  responseHeaders: Record<string, string>;
 
   constructor({
     error,
@@ -22,7 +27,7 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     isErrorTextStraightToOutput,
     translateFunction,
     statusCode,
-    responseHeaders
+    responseHeaders,
   }: FormatResponseJSONRPCDataOptionsType) {
     super();
 
@@ -69,6 +74,6 @@ export class JSONRPCResponseFormatter extends ResponseFormatter {
     data: this.result || {},
     additionalErrors: this.getAdditionalErrors(this.error),
     code: this.statusCode,
-    headers: this.responseHeaders
+    headers: this.responseHeaders,
   });
 }

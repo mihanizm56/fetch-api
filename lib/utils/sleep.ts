@@ -1,5 +1,5 @@
 export const sleep = (ms: number) =>
-  new Promise(res => {
+  new Promise((res) => {
     setTimeout(() => {
       res(null);
     }, ms);

@@ -2,9 +2,16 @@ import { ResponseFormatter, IResponse } from '@/types';
 
 export class TextResponseFormatter extends ResponseFormatter {
   data: string;
-  responseHeaders: Record<string,string>;
 
-  constructor({data,responseHeaders}:{data: string,responseHeaders: Record<string,string>;}) {
+  responseHeaders: Record<string, string>;
+
+  constructor({
+    data,
+    responseHeaders,
+  }: {
+    data: string;
+    responseHeaders: Record<string, string>;
+  }) {
     super();
 
     this.data = data;
@@ -17,6 +24,6 @@ export class TextResponseFormatter extends ResponseFormatter {
     data: this.data,
     additionalErrors: null,
     code: 200,
-    headers:this.responseHeaders
+    headers: this.responseHeaders,
   });
 }

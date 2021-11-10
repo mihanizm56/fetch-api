@@ -13,10 +13,65 @@ export type ErrorTracingType =
 
 export type ModeCorsType = 'cors' | 'no-cors';
 
+export type QueryParamsType = {
+  [key: string]: string | number | Array<any> | boolean;
+};
+
+export interface IResponse {
+  error: boolean;
+  errorText: string;
+  data: any;
+  additionalErrors: Record<string, any> | null;
+  code: number;
+  headers: Record<string, string>;
+}
+
+export type CacheParamsType = {
+  endpoint: string;
+  method: Pick<RequestInit, 'method'>;
+  requestBody: Pick<RequestInit, 'body'>;
+  requestHeaders: Record<string, string>;
+  requestCookies: string;
+};
+export interface ICache {
+  getFromCache: (params: CacheParamsType) => Promise<IResponse | null>;
+  setToCache: (params: CacheParamsType & { response: IResponse }) => void;
+}
+
+export type ResponseValidateType = {
+  response: any;
+  schema: any;
+  prevId?: string;
+};
+
+export type ExtraValidationCallbackType = (
+  options: ResponseValidateType,
+) => boolean;
+
 export type TranslateFunctionType = (
   key: string,
   options?: Record<string, any> | null,
 ) => string;
+
+export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
+
+export type ProgressCallbackParams = ({
+  total,
+  current,
+}: {
+  total: number;
+  current: number;
+}) => void;
+
+export type ProgressOptionsType = {
+  onLoaded?: (total: number) => void;
+  onProgress?: ProgressCallbackParams;
+};
+
+export type CustomSelectorDataType = (
+  responseData: any,
+  selectData?: string,
+) => any;
 
 export type SetResponseTrackCallbackOptions = {
   endpoint: string;
@@ -37,130 +92,18 @@ export type SetResponseTrackCallbackOptions = {
 export type SetResponseTrackCallback = (
   options: SetResponseTrackCallbackOptions,
 ) => void;
+
 export type SetResponseTrackOptions = {
   callback: SetResponseTrackCallback;
   name: string;
 };
 
-export type PersistentFetchOptionsCallback = (
-  params: RequestInit &
-    Pick<IRequestParams, 'headers' | 'endpoint' | 'parseType'>,
-) => PersistentFetchParamsType;
-export type SetResponsePersistentParamsOptions = {
-  callback: PersistentFetchOptionsCallback;
-  name: string;
-};
-
-export type TraceBaseRequestParamsType = {
-  traceRequestCallback?: SetResponseTrackCallback;
-  response: Response | null;
-  requestError?: boolean;
-  validationError?: boolean;
-  responseError?: boolean;
-  requestBody: Pick<RequestInit, 'body'>;
-  requestHeaders: Record<string, string>;
-  requestCookies: string;
-  responseBody: any; // because we dont know about response body type yet
-  formattedResponse: IResponse;
-  endpoint: string;
-  method: Pick<RequestInit, 'method'>;
-  code: number;
-  tracingDisabled?: boolean;
-};
-
-export type AdditionalErrors = Record<string, any>;
-
-export type IJSONPRCRequestBodyParams = {
-  method?: string;
-  params?: string | number | Array<any> | Record<string, any>;
-};
-
-export type IJSONPRCRequestFormattedBodyParams = IJSONPRCRequestBodyParams & {
-  id: string;
-  jsonrpc: string;
-};
-
-export interface IJSONPRCRequestParams extends IRequestParams {
-  id: string;
-  version: {
-    jsonrpc: string;
-  };
-  body?: IJSONPRCRequestBodyParams | Array<IJSONPRCRequestBodyParams>;
-  responseSchema?: any | Array<any>;
-}
-
-export type FormatResponseRESTDataOptionsType = {
-  isErrorTextStraightToOutput?: boolean;
-  translateFunction?: TranslateFunctionType;
-  statusCode: number;
-  responseHeaders: Record<string, string>;
-} & IRESTPureResponse;
-
-export type FormatResponsePureRESTDataOptionsType = {
-  isErrorTextStraightToOutput?: boolean;
-  translateFunction?: TranslateFunctionType;
-  statusCode: number;
-  data: any; // data here is pure response parsed data
-  responseHeaders: Record<string, string>;
-};
-
-export type FormatResponseJSONRPCDataOptionsType = {
-  isErrorTextStraightToOutput?: boolean;
-  translateFunction?: TranslateFunctionType;
-  statusCode: number;
-  responseHeaders: Record<string, string>;
-} & IJSONRPCPureResponse;
-
-export type ResponseValidateType = {
-  response: any;
-  schema: any;
-  prevId?: string;
-};
-
-export type ExtraValidationCallbackType = (
-  options: ResponseValidateType,
-) => boolean;
-
-export type CacheType =
-  | 'default'
-  | 'force-cache'
-  | 'no-cache'
-  | 'no-store'
-  | 'only-if-cached'
-  | 'reload';
-
-export type ProgressCallbackParams = ({
-  total,
-  current,
-}: {
-  total: number;
-  current: number;
-}) => void;
-
-export const cacheMap: ICacheMap = {
-  default: 'default',
-  forceCache: 'force-cache',
-  noCache: 'no-cache',
-  noStore: 'no-store',
-  onlyIfCached: 'only-if-cached',
-  reload: 'reload',
-};
-
-export type CustomSelectorDataType = (
-  responseData: any,
-  selectData?: string,
-) => any;
-
-export type FetchMethodType =
-  | 'GET'
-  | 'POST'
-  | 'PUT'
-  | 'PATCH'
-  | 'UPDATE'
-  | 'DELETE';
+export type ExtraVerifyRetryCallbackType = (params: {
+  formattedResponseData: IResponse;
+}) => boolean;
 
 export interface IRequestParams extends RequestInit {
-  headers?: { [key: string]: string };
+  headers?: Record<string, string>;
   body?: any;
   endpoint: string;
   parseType?: keyof typeof parseTypesMap;
@@ -188,20 +131,57 @@ export interface IRequestParams extends RequestInit {
   requestCache?: ICache;
 }
 
-export interface IResponse {
-  error: boolean;
-  errorText: string;
-  data: any;
-  additionalErrors: Record<string, any> | null;
-  code: number;
-  headers: Record<string, string>;
+export type IJSONPRCRequestBodyParams = {
+  method?: string;
+  params?: string | number | Array<any> | Record<string, any>;
+};
+export interface IJSONPRCRequestParams extends IRequestParams {
+  id: string;
+  version: {
+    jsonrpc: string;
+  };
+  body?: IJSONPRCRequestBodyParams | Array<IJSONPRCRequestBodyParams>;
+  responseSchema?: any | Array<any>;
 }
 
-export type IUtilResponse<DataType> = Omit<IResponse, 'data'> & {
-  data: DataType;
+export type PersistentFetchParamsType = Pick<
+  IRequestParams & Partial<IJSONPRCRequestParams>,
+  'headers' | 'body' | 'mode' | 'method'
+>;
+
+export type PersistentFetchOptionsCallback = (
+  params: RequestInit &
+    Pick<IRequestParams, 'headers' | 'endpoint' | 'parseType'>,
+) => PersistentFetchParamsType;
+
+export type SetResponsePersistentParamsOptions = {
+  callback: PersistentFetchOptionsCallback;
+  name: string;
 };
 
-export type BatchResponseType = Array<IResponse>;
+export type TraceBaseRequestParamsType = {
+  traceRequestCallback?: SetResponseTrackCallback;
+  response: Response | null;
+  requestError?: boolean;
+  validationError?: boolean;
+  responseError?: boolean;
+  requestBody: Pick<RequestInit, 'body'>;
+  requestHeaders: Record<string, string>;
+  requestCookies: string;
+  responseBody: any; // because we dont know about response body type yet
+  formattedResponse: IResponse;
+  endpoint: string;
+  method: Pick<RequestInit, 'method'>;
+  code: number;
+  tracingDisabled?: boolean;
+};
+
+export type AdditionalErrors = Record<string, any>;
+
+export type IJSONPRCRequestFormattedBodyParams = IJSONPRCRequestBodyParams & {
+  id: string;
+  jsonrpc: string;
+};
 
 export interface IRESTPureResponse {
   error: boolean;
@@ -209,6 +189,21 @@ export interface IRESTPureResponse {
   data: Record<string, any> | null;
   additionalErrors: AdditionalErrors | null;
 }
+
+export type FormatResponseRESTDataOptionsType = {
+  isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunctionType;
+  statusCode: number;
+  responseHeaders: Record<string, string>;
+} & IRESTPureResponse;
+
+export type FormatResponsePureRESTDataOptionsType = {
+  isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunctionType;
+  statusCode: number;
+  data: any; // data here is pure response parsed data
+  responseHeaders: Record<string, string>;
+};
 
 export type JSONRPCErrorType = {
   code: string;
@@ -227,9 +222,43 @@ export interface IJSONRPCPureResponse {
   id: string | number;
 }
 
-export type QueryParamsType = {
-  [key: string]: string | number | Array<any> | boolean;
+export type FormatResponseJSONRPCDataOptionsType = {
+  isErrorTextStraightToOutput?: boolean;
+  translateFunction?: TranslateFunctionType;
+  statusCode: number;
+  responseHeaders: Record<string, string>;
+} & IJSONRPCPureResponse;
+
+export type CacheType =
+  | 'default'
+  | 'force-cache'
+  | 'no-cache'
+  | 'no-store'
+  | 'only-if-cached'
+  | 'reload';
+
+export const cacheMap: ICacheMap = {
+  default: 'default',
+  forceCache: 'force-cache',
+  noCache: 'no-cache',
+  noStore: 'no-store',
+  onlyIfCached: 'only-if-cached',
+  reload: 'reload',
 };
+
+export type FetchMethodType =
+  | 'GET'
+  | 'POST'
+  | 'PUT'
+  | 'PATCH'
+  | 'UPDATE'
+  | 'DELETE';
+
+export type IUtilResponse<DataType> = Omit<IResponse, 'data'> & {
+  data: DataType;
+};
+
+export type BatchResponseType = Array<IResponse>;
 
 export type RequestRacerParams = {
   request: Promise<IResponse>;
@@ -238,11 +267,6 @@ export type RequestRacerParams = {
   isErrorTextStraightToOutput?: boolean;
   translateFunction?: TranslateFunctionType;
   customTimeout?: number;
-};
-
-export type ProgressOptionsType = {
-  onLoaded?: (total: number) => void;
-  onProgress?: ProgressCallbackParams;
 };
 
 export type ParseResponseParams = {
@@ -257,8 +281,6 @@ export type ParseResponseParams = {
 export abstract class ResponseParser {
   public abstract parse: (data: Response, options?: Record<string, any>) => any;
 }
-
-export type ArrayFormatType = 'bracket' | 'index' | 'comma' | 'none';
 
 export type FormattedEndpointParams = {
   endpoint: string;
@@ -355,18 +377,6 @@ export type SetResponseFromCacheParamsType = GetResponseFromCacheParamsType & {
   response: IResponse;
 };
 
-export type CacheParamsType = {
-  endpoint: string;
-  method: Pick<RequestInit, 'method'>;
-  requestBody: Pick<RequestInit, 'body'>;
-  requestHeaders: Record<string, string>;
-  requestCookies: string;
-};
-export interface ICache {
-  getFromCache: (params: CacheParamsType) => Promise<IResponse | null>;
-  setToCache: (params: CacheParamsType & { response: IResponse }) => void;
-}
-
 export type GetCompareIdsParams = { requestId: string; responceId: string };
 
 export type GetIsSchemaResponseValidParams = {
@@ -396,11 +406,6 @@ export type GetTimeoutExceptionParamsType = {
 export abstract class ResponseFormatter {
   public abstract getFormattedResponse: () => IResponse;
 }
-
-export type PersistentFetchParamsType = Pick<
-  IRequestParams & Partial<IJSONPRCRequestParams>,
-  'headers' | 'body' | 'mode' | 'method'
->;
 
 export type FormatResponseParamsType = {
   parseType: keyof typeof parseTypesMap;
@@ -497,10 +502,6 @@ export type StatusValidatorMethodParamsType = Omit<
 >;
 
 export type StatusValidatorMethodOutputType = () => boolean;
-
-export type ExtraVerifyRetryCallbackType = (params: {
-  formattedResponseData: IResponse;
-}) => boolean;
 
 export abstract class Formatter<DataType, FormatType> {
   public abstract getFormattedValue: (data: DataType) => FormatType;

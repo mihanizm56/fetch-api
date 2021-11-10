@@ -6,4 +6,8 @@ lib/requests/rest-request.ts
 lib/requests/pure-rest-request.ts
 lib/requests/json-rpc-request.ts
 lib/utils/fetch-proxy-maker/index.ts
+lib/utils/cache-controller/index.ts
+lib/utils/dependency-controller/index.ts
+lib/utils/middleware-controller/index.ts
+lib/utils/proxy-controller/index.ts
 !**/.*

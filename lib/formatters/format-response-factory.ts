@@ -28,14 +28,14 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     isBatchRequest,
     body,
     responseSchema,
-    responseHeaders
-  }: FormatResponseParamsType): ResponseFormatter => {    
+    responseHeaders,
+  }: FormatResponseParamsType): ResponseFormatter => {
     if (parseType === parseTypesMap.blob) {
-      return new BlobResponseFormatter({data,responseHeaders});
+      return new BlobResponseFormatter({ data, responseHeaders });
     }
 
     if (parseType === parseTypesMap.text) {
-      return new TextResponseFormatter({data,responseHeaders});
+      return new TextResponseFormatter({ data, responseHeaders });
     }
 
     if (protocol === requestProtocolsMap.jsonRpc) {
@@ -47,7 +47,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           statusCode,
           body,
           responseSchema,
-          responseHeaders
+          responseHeaders,
         });
       }
 
@@ -61,7 +61,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
         translateFunction,
         isErrorTextStraightToOutput,
         statusCode,
-        responseHeaders
+        responseHeaders,
       });
     }
 
@@ -71,7 +71,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
         statusCode,
         translateFunction,
         data,
-        responseHeaders
+        responseHeaders,
       });
     }
 
@@ -83,7 +83,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
       translateFunction,
       isErrorTextStraightToOutput,
       statusCode,
-      responseHeaders
+      responseHeaders,
     });
   };
 }
