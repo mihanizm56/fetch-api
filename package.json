@@ -1,12 +1,9 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.8.9",
+  "version": "3.8.10",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "engines": {
-    "node": ">=12 <13"
-  },
   "scripts": {
     "install": "node config/install/mark.js",
     "server": "node integrational-tests/setup/runner.js",
