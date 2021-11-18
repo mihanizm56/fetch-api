@@ -124,6 +124,7 @@ export interface IRequestParams extends RequestInit {
   tracingDisabled?: boolean;
   cacheIsDisabled?: boolean;
   middlewaresAreDisabled?: boolean;
+  proxyPersistentOptionsAreDisabled?: boolean;
   pureJsonFileResponse?: boolean;
   extraVerifyRetry?: ExtraVerifyRetryCallbackType;
   retryTimeInterval?: number;
@@ -203,6 +204,12 @@ export type FormatResponsePureRESTDataOptionsType = {
   statusCode: number;
   data: any; // data here is pure response parsed data
   responseHeaders: Record<string, string>;
+};
+
+export type GetFetchParamsType = {
+  params: RequestInit &
+    Pick<IRequestParams, 'headers' | 'endpoint' | 'parseType'>;
+  proxyPersistentOptionsAreDisabled?: boolean;
 };
 
 export type JSONRPCErrorType = {
@@ -311,6 +318,7 @@ export type GetIsomorphicFetchParamsType = {
   fetchParams: RequestInit &
     Pick<IRequestParams, 'headers' | 'endpoint' | 'parseType'>;
   abortRequestId?: string;
+  proxyPersistentOptionsAreDisabled?: boolean;
 };
 
 export type GetFetchBodyParamsType = {

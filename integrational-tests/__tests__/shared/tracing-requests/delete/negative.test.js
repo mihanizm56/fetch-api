@@ -33,11 +33,11 @@ describe('traceRequestCallback DELETE negative tests', () => {
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/negative?internalerror=true',
-      traceRequestCallback: setResponseTrackCallbackOptions => {
+      traceRequestCallback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       isErrorTextStraightToOutput: false,
-      translateFunction: text => text,
+      translateFunction: (text) => text,
       body: {
         foo: 'bar',
       },
@@ -85,11 +85,11 @@ describe('traceRequestCallback DELETE negative tests', () => {
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/negative?notfoundwithoutbody=true',
-      traceRequestCallback: setResponseTrackCallbackOptions => {
+      traceRequestCallback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       isErrorTextStraightToOutput: false,
-      translateFunction: text => text,
+      translateFunction: (text) => text,
       body: {
         foo: 'bar',
       },
@@ -144,7 +144,7 @@ describe('traceRequestCallback DELETE negative tests', () => {
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/negative?notfoundwithbody=true',
-      traceRequestCallback: setResponseTrackCallbackOptions => {
+      traceRequestCallback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       isErrorTextStraightToOutput: true,
@@ -202,7 +202,7 @@ describe('traceRequestCallback DELETE negative tests', () => {
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/negative',
-      traceRequestCallback: setResponseTrackCallbackOptions => {
+      traceRequestCallback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       isErrorTextStraightToOutput: true,
@@ -259,7 +259,7 @@ describe('traceRequestCallback DELETE negative tests', () => {
     const requestConfig = {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/positive',
-      traceRequestCallback: setResponseTrackCallbackOptions => {
+      traceRequestCallback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       responseSchema: Joi.object({
@@ -335,14 +335,14 @@ describe('ProxyController negative tests', () => {
       ...requestBaseConfig,
       endpoint: 'http://127.0.0.1:8080/rest/negative?internalerror=true',
       isErrorTextStraightToOutput: false,
-      translateFunction: text => text,
+      translateFunction: (text) => text,
       body: {
         foo: 'bar',
       },
     };
 
     new ProxyController().setResponseTrackCallback({
-      callback: setResponseTrackCallbackOptions => {
+      callback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       name: 'test',
@@ -395,7 +395,7 @@ describe('ProxyController negative tests', () => {
     };
 
     new ProxyController().setResponseTrackCallback({
-      callback: setResponseTrackCallbackOptions => {
+      callback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       name: 'test',
@@ -456,7 +456,7 @@ describe('ProxyController negative tests', () => {
     };
 
     new ProxyController().setResponseTrackCallback({
-      callback: setResponseTrackCallbackOptions => {
+      callback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       name: 'test',
@@ -518,7 +518,7 @@ describe('ProxyController negative tests', () => {
     };
 
     new ProxyController().setResponseTrackCallback({
-      callback: setResponseTrackCallbackOptions => {
+      callback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       name: 'test',
@@ -587,7 +587,7 @@ describe('ProxyController negative tests', () => {
     };
 
     new ProxyController().setResponseTrackCallback({
-      callback: setResponseTrackCallbackOptions => {
+      callback: (setResponseTrackCallbackOptions) => {
         resultOptions = { ...setResponseTrackCallbackOptions };
       },
       name: 'test',

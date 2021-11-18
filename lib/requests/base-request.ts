@@ -24,7 +24,8 @@ import {
   GetTimeoutExceptionParamsType,
   ICache,
   SetResponseFromCacheParamsType,
-  GetResponseFromCacheParamsType
+  GetResponseFromCacheParamsType,
+  GetFetchParamsType
 } from "@/types";
 import { isNode } from '@/utils/is-node';
 import {
@@ -159,9 +160,12 @@ export class BaseRequest implements IBaseRequest {
     }
   };
 
-  getFetchParams = (params:RequestInit & Pick<IRequestParams, 'headers'|'endpoint'|'parseType'>):RequestInit => {
-    if(!BaseRequest.persistentOptionsGetters?.length){
-      return params
+  getFetchParams = ({
+    proxyPersistentOptionsAreDisabled,
+    params
+  }: GetFetchParamsType): RequestInit => {
+    if(!BaseRequest.persistentOptionsGetters?.length || proxyPersistentOptionsAreDisabled) {
+      return params;
     }
 
     return BaseRequest.persistentOptionsGetters.reduce((acc:RequestInit, { callback }) => {
@@ -182,8 +186,12 @@ export class BaseRequest implements IBaseRequest {
     endpoint,
     fetchParams,
     abortRequestId,
+    proxyPersistentOptionsAreDisabled
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    const requestParams = this.getFetchParams(fetchParams);
+    const requestParams = this.getFetchParams({
+      params:fetchParams,
+      proxyPersistentOptionsAreDisabled
+    });
 
     if (isNode()) {
       const requestFetch = (
@@ -531,6 +539,7 @@ export class BaseRequest implements IBaseRequest {
       retryTimeInterval,
       retryIntervalNonIncrement,
       middlewaresAreDisabled,
+      proxyPersistentOptionsAreDisabled,
       cacheIsDisabled,
       requestCache
     } = mainParams;
@@ -583,7 +592,8 @@ export class BaseRequest implements IBaseRequest {
     const { requestFetch, fetchController } = this.getIsomorphicFetch({
       endpoint: formattedEndpoint,
       abortRequestId,
-      fetchParams
+      fetchParams,
+      proxyPersistentOptionsAreDisabled
     });
 
     const getRequest = async (retryCounter?: number): Promise<IResponse> => {

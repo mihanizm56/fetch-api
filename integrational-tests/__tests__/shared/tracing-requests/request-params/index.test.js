@@ -18,7 +18,7 @@ describe('Tracing request params tests', () => {
       const requestConfig = {
         ...requestBaseConfig,
         endpoint: 'http://127.0.0.1:8080/rest/positive',
-        traceRequestCallback: setResponseTrackCallbackOptions => {
+        traceRequestCallback: (setResponseTrackCallbackOptions) => {
           resultOptions = { ...setResponseTrackCallbackOptions };
         },
         body: {
@@ -55,7 +55,7 @@ describe('Tracing request params tests', () => {
         body: {
           test: '123',
         },
-        traceRequestCallback: setResponseTrackCallbackOptions => {
+        traceRequestCallback: (setResponseTrackCallbackOptions) => {
           resultOptions = { ...setResponseTrackCallbackOptions };
         },
       };
@@ -83,7 +83,7 @@ describe('Tracing request params tests', () => {
       };
 
       new ProxyController().setResponseTrackCallback({
-        callback: setResponseTrackCallbackOptions => {
+        callback: (setResponseTrackCallbackOptions) => {
           resultOptions = { ...setResponseTrackCallbackOptions };
         },
         name: 'test',
@@ -117,7 +117,7 @@ describe('Tracing request params tests', () => {
       };
 
       new ProxyController().setResponseTrackCallback({
-        callback: setResponseTrackCallbackOptions => {
+        callback: (setResponseTrackCallbackOptions) => {
           resultOptions = { ...setResponseTrackCallbackOptions };
         },
         name: 'test',
