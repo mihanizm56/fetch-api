@@ -442,6 +442,8 @@ export type GetFormattedErrorTextResponseParams = {
   errorDictionaryParams: ErrorResponseFormatterConstructorParams;
   statusCode: number;
   responseHeaders: Record<string, string>;
+  userAbortedRequest?: boolean;
+  pureResponseErrorMessage?: string;
 };
 
 export type FormatValidateParams = {

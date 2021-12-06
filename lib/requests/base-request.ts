@@ -54,6 +54,7 @@ import { checkToDoRetry } from "@/utils/check-todo-retry";
 import { HeadersFormatter } from "@/formatters/headers-formatter";
 import { getSleepTimeBeforeRetry } from "@/utils/get-sleep-time-before-retry";
 import { sleep } from "@/utils/sleep";
+import { getIsAbortRequestError } from "@/utils/get-is-abort-request-error";
 
 interface IBaseRequest {
   makeFetch: (
@@ -779,8 +780,9 @@ export class BaseRequest implements IBaseRequest {
         throw new Error(validationErrorMessage);
       })
       .catch(async(error: Error) => {
+        const userAbortedRequest = getIsAbortRequestError(error.message);
         const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY;
-        
+
         // check if needs to retry request   
         if (typeof retry !== 'undefined' && 
             typeof retryCounter !== 'undefined' && 
@@ -799,6 +801,7 @@ export class BaseRequest implements IBaseRequest {
           endpoint,
           errorRequestMessage,
           fetchBody,
+          userAbortedRequest
         });
 
         // check if there was no connection
@@ -808,12 +811,15 @@ export class BaseRequest implements IBaseRequest {
         const formattedResponseError = new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
             translateFunction,
+            // todo create message in one place
             errorTextKey: errorRequestMessage,
             isErrorTextStraightToOutput,
             statusCode: errorCode,
           },
           statusCode: errorCode,
-          responseHeaders: this.responseHeaders
+          responseHeaders: this.responseHeaders,
+          userAbortedRequest,
+          pureResponseErrorMessage: error.message
         });
         
         const proxyBaseParams = {
