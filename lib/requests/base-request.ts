@@ -781,7 +781,9 @@ export class BaseRequest implements IBaseRequest {
       })
       .catch(async(error: Error) => {
         const userAbortedRequest = getIsAbortRequestError(error.message);
-        const errorRequestMessage = isErrorTextStraightToOutput ? error.message : NETWORK_ERROR_KEY;
+        const errorRequestMessage = isErrorTextStraightToOutput || userAbortedRequest 
+          ? error.message 
+          : NETWORK_ERROR_KEY;
 
         // check if needs to retry request   
         if (typeof retry !== 'undefined' && 
@@ -811,15 +813,13 @@ export class BaseRequest implements IBaseRequest {
         const formattedResponseError = new ErrorResponseFormatter().getFormattedErrorResponse({
           errorDictionaryParams: {
             translateFunction,
-            // todo create message in one place
             errorTextKey: errorRequestMessage,
             isErrorTextStraightToOutput,
             statusCode: errorCode,
+            userAbortedRequest
           },
           statusCode: errorCode,
           responseHeaders: this.responseHeaders,
-          userAbortedRequest,
-          pureResponseErrorMessage: error.message
         });
         
         const proxyBaseParams = {

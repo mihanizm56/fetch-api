@@ -22,8 +22,9 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     errorTextData,
     translateFunction,
     statusCode,
+    userAbortedRequest,
   }: ErrorResponseFormatterConstructorParams): string => {
-    if (isErrorTextStraightToOutput) {
+    if (isErrorTextStraightToOutput || userAbortedRequest) {
       return errorTextKey;
     }
 
@@ -49,27 +50,14 @@ export class ErrorResponseFormatter implements IErrorResponseFormatter {
     errorDictionaryParams,
     statusCode,
     responseHeaders,
-    userAbortedRequest,
-    pureResponseErrorMessage = '',
   }: GetFormattedErrorTextResponseParams): IResponse => {
-    const baseParams = {
+    return {
       error: true,
+      errorText: this.getFormattedErrorTextResponse(errorDictionaryParams),
       data: {},
       additionalErrors: errorDictionaryParams.errorTextData || null,
       code: statusCode,
       headers: responseHeaders,
-    };
-
-    if (userAbortedRequest) {
-      return {
-        ...baseParams,
-        errorText: pureResponseErrorMessage,
-      };
-    }
-
-    return {
-      ...baseParams,
-      errorText: this.getFormattedErrorTextResponse(errorDictionaryParams),
     };
   };
 }

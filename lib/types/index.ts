@@ -301,6 +301,7 @@ export type ErrorResponseFormatterConstructorParams = {
   errorTextData?: Record<string, any> | null;
   translateFunction?: TranslateFunctionType;
   statusCode: number;
+  userAbortedRequest?: boolean;
 };
 
 export type FormatDataTypeValidatorParamsType = {
@@ -443,7 +444,6 @@ export type GetFormattedErrorTextResponseParams = {
   statusCode: number;
   responseHeaders: Record<string, string>;
   userAbortedRequest?: boolean;
-  pureResponseErrorMessage?: string;
 };
 
 export type FormatValidateParams = {
