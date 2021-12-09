@@ -1,7 +1,7 @@
 import {
   IRequestParams,
 } from "@/types";
-import { parseTypesMap, requestProtocolsMap } from "@/constants";
+import { requestProtocolsMap } from "@/constants";
 import { BaseRequest } from "./base-request";
 
 export class PureRestRequest extends BaseRequest {
@@ -17,35 +17,43 @@ export class PureRestRequest extends BaseRequest {
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public postRequest = (requestParams: IRequestParams) =>
+  public postRequest = (requestParams: Omit<
+    IRequestParams,
+    "method" | "requestProtocol"
+  >) =>
     this.makeFetch({
       ...requestParams,
       method: "POST",
-      parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public putRequest = (requestParams: IRequestParams) =>
+  public putRequest = (requestParams: Omit<
+    IRequestParams,
+    "method" | "requestProtocol"
+  >) =>
     this.makeFetch({
       ...requestParams,
       method: "PUT",
-      parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public patchRequest = (requestParams: IRequestParams) =>
+  public patchRequest = (requestParams: Omit<
+    IRequestParams,
+    "method" | "requestProtocol"
+  >) =>
     this.makeFetch({
       ...requestParams,
       method: "PATCH",
-      parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 
-  public deleteRequest = (requestParams: IRequestParams) =>
+  public deleteRequest = (requestParams: Omit<
+    IRequestParams,
+    "method" | "requestProtocol"
+  >) =>
     this.makeFetch({
       ...requestParams,
       method: "DELETE",
-      parseType: parseTypesMap.json,
       requestProtocol: requestProtocolsMap.pureRest,
     });
 }
