@@ -17,13 +17,17 @@ export type QueryParamsType = {
   [key: string]: string | number | Array<any> | boolean;
 };
 
-export interface IResponse {
+export interface IResponse<
+  DataType = any,
+  HeadersType = Record<string, string>,
+  AdditionalErrorsType = Record<string, any>,
+> {
   error: boolean;
   errorText: string;
-  data: any;
-  additionalErrors: Record<string, any> | null;
+  data: DataType;
+  additionalErrors: AdditionalErrorsType | null;
   code: number;
-  headers: Record<string, string>;
+  headers: HeadersType;
 }
 
 export type CacheParamsType = {
