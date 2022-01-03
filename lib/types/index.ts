@@ -395,7 +395,20 @@ export type GetCompareIdsParams = { requestId: string; responceId: string };
 export type GetIsSchemaResponseValidParams = {
   data: any;
   error: boolean;
-  schema: any;
+  schema: {
+    validate: (
+      data: any,
+      params: {
+        allowUnknown: boolean;
+        abortEarly: boolean;
+        [key: string]: any;
+      },
+    ) => {
+      error: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
 };
 
 export type MiddlewareParams = {
