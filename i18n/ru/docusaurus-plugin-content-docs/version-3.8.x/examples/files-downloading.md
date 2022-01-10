@@ -12,7 +12,6 @@ import Link from '@docusaurus/Link';
 
 
 #### pureJsonFileResponse 
-  - используется в связке с PureRestRequest (getRequest)
   - отключает заголовок Content-type
   - разрешает только 200,304,404 коды ответа
   - отключает валидации по схемам
