@@ -59,6 +59,7 @@ module.exports = {
         "examples/request-timeout",
         "examples/proxy-maker",
         "examples/caching",
+        "examples/files-downloading",
       ],
     },
   ],

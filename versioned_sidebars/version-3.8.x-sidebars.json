@@ -148,6 +148,10 @@
         {
           "type": "doc",
           "id": "version-3.8.x/examples/caching"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.8.x/examples/files-downloading"
         }
       ]
     }
