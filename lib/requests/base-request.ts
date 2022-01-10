@@ -545,7 +545,9 @@ export class BaseRequest implements IBaseRequest {
       requestCache
     } = mainParams;
 
-    const isPureFileRequest = parseType === parseTypesMap.blob || parseType === parseTypesMap.text || Boolean(pureJsonFileResponse);
+    const isPureFileRequest = parseType === parseTypesMap.blob || 
+      parseType === parseTypesMap.text || 
+      Boolean(pureJsonFileResponse);
 
     const cacheNoStore = cache === 'no-store' || cache ==='no-cache';
 
