@@ -135,7 +135,19 @@ export class BaseRequest implements IBaseRequest {
       }
 
       return await responseDataParser.parse(response)
-    } catch (error) {
+    } catch (error: any) {
+      // there may be the situation when response was given but aborted during parsing
+      // and we should not throw NETWORK_ERROR_KEY
+      // but throw pure error to be cathed in .catch block below with necessary logs
+      const userAbortedRequest = getIsAbortRequestError(error.message);
+
+      if(userAbortedRequest) {
+        console.error('CHECK',error.message);
+        
+        throw new Error(error);
+      }
+
+      // regular error catching
       console.error('(fetch-api): can not parse the response', error);
 
       throw new Error(NETWORK_ERROR_KEY)

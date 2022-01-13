@@ -1,13 +1,9 @@
-import {
-  ABORTED_ERROR_TEXT_CHROME,
-  ABORTED_ERROR_TEXT_MOZILLA,
-  ABORTED_ERROR_TEXT_SAFARI,
-} from '@/constants';
+// The user aborted a request - CHROME
+// The operation was aborted - MOZILLA
+// Fetch is aborted - SAFARI
 
 export const getIsAbortRequestError = (message: string) => {
-  return (
-    message === ABORTED_ERROR_TEXT_CHROME ||
-    message === ABORTED_ERROR_TEXT_MOZILLA ||
-    message === ABORTED_ERROR_TEXT_SAFARI
+  return /(The user aborted a request)|(The operation was aborted)|(Fetch is aborted)/.test(
+    message,
   );
 };
