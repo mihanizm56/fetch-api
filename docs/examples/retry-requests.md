@@ -27,3 +27,36 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
     retry: 3
   });
 ```
+
+
+You can use extraVerifyRetry param - that is callback with IResponse response type as params. There you can create different contitionals to retry requests on different situations. For example, if you need to retry request if response code not 401:
+
+
+```javascript
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+import { ExtraVerifyRetryCallbackType } from '@mihanizm56/fetch-api/dist/types';
+
+export const extraVerifyNotAuthRetry: ExtraVerifyRetryCallbackType = ({
+  formattedResponseData: { code, error },
+}) => {
+  if (!error) {
+    return false;
+  }
+
+  if (code === 401) {
+    return false;
+  }
+
+  return true;
+};
+
+
+export const getWhateverRequest = (someData): Promise<IResponse> =>
+  new RestRequest().getRequest({
+    endpoint: "http://localhost:3000",
+    responseSchema: Joi.object({
+      test_string_field: Joi.string().required(),
+    }),
+    retry: 3,
+    extraVerifyRetry: extraVerifyNotAuthRetry,
+  });

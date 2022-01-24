@@ -26,3 +26,36 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
 |-------timeoutValue--------|
 
 |--retry1--retry2--retry3--|
+
+
+Вы можете использовать параметр extraVerifyRetry - это коллбек с типом ответа IResponse в качестве параметра. Там вы можете создавать разные условия для повторных запросов в разных ситуациях. Например, если вам нужно повторить запрос, если код ответа не 401:
+
+
+```javascript
+import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+import { ExtraVerifyRetryCallbackType } from '@mihanizm56/fetch-api/dist/types';
+
+export const extraVerifyNotAuthRetry: ExtraVerifyRetryCallbackType = ({
+  formattedResponseData: { code, error },
+}) => {
+  if (!error) {
+    return false;
+  }
+
+  if (code === 401) {
+    return false;
+  }
+
+  return true;
+};
+
+
+export const getWhateverRequest = (someData): Promise<IResponse> =>
+  new RestRequest().getRequest({
+    endpoint: "http://localhost:3000",
+    responseSchema: Joi.object({
+      test_string_field: Joi.string().required(),
+    }),
+    retry: 3,
+    extraVerifyRetry: extraVerifyNotAuthRetry,
+  });
