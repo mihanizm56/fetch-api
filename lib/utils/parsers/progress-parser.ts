@@ -81,6 +81,9 @@ export const progressParse = async (
 };
 
 export class ProgressParser extends ResponseParser {
-  parse = (data: Response, options: ProgressParseOptionsType) =>
-    progressParse(data, options);
+  parse = (data: Response, options: ProgressParseOptionsType) =>{
+
+    return     progressParse(data, options);
+  }
+
 }

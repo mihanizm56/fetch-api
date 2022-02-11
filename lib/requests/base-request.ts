@@ -119,7 +119,13 @@ export class BaseRequest implements IBaseRequest {
         isResponseStatusSuccess,
         isNotFound,
         progressOptions
-      })      
+      });
+
+      // TODO think about
+      const parserOptions = {
+        progressOptions,
+        parseType
+      }
 
       if (isNotFound) {
         try {
@@ -134,7 +140,7 @@ export class BaseRequest implements IBaseRequest {
         }
       }
 
-      return await responseDataParser.parse(response)
+      return await responseDataParser.parse(response,parserOptions)
     } catch (error: any) {
       // there may be the situation when response was given but aborted during parsing
       // and we should not throw NETWORK_ERROR_KEY
