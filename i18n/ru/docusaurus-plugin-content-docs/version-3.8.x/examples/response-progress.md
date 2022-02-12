@@ -13,10 +13,10 @@ title: Отслеживание прогресса ответа
 Если получаете 0 в total и заметили заголовок "Transfer-Encoding: chunked", то посмотрите <Link to='https://stackoverflow.com/questions/16870904/node-express-content-length'>этот вопрос</Link>
 
 ```javascript
-import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+import { PureRestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (): Promise<IResponse> =>
-  new RestRequest().getRequest({
+  new PureRestRequest().getRequest({
     endpoint: "http://localhost:3000"
     progressOptions: {
       onLoaded: (total: number) => {/*ваши действия с total*/};

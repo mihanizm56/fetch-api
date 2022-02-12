@@ -17,10 +17,10 @@ See <Link to='https://stackoverflow.com/questions/16870904/node-express-content-
 
 
 ```javascript
-import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
+import { PureRestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (): Promise<IResponse> =>
-  new RestRequest().getRequest({
+  new PureRestRequest().getRequest({
     endpoint: "http://localhost:3000",
     progressOptions: {
       onLoaded: (total: number) => {/*do smth with total*/};
