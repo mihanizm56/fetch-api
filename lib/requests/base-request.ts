@@ -27,7 +27,7 @@ import {
   GetResponseFromCacheParamsType,
   GetFetchParamsType
 } from "@/types";
-import { isNode } from '@/utils/is-node';
+import { getIsNode } from '@/utils/is-node';
 import {
   parseTypesMap,
   requestProtocolsMap,
@@ -118,14 +118,9 @@ export class BaseRequest implements IBaseRequest {
         parseType,
         isResponseStatusSuccess,
         isNotFound,
-        progressOptions
-      });
-
-      // TODO think about
-      const parserOptions = {
         progressOptions,
-        parseType
-      }
+        isNode: getIsNode()
+      });
 
       if (isNotFound) {
         try {
@@ -140,7 +135,7 @@ export class BaseRequest implements IBaseRequest {
         }
       }
 
-      return await responseDataParser.parse(response,parserOptions)
+      return await responseDataParser.parse(response)
     } catch (error: any) {
       // there may be the situation when response was given but aborted during parsing
       // and we should not throw NETWORK_ERROR_KEY
@@ -207,12 +202,14 @@ export class BaseRequest implements IBaseRequest {
     abortRequestId,
     proxyPersistentOptionsAreDisabled
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
+    const isNode = getIsNode();
+
     const requestParams = this.getFetchParams({
       params:fetchParams,
       proxyPersistentOptionsAreDisabled
     });
 
-    if (isNode()) {
+    if (isNode) {
       const requestFetch = (
         // TODO fix any type
         () => nodeFetch(endpoint, requestParams as any) as unknown
@@ -891,6 +888,8 @@ export class BaseRequest implements IBaseRequest {
     fetchController,
     customTimeout,
   }: GetTimeoutExceptionParamsType): Promise<IResponse> => {
+    const isNode = getIsNode();
+
     return new Promise((resolve) => {
       return setTimeout(() => {
         const requestTimeoutError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
@@ -907,7 +906,7 @@ export class BaseRequest implements IBaseRequest {
         );
 
         // if the window fetch
-        if (!isNode()) {
+        if (!isNode) {
           fetchController.abort();
         }
 

@@ -1,6 +1,5 @@
 import { parseTypesMap } from '@/constants';
 import { ProgressOptionsType, ResponseParser } from '@/types';
-import { isNode } from '../is-node';
 import { BlobParser } from './blob-parse';
 import { JsonParser } from './json-parser';
 import { ProgressParser } from './progress-parser';
@@ -11,6 +10,7 @@ type GetParserOptions = {
   isResponseStatusSuccess: boolean;
   isNotFound: boolean;
   progressOptions?: ProgressOptionsType;
+  isNode?: boolean;
 };
 
 interface IResponseDataParserFactory {
@@ -23,6 +23,7 @@ export class ResponseDataParserFactory implements IResponseDataParserFactory {
     isResponseStatusSuccess,
     isNotFound,
     progressOptions,
+    isNode,
   }: GetParserOptions): ResponseParser => {
     // if response is not success - then parse the response like json
     // because backend must send an error it with JSON
@@ -31,8 +32,8 @@ export class ResponseDataParserFactory implements IResponseDataParserFactory {
     }
 
     // progress not run on nodejs yet
-    if (progressOptions && parseType && !isNode()) {
-      return new ProgressParser();
+    if (progressOptions && parseType && !isNode) {
+      return new ProgressParser({ parseType, progressOptions });
     }
 
     if (parseType === parseTypesMap.json) {

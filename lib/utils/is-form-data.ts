@@ -1,7 +1,9 @@
-import { isNode } from '@/utils/is-node';
+import { getIsNode } from '@/utils/is-node';
 
 export const isFormData = (body: JSON | FormData) => {
-  if (isNode()) {
+  const isNode = getIsNode();
+
+  if (isNode) {
     return body?.constructor?.name === 'FormData';
   }
 

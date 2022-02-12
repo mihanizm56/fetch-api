@@ -1,18 +1,17 @@
 import { ProgressOptionsType, ResponseParser } from '@/types';
 import { parseTypesMap } from '@/constants';
 
-type ProgressParseOptionsType = {
+type ProgressParseParamsType = {
+  response: Response;
   progressOptions: ProgressOptionsType;
   parseType: keyof typeof parseTypesMap;
 };
 
-export const progressParse = async (
-  response: Response,
-  {
-    progressOptions: { onProgress, onLoaded },
-    parseType,
-  }: ProgressParseOptionsType,
-) => {
+export const progressParse = async ({
+  response,
+  progressOptions: { onProgress, onLoaded },
+  parseType,
+}: ProgressParseParamsType) => {
   if (!response.body) {
     return null;
   }
@@ -81,9 +80,22 @@ export const progressParse = async (
 };
 
 export class ProgressParser extends ResponseParser {
-  parse = (data: Response, options: ProgressParseOptionsType) =>{
+  progressOptions: ProgressOptionsType;
 
-    return     progressParse(data, options);
+  parseType: keyof typeof parseTypesMap;
+
+  constructor({ parseType, progressOptions }: any) {
+    super();
+
+    this.parseType = parseType;
+    this.progressOptions = progressOptions;
   }
 
+  parse = (data: Response) => {
+    return progressParse({
+      response: data,
+      parseType: this.parseType,
+      progressOptions: this.progressOptions,
+    });
+  };
 }

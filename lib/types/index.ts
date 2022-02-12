@@ -290,7 +290,7 @@ export type ParseResponseParams = {
 };
 
 export abstract class ResponseParser {
-  public abstract parse: (data: Response, options?: Record<string, any>) => any;
+  public abstract parse: (data: Response) => any;
 }
 
 export type FormattedEndpointParams = {
