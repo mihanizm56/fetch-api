@@ -18,7 +18,11 @@ export const progressParse = async ({
 
   const reader = response.body.getReader();
 
-  const contentLength = Number(response.headers.get('Content-Length'));
+  const contentLengthHeader = Number(response.headers.get('Content-Length'));
+  const customLengthHeader = Number(
+    response.headers.get('fetch-api-file-length'),
+  );
+  const contentLength = customLengthHeader || contentLengthHeader;
 
   let receivedLength = 0;
   const chunks = [];
@@ -45,8 +49,6 @@ export const progressParse = async ({
 
     chunks.push(value);
     receivedLength += value.length;
-
-    // console.log(`Получено ${receivedLength} из ${contentLength}`);
   }
 
   const chunksAll = new Uint8Array(receivedLength); // (4.1)
