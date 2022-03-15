@@ -107,10 +107,11 @@ export class BaseRequest implements IBaseRequest {
     isResponseStatusSuccess,
     isStatusEmpty,
     isNotFound,
-    progressOptions
+    progressOptions,
+    requestProtocol
   }: ParseResponseParams) => {
     try {
-      if (isStatusEmpty) {
+      if (isStatusEmpty && requestProtocol !== requestProtocolsMap.jsonRpc) {
         return {}
       }
 
@@ -673,8 +674,13 @@ export class BaseRequest implements IBaseRequest {
             isResponseStatusSuccess,
             isStatusEmpty,
             isNotFound,
-            progressOptions
+            progressOptions,
+            requestProtocol
           });     
+
+          if(endpoint === '/ns/suppliers/suppliers-portal-core/suppliers'){
+            console.log('parsedResponseData',parsedResponseData);
+          }
 
           this.parsedResponseData = parsedResponseData;
 
@@ -696,7 +702,11 @@ export class BaseRequest implements IBaseRequest {
             isStatusEmpty,
             isBatchRequest,
             isPureFileRequest,
-          });         
+          });
+          
+          if(endpoint === '/ns/suppliers/suppliers-portal-core/suppliers'){
+            console.log('isFormatValid',isFormatValid);
+          }
 
           if (isFormatValid) {
             // get the formatter func

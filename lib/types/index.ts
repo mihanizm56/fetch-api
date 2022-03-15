@@ -287,6 +287,7 @@ export type ParseResponseParams = {
   isStatusEmpty: boolean;
   isNotFound: boolean;
   progressOptions?: ProgressOptionsType;
+  requestProtocol: keyof typeof requestProtocolsMap;
 };
 
 export abstract class ResponseParser {
