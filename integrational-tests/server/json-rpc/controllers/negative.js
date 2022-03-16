@@ -18,7 +18,12 @@ module.exports.negativeRPCController = (req, res) => {
     simpleOneResponseError,
     simpleTwoResponseError,
     networkerror,
+    emptyResponseError,
   } = req.query;
+
+  if (emptyResponseError) {
+    return res.status(204).send();
+  }
 
   if (networkerror) {
     return res.status(501).send();

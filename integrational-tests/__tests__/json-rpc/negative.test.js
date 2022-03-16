@@ -73,6 +73,38 @@ describe('JSON-PRC request (negative)', () => {
     });
   });
 
+  test('test get backend error in simple json-rpc request if the status is 204 with empty response data', async () => {
+    const responseSchema = Joi.any();
+
+    const data = await new JSONRPCRequest().makeRequest({
+      endpoint: 'http://localhost:8080/json-rpc/negative',
+      responseSchema,
+      queryParams: {
+        emptyResponseError: true,
+      },
+      body: {
+        method: 'test_method',
+        options: {
+          test: '123',
+        },
+      },
+    });
+
+    expect(data).toEqual({
+      additionalErrors: null,
+      code: 500,
+      data: {},
+      error: true,
+      errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
+    });
+  });
+
   test('test if ids of request and response are not the same', async () => {
     const responseSchema = Joi.any();
 
@@ -518,6 +550,41 @@ describe('JSON-PRC request (negative)', () => {
           connection: 'close',
           'content-length': '225',
           'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
+      });
+    });
+
+    test('test get backend error in batch request if the status is 204 with empty response data', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      });
+
+      const responseSchemaObjectTwo = Joi.object({
+        foo: Joi.string().required(),
+      });
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/negative?emptyResponseError=true',
+        body: [
+          { method: 'listCountries', params: {} },
+          { method: 'listCountries', params: {} },
+        ],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne, responseSchemaObjectTwo],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 500,
+        data: {},
+        error: true,
+        errorText: 'network-error',
+        headers: {
+          connection: 'close',
           date: 'mock-date',
           etag: 'mock-etag',
           'x-powered-by': 'Express',
