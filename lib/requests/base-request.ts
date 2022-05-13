@@ -703,10 +703,6 @@ export class BaseRequest implements IBaseRequest {
             isBatchRequest,
             isPureFileRequest,
           });
-          
-          if(endpoint === '/ns/suppliers/suppliers-portal-core/suppliers'){
-            console.log('isFormatValid',isFormatValid);
-          }
 
           if (isFormatValid) {
             // get the formatter func
