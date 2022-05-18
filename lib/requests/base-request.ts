@@ -558,7 +558,8 @@ export class BaseRequest implements IBaseRequest {
       middlewaresAreDisabled,
       proxyPersistentOptionsAreDisabled,
       cacheIsDisabled,
-      requestCache
+      requestCache,
+      ignoreResponseIdCompare
     } = mainParams;
 
     const isPureFileRequest = parseType === parseTypesMap.blob || 
@@ -702,6 +703,7 @@ export class BaseRequest implements IBaseRequest {
             isStatusEmpty,
             isBatchRequest,
             isPureFileRequest,
+            ignoreResponseIdCompare
           });
 
           if (isFormatValid) {

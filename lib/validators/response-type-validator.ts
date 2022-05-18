@@ -141,6 +141,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     schema,
     prevId,
     isBatchRequest,
+    ignoreResponseIdCompare
   }: any): boolean => {
     // return true because all validation will be prepared in Formatter
     if (isBatchRequest) {
@@ -159,7 +160,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     });
 
     // if ids are not equal
-    if (!idsAreEqual) {
+    if (!idsAreEqual && !ignoreResponseIdCompare) {
       console.error('(fetch-api): request-response ids are not equal');
       return false;
     }

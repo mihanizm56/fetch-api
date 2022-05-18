@@ -37,8 +37,8 @@ describe('JSON-PRC request (negative)', () => {
         'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
-        'x-powered-by': 'Express'
-      }
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('set headers', async () => {
@@ -76,8 +76,8 @@ describe('JSON-PRC request (negative)', () => {
         'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
-        'x-powered-by': 'Express'
-      }
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('set queryParams full check', async () => {
@@ -128,8 +128,8 @@ describe('JSON-PRC request (negative)', () => {
         'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
-        'x-powered-by': 'Express'
-      }
+        'x-powered-by': 'Express',
+      },
     });
   });
   test('set extra validation callback and this returns true', async () => {
@@ -170,8 +170,8 @@ describe('JSON-PRC request (negative)', () => {
         'content-type': 'application/json; charset=utf-8',
         date: 'mock-date',
         etag: 'mock-etag',
-        'x-powered-by': 'Express'
-      }
+        'x-powered-by': 'Express',
+      },
     });
   });
   describe('JSON-PRC batching (positive)', () => {
@@ -209,8 +209,8 @@ describe('JSON-PRC request (negative)', () => {
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
-              'x-powered-by': 'Express'
-            }
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
@@ -221,8 +221,8 @@ describe('JSON-PRC request (negative)', () => {
           'content-type': 'application/json; charset=utf-8',
           date: 'mock-date',
           etag: 'mock-etag',
-          'x-powered-by': 'Express'
-        }
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('test answer two objects', async () => {
@@ -270,8 +270,8 @@ describe('JSON-PRC request (negative)', () => {
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
-              'x-powered-by': 'Express'
-            }
+              'x-powered-by': 'Express',
+            },
           },
           {
             additionalErrors: null,
@@ -298,8 +298,8 @@ describe('JSON-PRC request (negative)', () => {
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
-              'x-powered-by': 'Express'
-            }
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
@@ -310,8 +310,8 @@ describe('JSON-PRC request (negative)', () => {
           'content-type': 'application/json; charset=utf-8',
           date: 'mock-date',
           etag: 'mock-etag',
-          'x-powered-by': 'Express'
-        }
+          'x-powered-by': 'Express',
+        },
       });
     });
     test('test answer random order in response', async () => {
@@ -359,8 +359,8 @@ describe('JSON-PRC request (negative)', () => {
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
-              'x-powered-by': 'Express'
-            }
+              'x-powered-by': 'Express',
+            },
           },
           {
             additionalErrors: null,
@@ -387,8 +387,8 @@ describe('JSON-PRC request (negative)', () => {
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
-              'x-powered-by': 'Express'
-            }
+              'x-powered-by': 'Express',
+            },
           },
         ],
         error: false,
@@ -399,8 +399,46 @@ describe('JSON-PRC request (negative)', () => {
           'content-type': 'application/json; charset=utf-8',
           date: 'mock-date',
           etag: 'mock-etag',
-          'x-powered-by': 'Express'
-        }
+          'x-powered-by': 'Express',
+        },
+      });
+    });
+
+    test('test if ids of request and response are not the same but ignoreResponseIdCompare is set', async () => {
+      const responseSchema = Joi.any();
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint: 'http://localhost:8080/json-rpc/negative',
+        responseSchema,
+        queryParams: {
+          notsameid: true,
+        },
+        body: {
+          method: 'test_method',
+          options: {
+            test: '123',
+          },
+        },
+        ignoreResponseIdCompare: true,
+      });
+
+      expect(data).toEqual({
+        additionalErrors: {
+          err: 'Тестовая ошибка 2 err',
+          param2: 'test param 2',
+        },
+        code: 400,
+        data: {},
+        error: true,
+        errorText: 'network-error',
+        headers: {
+          connection: 'close',
+          'content-length': '199',
+          'content-type': 'application/json; charset=utf-8',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+        },
       });
     });
   });

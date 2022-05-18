@@ -134,6 +134,7 @@ export interface IRequestParams extends RequestInit {
   retryTimeInterval?: number;
   retryIntervalNonIncrement?: boolean;
   requestCache?: ICache;
+  ignoreResponseIdCompare?: boolean
 }
 
 export type IJSONPRCRequestBodyParams = {
@@ -472,6 +473,7 @@ export type FormatValidateParams = {
   isStatusEmpty?: boolean;
   isBatchRequest?: boolean;
   isPureFileRequest?: boolean;
+  ignoreResponseIdCompare?: boolean;
 };
 
 export type FormatValidateParamsMethod = (
