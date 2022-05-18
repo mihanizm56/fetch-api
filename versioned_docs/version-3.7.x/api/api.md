@@ -20,11 +20,9 @@ import Link from '@docusaurus/Link';
 | pureJsonFileResponse  |  ```boolean``` | removes any additional headers from request to make it possible to fetch the original json file (availiable only for PureRestRequest) |
 | ignoreResponseIdCompare  |  ```boolean``` | ignores id comparison in json-rpc requests |
 
-
-
 ### Also consists of a lot of default fetch options (headers, mode, etc), see <Link to='https://developer.mozilla.org/ru/docs/Web/API/Fetch_API/Using_Fetch'>api docs</Link>
 
-rest-
+
 ## Request output options:
 
 |  Name | Type | Comments |

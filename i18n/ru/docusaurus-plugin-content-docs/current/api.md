@@ -18,6 +18,7 @@ import Link from '@docusaurus/Link';
 | customTimeout               | `number`                         | количество миллисекунд до таймаута запроса (включая попытки повторного запроса если указан параметр retry и запрос прошёл неудачно) |
 | retry                       | `number`                         | количество попыток запрос данные еще раз если ответ не успешен                                                                      |
 | pureJsonFileResponse        | `boolean`                        | флаг, убирающий доп заголовки для возможности получения файла (доступно только для PureRestRequest)                                 |
+| ignoreResponseIdCompare  |  ```boolean``` | флаг, включающий игнорирование проверки сравнение id в json-rpc запросах |
 
 ### Также состоит из множества fetch параметров (headers, mode, итд), можно посмотреть <Link to='https://developer.mozilla.org/ru/docs/Web/API/Fetch_API/Using_Fetch'>тут</Link>
 

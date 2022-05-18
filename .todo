@@ -1,0 +1,8 @@
+1) tests retry fix
+2) global cache tests
+3) local cache tests
+4) local middlewares
+5) disable proxy local tests
+
+
+ignoreResponseIdCompare
