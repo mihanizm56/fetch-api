@@ -345,7 +345,8 @@ export class BaseRequest implements IBaseRequest {
     responseSchema,
     body,
     isNotFound,
-    isPureFileRequest
+    isPureFileRequest,
+    ignoreResponseIdCompare
   }: GetPreparedResponseDataParams): FormatResponseParamsType => {
     if (isPureFileRequest && !isNotFound) {
       return {
@@ -385,7 +386,8 @@ export class BaseRequest implements IBaseRequest {
         data: response,
         isBatchRequest,
         responseSchema,
-        body
+        body,
+        ignoreResponseIdCompare
       }
     }
 
@@ -562,6 +564,8 @@ export class BaseRequest implements IBaseRequest {
       ignoreResponseIdCompare
     } = mainParams;
 
+    
+
     const isPureFileRequest = parseType === parseTypesMap.blob || 
       parseType === parseTypesMap.text || 
       Boolean(pureJsonFileResponse);
@@ -679,10 +683,6 @@ export class BaseRequest implements IBaseRequest {
             requestProtocol
           });     
 
-          if(endpoint === '/ns/suppliers/suppliers-portal-core/suppliers'){
-            console.log('parsedResponseData',parsedResponseData);
-          }
-
           this.parsedResponseData = parsedResponseData;
 
           // validate the format of the request
@@ -721,7 +721,8 @@ export class BaseRequest implements IBaseRequest {
                 isBatchRequest,
                 responseSchema,
                 body,
-                isNotFound
+                isNotFound,
+                ignoreResponseIdCompare
               })
             );
 

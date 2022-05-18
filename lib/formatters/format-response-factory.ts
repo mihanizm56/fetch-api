@@ -29,6 +29,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
     body,
     responseSchema,
     responseHeaders,
+    ignoreResponseIdCompare,
   }: FormatResponseParamsType): ResponseFormatter => {
     if (parseType === parseTypesMap.blob) {
       return new BlobResponseFormatter({ data, responseHeaders });
@@ -48,6 +49,7 @@ export class FormatResponseFactory implements IFormatResponseFactory {
           body,
           responseSchema,
           responseHeaders,
+          ignoreResponseIdCompare,
         });
       }
 

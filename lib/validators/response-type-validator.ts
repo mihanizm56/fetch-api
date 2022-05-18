@@ -71,7 +71,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   }: GetIsSchemaResponseValidParams): { error: boolean; errorText: string } => {
     // if the error flag is true
     // then not validate
-    if (error) {
+    if (error || !schema) {
       return { error: false, errorText: '' };
     }
 

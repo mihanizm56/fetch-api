@@ -18,6 +18,7 @@ type ParamsType = {
   responseSchema?: Array<any>;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
   responseHeaders: Record<string, string>;
+  ignoreResponseIdCompare?: boolean;
 };
 
 export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
@@ -35,6 +36,8 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
 
   responseHeaders: Record<string, string>;
 
+  ignoreResponseIdCompare?: boolean;
+
   constructor({
     data,
     isErrorTextStraightToOutput,
@@ -43,10 +46,12 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
     responseSchema,
     body,
     responseHeaders,
+    ignoreResponseIdCompare,
   }: ParamsType) {
     super();
     this.data = data;
     this.isErrorTextStraightToOutput = isErrorTextStraightToOutput;
+    this.ignoreResponseIdCompare = ignoreResponseIdCompare;
     this.statusCode = statusCode;
     this.translateFunction = translateFunction;
     this.responseSchema = responseSchema;
@@ -93,6 +98,7 @@ export class JSONRPCBatchResponseFormatter extends ResponseFormatter {
         response: responseItemData,
         schema,
         prevId,
+        ignoreResponseIdCompare: this.ignoreResponseIdCompare,
       });
 
       if (isFormatValid) {

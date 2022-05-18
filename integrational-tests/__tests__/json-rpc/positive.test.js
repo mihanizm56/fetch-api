@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const Joi = require('joi');
 const { JSONRPCRequest } = require('../../../dist');
 
@@ -174,6 +175,43 @@ describe('JSON-PRC request (negative)', () => {
       },
     });
   });
+  test('test if ids of request and response are not the same but ignoreResponseIdCompare is set', async () => {
+    const responseSchema = Joi.any();
+
+    const data = await new JSONRPCRequest().makeRequest({
+      endpoint: 'http://localhost:8080/json-rpc/negative',
+      responseSchema,
+      queryParams: {
+        notsameid: true,
+      },
+      body: {
+        method: 'test_method',
+        options: {
+          test: '123',
+        },
+      },
+      ignoreResponseIdCompare: true,
+    });
+
+    expect(data).toEqual({
+      additionalErrors: {
+        err: 'Тестовая ошибка 2 err',
+        param2: 'test param 2',
+      },
+      code: 400,
+      data: {},
+      error: true,
+      errorText: 'network-error',
+      headers: {
+        connection: 'close',
+        'content-length': '199',
+        'content-type': 'application/json; charset=utf-8',
+        date: 'mock-date',
+        etag: 'mock-etag',
+        'x-powered-by': 'Express',
+      },
+    });
+  });
   describe('JSON-PRC batching (positive)', () => {
     test('test answer one object', async () => {
       const responseSchemaObject = Joi.object({
@@ -266,7 +304,7 @@ describe('JSON-PRC request (negative)', () => {
             errorText: '',
             headers: {
               connection: 'close',
-              'content-length': '315',
+              'content-length': '316',
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
@@ -294,7 +332,7 @@ describe('JSON-PRC request (negative)', () => {
             },
             headers: {
               connection: 'close',
-              'content-length': '315',
+              'content-length': '316',
               'content-type': 'application/json; charset=utf-8',
               date: 'mock-date',
               etag: 'mock-etag',
@@ -306,7 +344,7 @@ describe('JSON-PRC request (negative)', () => {
         errorText: '',
         headers: {
           connection: 'close',
-          'content-length': '315',
+          'content-length': '316',
           'content-type': 'application/json; charset=utf-8',
           date: 'mock-date',
           etag: 'mock-etag',
@@ -403,37 +441,78 @@ describe('JSON-PRC request (negative)', () => {
         },
       });
     });
-
-    test('test if ids of request and response are not the same but ignoreResponseIdCompare is set', async () => {
-      const responseSchema = Joi.any();
-
+    test.only('test if ids of request and response are not the same but ignoreResponseIdCompare is set', async () => {
       const data = await new JSONRPCRequest().makeRequest({
-        endpoint: 'http://localhost:8080/json-rpc/negative',
-        responseSchema,
-        queryParams: {
-          notsameid: true,
-        },
-        body: {
-          method: 'test_method',
-          options: {
-            test: '123',
-          },
-        },
+        endpoint:
+          'http://localhost:8080/json-rpc/positive?batch=true&notCorrectIds=true',
+        body: [
+          { method: 'listCountries', params: {} },
+          { method: 'listCountries', params: {} },
+        ],
+        isBatchRequest: true,
         ignoreResponseIdCompare: true,
       });
 
+      // console.log(JSON.stringify(data, null, 2));
+
       expect(data).toEqual({
-        additionalErrors: {
-          err: 'Тестовая ошибка 2 err',
-          param2: 'test param 2',
-        },
-        code: 400,
-        data: {},
-        error: true,
-        errorText: 'network-error',
+        errorText: '',
+        error: false,
+        data: [
+          {
+            errorText: '',
+            error: false,
+            data: {
+              countries: [
+                {
+                  id: 'e128ce0f-852b-5c3c-9b95-f3d9829cc2a2',
+                  value: 'ru-RU',
+                  label: 'country.label.RU',
+                },
+                {
+                  id: '84fbd842-4051-5702-a638-79bdb73a8f7e',
+                  value: 'pl-PL',
+                  label: 'country.label.PL',
+                },
+              ],
+            },
+            additionalErrors: null,
+            code: 200,
+            headers: {
+              connection: 'close',
+              'content-length': '304',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
+          },
+          {
+            errorText: '',
+            error: false,
+            data: {
+              foo: 'foo',
+              bar: {
+                baz: 0,
+              },
+            },
+            additionalErrors: null,
+            code: 200,
+            headers: {
+              connection: 'close',
+              'content-length': '304',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
+          },
+        ],
+        additionalErrors: null,
+        code: 200,
         headers: {
           connection: 'close',
-          'content-length': '199',
+          'content-length': '304',
           'content-type': 'application/json; charset=utf-8',
           date: 'mock-date',
           etag: 'mock-etag',

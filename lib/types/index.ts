@@ -134,7 +134,7 @@ export interface IRequestParams extends RequestInit {
   retryTimeInterval?: number;
   retryIntervalNonIncrement?: boolean;
   requestCache?: ICache;
-  ignoreResponseIdCompare?: boolean
+  ignoreResponseIdCompare?: boolean;
 }
 
 export type IJSONPRCRequestBodyParams = {
@@ -350,6 +350,7 @@ export type GetPreparedResponseDataParams = {
   isNotFound: boolean;
   isPureFileRequest?: boolean;
   responseHeaders: Record<string, string>;
+  ignoreResponseIdCompare?: boolean;
 };
 
 export type GetMiddlewareCombinedResponseParamsType = {
@@ -447,6 +448,7 @@ export type FormatResponseParamsType = {
   isBatchRequest?: boolean;
   responseSchema?: Array<any>;
   body?: Array<IJSONPRCRequestFormattedBodyParams>;
+  ignoreResponseIdCompare?: boolean;
 } & (Partial<Omit<IRESTPureResponse, 'error'>> &
   Partial<Omit<IJSONRPCPureResponse, 'error'>>);
 

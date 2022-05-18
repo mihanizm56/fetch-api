@@ -50,7 +50,8 @@ module.exports.positiveRPCController = (req, res) => {
     batch,
     oneSchema,
     twoSchemas,
-    randomIds
+    randomIds,
+    notCorrectIds,
   } = req.query;
 
   const areQueryParamsForCheckExist =
@@ -99,15 +100,7 @@ module.exports.positiveRPCController = (req, res) => {
 
       return res.status(200).json(enrichedData);
     }
-    if(randomIds){
-      const enrichedData = mockPositiveBatchTwoItemsData.map(
-        (responseItem, index) => ({
-          ...responseItem,
-          jsonrpc: '2.0',
-          id: req.body[index].id,
-        }),
-      );
-
+    if (randomIds) {
       return res.status(200).json([
         {
           jsonrpc: '2.0',
@@ -131,7 +124,35 @@ module.exports.positiveRPCController = (req, res) => {
           jsonrpc: '2.0',
           id: req.body[0].id,
           result: mockPositiveData,
-        }
+        },
+      ]);
+    }
+
+    if (notCorrectIds) {
+      return res.status(200).json([
+        {
+          jsonrpc: '2.0',
+          id: '123',
+          result: {
+            countries: [
+              {
+                id: 'e128ce0f-852b-5c3c-9b95-f3d9829cc2a2',
+                value: 'ru-RU',
+                label: 'country.label.RU',
+              },
+              {
+                id: '84fbd842-4051-5702-a638-79bdb73a8f7e',
+                value: 'pl-PL',
+                label: 'country.label.PL',
+              },
+            ],
+          },
+        },
+        {
+          jsonrpc: '2.0',
+          id: '121121',
+          result: mockPositiveData,
+        },
       ]);
     }
   }
