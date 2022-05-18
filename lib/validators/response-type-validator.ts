@@ -135,14 +135,18 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
   checkIdsEquality = ({
     prev,
     curr,
-    ignoreResponseIdCompare}: { prev: IDType; curr: IDType,ignoreResponseIdCompare?:boolean }): boolean => {
-    if(ignoreResponseIdCompare) {
+    ignoreResponseIdCompare,
+  }: {
+    prev: IDType;
+    curr: IDType;
+    ignoreResponseIdCompare?: boolean;
+  }): boolean => {
+    if (ignoreResponseIdCompare) {
       return true;
     }
 
     return prev === curr;
-  }
- 
+  };
 
   // todo fix any type
   public getJSONRPCFormatIsValid = ({
@@ -150,7 +154,7 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     schema,
     prevId,
     isBatchRequest,
-    ignoreResponseIdCompare
+    ignoreResponseIdCompare,
   }: any): boolean => {
     // return true because all validation will be prepared in Formatter
     if (isBatchRequest) {
@@ -166,12 +170,13 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     const idsAreEqual = this.checkIdsEquality({
       prev: prevId,
       curr: response.id,
-      ignoreResponseIdCompare
+      ignoreResponseIdCompare,
     });
 
     // if ids are not equal
     if (!idsAreEqual) {
       console.error('(fetch-api): request-response ids are not equal');
+      console.error('(fetch-api): full response: ', response);
       return false;
     }
 
