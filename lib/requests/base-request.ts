@@ -561,10 +561,9 @@ export class BaseRequest implements IBaseRequest {
       proxyPersistentOptionsAreDisabled,
       cacheIsDisabled,
       requestCache,
-      ignoreResponseIdCompare
+      ignoreResponseIdCompare,
+      notRetryWhenOffline
     } = mainParams;
-
-    
 
     const isPureFileRequest = parseType === parseTypesMap.blob || 
       parseType === parseTypesMap.text || 
@@ -734,8 +733,9 @@ export class BaseRequest implements IBaseRequest {
               formattedResponseData,
               retry,
               retryCounter,
-              extraVerifyRetry
-            })
+              extraVerifyRetry,
+              notRetryWhenOffline
+            });
 
             if(needsToRetry && typeof retryCounter !== 'undefined'){
               await sleep(sleepTime);
@@ -811,10 +811,16 @@ export class BaseRequest implements IBaseRequest {
           ? error.message 
           : NETWORK_ERROR_KEY;
 
+        // check if there was no connection
+        const isOnlineRequest = getIsRequestOnline();
+
+        // todo refactor
         // check if needs to retry request   
         if (typeof retry !== 'undefined' && 
             typeof retryCounter !== 'undefined' && 
-            retryCounter < retry
+            retryCounter < retry &&
+            // retry if online or if not notRetryWhenOffline
+            (isOnlineRequest || !notRetryWhenOffline)
         ) {
           await sleep(sleepTime);
           
@@ -832,8 +838,7 @@ export class BaseRequest implements IBaseRequest {
           userAbortedRequest
         });
 
-        // check if there was no connection
-        const isOnlineRequest = getIsRequestOnline();
+
         const errorCode = isOnlineRequest ? REQUEST_ERROR_STATUS_CODE : OFFLINE_STATUS_CODE;
         
         const formattedResponseError = new ErrorResponseFormatter().getFormattedErrorResponse({

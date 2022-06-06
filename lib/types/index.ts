@@ -135,6 +135,7 @@ export interface IRequestParams extends RequestInit {
   retryIntervalNonIncrement?: boolean;
   requestCache?: ICache;
   ignoreResponseIdCompare?: boolean;
+  notRetryWhenOffline?: boolean;
 }
 
 export type IJSONPRCRequestBodyParams = {
