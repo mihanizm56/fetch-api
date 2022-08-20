@@ -4,6 +4,7 @@ import { MiddlewareParams } from '@/types';
 interface IMiddlewaresController {
   setMiddleware: (middlewareParams: MiddlewareParams) => void;
   deleteMiddleware: (middlewareName: string) => void;
+  getMiddlewares:() => Array<MiddlewareParams>;
 }
 
 export class MiddlewaresController implements IMiddlewaresController {
@@ -21,5 +22,9 @@ export class MiddlewaresController implements IMiddlewaresController {
     BaseRequest.middlewares = BaseRequest.middlewares.filter(
       middleware => middleware.name !== middlewareName,
     );
+  }
+
+  getMiddlewares() {
+    return BaseRequest.middlewares;
   }
 }
