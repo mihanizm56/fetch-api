@@ -591,5 +591,42 @@ describe('JSON-PRC request (negative)', () => {
         },
       });
     });
+
+    test('test get backend in batch request if the response length is not equal to body', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      });
+
+      const responseSchemaObjectTwo = Joi.object({
+        foo: Joi.string().required(),
+      });
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/positive?batch=true&batchLengthError=true',
+        body: [
+          { method: 'listCountries1', params: {} },
+          { method: 'listCountries2', params: {} },
+        ],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne, responseSchemaObjectTwo],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 500,
+        data: {},
+        error: true,
+        errorText: 'network-error',
+        headers: {
+          connection: 'close',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+          'content-length': '77',
+          'content-type': 'application/json; charset=utf-8',
+        },
+      });
+    });
   });
 });

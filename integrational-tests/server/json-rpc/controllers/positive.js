@@ -52,6 +52,7 @@ module.exports.positiveRPCController = (req, res) => {
     twoSchemas,
     randomIds,
     notCorrectIds,
+    batchLengthError,
   } = req.query;
 
   const areQueryParamsForCheckExist =
@@ -154,6 +155,19 @@ module.exports.positiveRPCController = (req, res) => {
           result: mockPositiveData,
         },
       ]);
+    }
+
+    if (batchLengthError) {
+      const enrichedData = mockPositiveBatchOneItemData.map(
+        (responseItem, index) => ({
+          ...responseItem,
+          jsonrpc: '2.0',
+          id: req.body[index].id,
+        }),
+      );
+
+      // send one response object not full
+      return res.status(200).json([enrichedData[0]]);
     }
   }
 

@@ -155,9 +155,15 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
     prevId,
     isBatchRequest,
     ignoreResponseIdCompare,
+    requestBody,
   }: any): boolean => {
     // return true because all validation will be prepared in Formatter
     if (isBatchRequest) {
+      if (requestBody.length !== response.length) {
+        console.error('(fetch-api): request-response lengths are not equal');
+        return false;
+      }
+
       return true;
     }
 

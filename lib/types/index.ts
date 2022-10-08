@@ -477,6 +477,7 @@ export type FormatValidateParams = {
   isBatchRequest?: boolean;
   isPureFileRequest?: boolean;
   ignoreResponseIdCompare?: boolean;
+  requestBody: Pick<RequestInit, 'body'>;
 };
 
 export type FormatValidateParamsMethod = (
