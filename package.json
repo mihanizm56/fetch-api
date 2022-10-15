@@ -1,11 +1,10 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.8.18",
+  "version": "3.8.19",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "install": "node config/install/mark.js",
     "server": "node integrational-tests/setup/runner.js",
     "test:watch": "jest --watch",
     "test": "npm run build && set CI=true && jest",
