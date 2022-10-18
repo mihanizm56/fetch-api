@@ -36,6 +36,7 @@ export type CacheParamsType = {
   requestBody: Pick<RequestInit, 'body'>;
   requestHeaders: Record<string, string>;
   requestCookies: string;
+  fullEndpoint: string;
 };
 export interface ICache {
   getFromCache: (params: CacheParamsType) => Promise<IResponse | null>;

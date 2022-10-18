@@ -467,7 +467,8 @@ export class BaseRequest implements IBaseRequest {
     requestCookies,
     cacheIsDisabled,
     cacheNoStore,
-    requestCache
+    requestCache,
+    fullEndpoint
   }: GetResponseFromCacheParamsType) => {
     if(cacheNoStore || cacheIsDisabled) {
       return;
@@ -480,7 +481,8 @@ export class BaseRequest implements IBaseRequest {
       method,
       requestBody,
       requestHeaders,
-      requestCookies
+      requestCookies,
+      fullEndpoint
     });
 
     return cachedResponse;
@@ -495,7 +497,8 @@ export class BaseRequest implements IBaseRequest {
     cacheIsDisabled,
     cacheNoStore,
     requestCache,
-    response
+    response,
+    fullEndpoint
   }: SetResponseFromCacheParamsType) => {
     if(cacheNoStore || cacheIsDisabled) {
       return;
@@ -509,7 +512,8 @@ export class BaseRequest implements IBaseRequest {
       requestBody,
       requestHeaders,
       requestCookies,
-      response
+      response,
+      fullEndpoint
     });
 
     return cachedResponse;
@@ -636,7 +640,8 @@ export class BaseRequest implements IBaseRequest {
         requestCookies: this.cookie,
         cacheIsDisabled,
         cacheNoStore: cacheNoStore,
-        requestCache
+        requestCache,
+        fullEndpoint:formattedEndpoint
       });
 
       if (cachedResponse) {
@@ -790,7 +795,8 @@ export class BaseRequest implements IBaseRequest {
               cacheIsDisabled,
               cacheNoStore,
               requestCache,
-              response: responseFromMiddlewares
+              response: responseFromMiddlewares,
+              fullEndpoint:formattedEndpoint
             }) 
 
             // return response data
