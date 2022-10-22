@@ -17,7 +17,6 @@
   hard-structured response format
 - Provides the ability to cancel the request by throwing the special event (ABORT_REQUEST_EVENT_NAME)
 - Provides the ability to handle the response progress
-- Provides the ability to select necessary fields from the response (https://github.com/nemtsov/json-mask#readme used)
 - Provides the ability to use persistent params for all requests
 - Provides the ability to retry requests
 - Provides the ability to logging your error requests

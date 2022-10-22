@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.8.20-beta.1",
+  "version": "3.8.20-beta.2",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,7 +30,6 @@
   "homepage": "https://github.com/mihanizm56/fetch-api#readme",
   "dependencies": {
     "colors": "1.4.0",
-    "json-mask": "1.0.4",
     "node-fetch": "2.6.1",
     "query-string": "7.0.1"
   },

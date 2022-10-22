@@ -73,11 +73,6 @@ export type ProgressOptionsType = {
   onProgress?: ProgressCallbackParams;
 };
 
-export type CustomSelectorDataType = (
-  responseData: any,
-  selectData?: string,
-) => any;
-
 export type SetResponseTrackCallbackOptions = {
   endpoint: string;
   method: Pick<RequestInit, 'method'>;
@@ -122,8 +117,6 @@ export interface IRequestParams extends RequestInit {
   abortRequestId?: string;
   arrayFormat?: ArrayFormatType;
   progressOptions?: ProgressOptionsType;
-  customSelectorData?: CustomSelectorDataType;
-  selectData?: string;
   retry?: number;
   traceRequestCallback?: SetResponseTrackCallback;
   tracingDisabled?: boolean;

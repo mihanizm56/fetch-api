@@ -42,7 +42,6 @@ import { ErrorResponseFormatter } from "../errors-formatter/error-response-forma
 import { TIMEOUT_VALUE } from "@/constants";
 import { FormatResponseFactory } from "@/formatters/format-response-factory";
 import { isFormData } from "@/utils/is-form-data";
-import { getDataFromSelector } from "@/utils/get-data-from-selector";
 import { OFFLINE_STATUS_CODE, REQUEST_ERROR_STATUS_CODE } from "@/constants";
 import { makeErrorRequestLogs } from "@/utils/make-error-request-logs";
 import { getIsRequestOnline } from "@/utils/get-is-request-online";
@@ -203,14 +202,13 @@ export class BaseRequest implements IBaseRequest {
     abortRequestId,
     proxyPersistentOptionsAreDisabled
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
-    const isNode = getIsNode();
-
     const requestParams = this.getFetchParams({
       params:fetchParams,
       proxyPersistentOptionsAreDisabled
     });
 
-    if (isNode) {
+    // if old nodejs
+    if (typeof fetch === 'undefined') {
       const requestFetch = (
         // TODO fix any type
         () => nodeFetch(endpoint, requestParams as any) as unknown
@@ -545,8 +543,6 @@ export class BaseRequest implements IBaseRequest {
       arrayFormat,
       isBatchRequest,
       progressOptions,
-      customSelectorData,
-      selectData,
       cache = cacheMap.default, // TODO проверить нужен ли дефолтный параметр,
       credentials,
       integrity,
@@ -752,12 +748,6 @@ export class BaseRequest implements IBaseRequest {
             // remove the abort listener
             this.removeAbortListenerFromRequest();
             
-            // select the response data fields if all fields are not necessary
-            // work only for json responses
-            const selectedResponseData = (selectData || customSelectorData) && !isPureFileRequest 
-              ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
-              : formattedResponseData;
-
             const proxyBaseParams = {
               response,
               responseError: formattedResponseData.error,
@@ -778,7 +768,7 @@ export class BaseRequest implements IBaseRequest {
             })
 
             const responseFromMiddlewares = await this.getMiddlewareCombinedResponse({
-              response: selectedResponseData,
+              response: formattedResponseData,
               endpoint,
               method,
               middlewaresAreDisabled,

@@ -11,7 +11,6 @@ export {
   IUtilResponse,
   ExtraValidationCallbackType,
   ProgressOptionsType,
-  CustomSelectorDataType,
   SetResponseTrackCallbackOptions,
   ErrorTracingType,
   BatchResponseType,

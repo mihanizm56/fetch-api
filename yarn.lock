@@ -4326,11 +4326,6 @@ jsesc@^2.5.1:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
 
-json-mask@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/json-mask/-/json-mask-1.0.4.tgz#07366b7f1fa81cfa1683435bf640cc9bd9bc892d"
-  integrity sha512-ZnNhI8x2DeU57jGSa82w5JS3wJp0N6kqrKfg2OWcTJC1tInggqkjn0W63fCcafus3+f86bvsbla0PvRowPJbZg==
-
 json-parse-better-errors@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"

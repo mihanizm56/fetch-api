@@ -30,13 +30,8 @@ describe('get request (positive)', () => {
       responseSchema,
     };
 
-    const {
-      data,
-      errorText,
-      error,
-      additionalErrors,
-      code,
-    } = await new RestRequest().getRequest(requestConfig);
+    const { data, errorText, error, additionalErrors, code } =
+      await new RestRequest().getRequest(requestConfig);
 
     expect(data).toEqual({ bar: { baz: 0 }, delta: ['1', '2'], foo: 'foo' });
     expect(additionalErrors).toBeNull();
@@ -81,41 +76,6 @@ describe('get request (positive)', () => {
     });
 
     describe('test selected fields', () => {
-      test('get simple array with selected field', async () => {
-        const responseSchema = Joi.object({
-          foo: Joi.string().required(),
-          bar: Joi.object({
-            baz: Joi.number().required(),
-          }).required(),
-          delta: Joi.array().items(Joi.string()),
-        });
-
-        const requestConfig = {
-          ...requestBaseConfig,
-          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
-          responseSchema,
-          selectData: 'delta',
-        };
-
-        const response = await new PureRestRequest().getRequest(requestConfig);
-
-        expect(response).toEqual({
-          additionalErrors: null,
-          code: 200,
-          data: { delta: ['1', '2'] },
-          error: false,
-          errorText: '',
-          headers: {
-            connection: 'close',
-            'content-length': '47',
-            'content-type': 'application/json; charset=utf-8',
-            date: 'mock-date',
-            etag: 'mock-etag',
-            'x-powered-by': 'Express',
-          },
-        });
-      });
-
       test('get full data if empty select field provided', async () => {
         const responseSchema = Joi.object({
           foo: Joi.string().required(),
@@ -142,76 +102,6 @@ describe('get request (positive)', () => {
             delta: ['1', '2'],
             foo: 'foo',
           },
-          error: false,
-          errorText: '',
-          headers: {
-            connection: 'close',
-            'content-length': '47',
-            'content-type': 'application/json; charset=utf-8',
-            date: 'mock-date',
-            etag: 'mock-etag',
-            'x-powered-by': 'Express',
-          },
-        });
-      });
-
-      test('get no data if not correct select field provided', async () => {
-        const responseSchema = Joi.object({
-          foo: Joi.string().required(),
-          bar: Joi.object({
-            baz: Joi.number().required(),
-          }).required(),
-          delta: Joi.array().items(Joi.string()),
-        });
-
-        const requestConfig = {
-          ...requestBaseConfig,
-          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
-          responseSchema,
-          selectData: 'zoo',
-        };
-
-        const response = await new PureRestRequest().getRequest(requestConfig);
-
-        expect(response).toEqual({
-          additionalErrors: null,
-          code: 200,
-          data: {},
-          error: false,
-          errorText: '',
-          headers: {
-            connection: 'close',
-            'content-length': '47',
-            'content-type': 'application/json; charset=utf-8',
-            date: 'mock-date',
-            etag: 'mock-etag',
-            'x-powered-by': 'Express',
-          },
-        });
-      });
-
-      test('get data if custom selector provided', async () => {
-        const responseSchema = Joi.object({
-          foo: Joi.string().required(),
-          bar: Joi.object({
-            baz: Joi.number().required(),
-          }).required(),
-          delta: Joi.array().items(Joi.string()),
-        });
-
-        const requestConfig = {
-          ...requestBaseConfig,
-          endpoint: 'http://127.0.0.1:8080/rest/positive?pureresponse=true',
-          responseSchema,
-          customSelectorData: data => data.delta,
-        };
-
-        const response = await new PureRestRequest().getRequest(requestConfig);
-
-        expect(response).toEqual({
-          additionalErrors: null,
-          code: 200,
-          data: ['1', '2'],
           error: false,
           errorText: '',
           headers: {
