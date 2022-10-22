@@ -203,9 +203,6 @@
   "You can use shemas to validate responses or you can provide your own validate function\"": {
     "message": "Вы можете использовать схемы валидации ответов с сервера либо использовать кастомную функцию для проверки правильности ответа."
   },
-  "You're able to select only necessary data from JSON response": {
-    "message": "Вы можете выбрать только те поля из запроса, которые нужны для работы вашего модуля в приложении"
-  },
   "Just provide translateFunction option that handles the response key and translate it\"": {
     "message": "Вы можете передать параметр translateFunction и перевести текст ответа сервера"
   },
@@ -223,9 +220,6 @@
   },
   "All types of validations": {
     "message": "Валидирующий"
-  },
-  "Select the fields that are necessary": {
-    "message": "Избирательный"
   },
   "Translate your responses": {
     "message": "Мультиязычный"

@@ -45,15 +45,6 @@ const features = [
     ),
   },
   {
-    title: <Translate>Select the fields that are necessary</Translate>,
-    imageUrl: "img/like.svg",
-    description: (
-      <Translate>
-        You're able to select only necessary data from JSON response
-      </Translate>
-    ),
-  },
-  {
     title: <Translate>Translate your responses</Translate>,
     imageUrl: "img/like.svg",
     description: (
