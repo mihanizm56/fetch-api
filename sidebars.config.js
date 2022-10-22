@@ -53,7 +53,6 @@ module.exports = {
         "examples/query-params",
         "examples/response-progress",
         "examples/retry-requests",
-        "examples/select-response-fields",
         "examples/translation",
         "examples/browser-support",
         "examples/request-timeout",
