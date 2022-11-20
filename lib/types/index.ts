@@ -6,6 +6,10 @@ import {
   requestProtocolsMap,
   TRACING_ERRORS,
 } from '@/constants';
+import {
+  CacheRequestParamsType,
+  GetRequestCacheParamsType,
+} from '@/utils/browser-api-cache/_types';
 
 export type ErrorTracingType =
   | null
@@ -29,6 +33,13 @@ export interface IResponse<
   code: number;
   headers: HeadersType;
 }
+
+// types for browser cache
+export type BrowserCacheParamsType = Omit<
+  CacheRequestParamsType<IResponse>,
+  'request'
+> &
+  GetRequestCacheParamsType;
 
 export type CacheParamsType = {
   endpoint: string;
@@ -137,6 +148,7 @@ export interface IRequestParams extends RequestInit {
   requestCache?: ICache;
   ignoreResponseIdCompare?: boolean;
   notRetryWhenOffline?: boolean;
+  browserCacheParams?: BrowserCacheParamsType;
 }
 
 export type IJSONPRCRequestBodyParams = {
