@@ -29,6 +29,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     onUpdateCache,
     expires = 0,
     expiresToDate,
+    onRequestError,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     let resolved = false;
 
@@ -63,9 +64,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
             }),
           );
 
-          if (onUpdateCache) {
-            onUpdateCache(networkResponse);
-          }
+          onUpdateCache?.(networkResponse);
 
           if (!resolved) {
             resolved = true;
@@ -75,6 +74,8 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
           return;
         }
+
+        onRequestError?.();
 
         if (!resolved) {
           resolved = true;

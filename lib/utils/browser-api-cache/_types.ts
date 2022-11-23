@@ -8,6 +8,8 @@ export type CacheRequestParamsType<ResponseType> = {
   request: () => Promise<ResponseType>;
   // onUpdateCache callback
   onUpdateCache?: (params: ResponseType) => void;
+  // onRequestError callback
+  onRequestError?: () => void;
   // cache time in ms
   expires?: number;
   // cache time to determined date

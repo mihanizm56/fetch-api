@@ -28,6 +28,7 @@ export class CacheFirst implements IRequestCache {
     expires = 0,
     disabledCache,
     expiresToDate,
+    onRequestError,
   }: CacheRequestParamsType<ResponseType>) => {
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
@@ -65,9 +66,9 @@ export class CacheFirst implements IRequestCache {
         }),
       );
 
-      if (onUpdateCache) {
-        onUpdateCache(networkResponse);
-      }
+      onUpdateCache?.(networkResponse);
+    } else {
+      onRequestError?.();
     }
 
     return networkResponse;

@@ -29,6 +29,7 @@ export class StaleWhileRevalidate implements IRequestCache {
     expires = 0,
     disabledCache,
     expiresToDate,
+    onRequestError,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     let resolved = false;
 
@@ -61,9 +62,9 @@ export class StaleWhileRevalidate implements IRequestCache {
             }),
           );
 
-          if (onUpdateCache) {
-            onUpdateCache(networkResponse);
-          }
+          onUpdateCache?.(networkResponse);
+        } else {
+          onRequestError?.();
         }
 
         if (!resolved) {

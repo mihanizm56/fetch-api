@@ -28,12 +28,15 @@ export class NetworkFirstSimple implements IRequestCache {
     onUpdateCache,
     expires = 0,
     expiresToDate,
+    onRequestError,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     const cache = await caches.open(this.storageCacheName);
 
     const networkResponse = await request();
 
     if (networkResponse.error) {
+      onRequestError?.();
+
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
 
       const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
@@ -56,9 +59,7 @@ export class NetworkFirstSimple implements IRequestCache {
       }),
     );
 
-    if (onUpdateCache) {
-      onUpdateCache(networkResponse);
-    }
+    onUpdateCache?.(networkResponse);
 
     return networkResponse;
   };
