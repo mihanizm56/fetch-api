@@ -1,4 +1,8 @@
-export const pruneRequestCaches = async () => {
+type ParamsType = {
+  force?: boolean;
+};
+
+export const pruneRequestCaches = async ({ force }: ParamsType) => {
   const currentTimestamp = new Date().getTime();
 
   const projectCachesList = await caches.keys();
@@ -26,7 +30,7 @@ export const pruneRequestCaches = async () => {
           // get string from response -> transform to number
           const formattedExpires = Number(expires) || 0;
 
-          if (currentTimestamp > formattedExpires) {
+          if (currentTimestamp > formattedExpires || force) {
             projectCache.delete(projectCachedRequest.url);
           }
         }),
