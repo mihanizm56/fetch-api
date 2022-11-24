@@ -148,7 +148,7 @@ export interface IRequestParams extends RequestInit {
   requestCache?: ICache;
   ignoreResponseIdCompare?: boolean;
   notRetryWhenOffline?: boolean;
-  browserCacheParams?: BrowserCacheParamsType;
+  browserCacheParams?: BrowserCacheParamsType | null;
 }
 
 export type IJSONPRCRequestBodyParams = {
