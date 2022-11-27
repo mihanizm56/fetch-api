@@ -64,11 +64,9 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
-          const updatedValue = JSON.stringify(networkResponse);
-
           await cache.put(
             `/${this.requestCacheKey}`,
-            new Response(updatedValue, {
+            new Response(JSON.stringify(networkResponse), {
               headers: {
                 'content-type': 'application/json',
                 expires: expiresToDate
@@ -79,7 +77,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
           );
 
           onUpdateCache?.(networkResponse);
-          this.debugCacheLogger.logUpdatedCache({ value: updatedValue });
+          this.debugCacheLogger.logUpdatedCache();
 
           if (!resolved) {
             resolved = true;

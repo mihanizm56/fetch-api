@@ -86,13 +86,13 @@ export class DebugCacheLogger {
     });
   };
 
-  logUpdatedCache = ({ value }: Record<string, any>) => {
+  logUpdatedCache = () => {
     if (!this.debug) {
       return;
     }
 
     this.logsArray.push({
-      log: `Cache is updated, new value: ${value}`,
+      log: 'Cache is updated',
       type: 'success',
     });
   };

@@ -62,11 +62,9 @@ export class NetworkFirstSimple implements IRequestCache {
       return !old && cachedResponse ? cachedResponse : networkResponse;
     }
 
-    const updatedValue = JSON.stringify(networkResponse);
-
     await cache.put(
       `/${this.requestCacheKey}`,
-      new Response(updatedValue, {
+      new Response(JSON.stringify(networkResponse), {
         headers: {
           'content-type': 'application/json',
           expires: expiresToDate
@@ -77,7 +75,7 @@ export class NetworkFirstSimple implements IRequestCache {
     );
 
     onUpdateCache?.(networkResponse);
-    this.debugCacheLogger.logUpdatedCache({ value: updatedValue });
+    this.debugCacheLogger.logUpdatedCache();
 
     return networkResponse;
   };
