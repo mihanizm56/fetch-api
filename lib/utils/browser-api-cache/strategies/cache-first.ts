@@ -4,17 +4,7 @@ import {
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
-import { LOGS_STYLES } from '../_constants';
-import {
-  closeLogsGroup,
-  logCacheIsExpired,
-  logCacheIsMatched,
-  logDisabledCache,
-  logNotUpdatedCache,
-  logParams,
-  logUpdatedCache,
-  openLogsGroup,
-} from '../_utils/debug-logs';
+import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 
 export class CacheFirst implements IRequestCache {
   timestamp: number;
@@ -23,14 +13,18 @@ export class CacheFirst implements IRequestCache {
 
   requestCacheKey: string;
 
+  debugCacheLogger: DebugCacheLogger;
+
   constructor({
     timestamp,
     storageCacheName,
     requestCacheKey,
+    debugCacheLogger,
   }: IRequestCacheParamsType) {
     this.timestamp = timestamp;
     this.storageCacheName = storageCacheName;
     this.requestCacheKey = requestCacheKey;
+    this.debugCacheLogger = debugCacheLogger;
   }
 
   cacheRequest = async <ResponseType extends { error: boolean }>({
@@ -42,9 +36,12 @@ export class CacheFirst implements IRequestCache {
     onRequestError,
     debug,
   }: CacheRequestParamsType<ResponseType>) => {
-    openLogsGroup({ debug, requestCacheKey: this.requestCacheKey });
+    this.debugCacheLogger.openLogsGroup({
+      debug,
+      requestCacheKey: this.requestCacheKey,
+    });
 
-    logParams({
+    this.debugCacheLogger.logParams({
       debug,
       params: JSON.stringify({
         strategy: 'CacheFirst',
@@ -61,8 +58,8 @@ export class CacheFirst implements IRequestCache {
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (disabledCache || !window.caches) {
       const response = await request();
-      logDisabledCache({ debug });
-      closeLogsGroup({ debug });
+      this.debugCacheLogger.logDisabledCache({ debug });
+      this.debugCacheLogger.closeLogsGroup({ debug });
 
       return response;
     }
@@ -70,7 +67,10 @@ export class CacheFirst implements IRequestCache {
     const cache = await caches.open(this.storageCacheName);
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
-    logCacheIsMatched({ debug, cacheMatched: Boolean(cacheMatch) });
+    this.debugCacheLogger.logCacheIsMatched({
+      debug,
+      cacheMatched: Boolean(cacheMatch),
+    });
 
     const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
       timestamp: this.timestamp,
@@ -78,11 +78,11 @@ export class CacheFirst implements IRequestCache {
     });
 
     if (old) {
-      logCacheIsExpired({ debug });
+      this.debugCacheLogger.logCacheIsExpired({ debug });
     }
 
     if (!old && cachedResponse) {
-      closeLogsGroup({ debug });
+      this.debugCacheLogger.closeLogsGroup({ debug });
       return cachedResponse;
     }
 
@@ -104,13 +104,16 @@ export class CacheFirst implements IRequestCache {
       );
 
       onUpdateCache?.(networkResponse);
-      logUpdatedCache({ debug, value: updatedValue });
+      this.debugCacheLogger.logUpdatedCache({ debug, value: updatedValue });
     } else {
       onRequestError?.();
-      logNotUpdatedCache({ debug, response: JSON.stringify(networkResponse) });
+      this.debugCacheLogger.logNotUpdatedCache({
+        debug,
+        response: JSON.stringify(networkResponse),
+      });
     }
 
-    closeLogsGroup({ debug });
+    this.debugCacheLogger.closeLogsGroup({ debug });
     return networkResponse;
   };
 }

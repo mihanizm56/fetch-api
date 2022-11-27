@@ -5,13 +5,7 @@ import {
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
-import { LOGS_STYLES } from '../_constants';
-import {
-  logCacheIsExpired,
-  logCacheIsMatched,
-  logNotUpdatedCache,
-  logUpdatedCache,
-} from '../_utils/debug-logs';
+import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 
 export class NetworkFirstWithTimeout implements IRequestCache {
   timestamp: number;
@@ -20,14 +14,18 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
   requestCacheKey: string;
 
+  debugCacheLogger: DebugCacheLogger;
+
   constructor({
     timestamp,
     storageCacheName,
     requestCacheKey,
+    debugCacheLogger,
   }: IRequestCacheParamsType) {
     this.timestamp = timestamp;
     this.storageCacheName = storageCacheName;
     this.requestCacheKey = requestCacheKey;
+    this.debugCacheLogger = debugCacheLogger;
   }
 
   cacheRequest = <ResponseType extends { error: boolean } = IResponse>({
@@ -45,14 +43,17 @@ export class NetworkFirstWithTimeout implements IRequestCache {
       const cache = await caches.open(this.storageCacheName);
 
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
-      logCacheIsMatched({ debug, cacheMatched: Boolean(cacheMatch) });
+      this.debugCacheLogger.logCacheIsMatched({
+        debug,
+        cacheMatched: Boolean(cacheMatch),
+      });
       const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
         timestamp: this.timestamp,
         cacheMatch,
       });
 
       if (old) {
-        logCacheIsExpired({ debug });
+        this.debugCacheLogger.logCacheIsExpired({ debug });
       }
 
       if (!old) {
@@ -80,7 +81,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
           );
 
           onUpdateCache?.(networkResponse);
-          logUpdatedCache({ debug, value: updatedValue });
+          this.debugCacheLogger.logUpdatedCache({ debug, value: updatedValue });
 
           if (!resolved) {
             resolved = true;
@@ -92,7 +93,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         }
 
         onRequestError?.();
-        logNotUpdatedCache({
+        this.debugCacheLogger.logNotUpdatedCache({
           debug,
           response: JSON.stringify(networkResponse),
         });

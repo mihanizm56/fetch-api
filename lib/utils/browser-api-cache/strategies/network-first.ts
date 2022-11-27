@@ -4,13 +4,7 @@ import {
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
-import { LOGS_STYLES } from '../_constants';
-import {
-  closeLogsGroup,
-  logDisabledCache,
-  logParams,
-  openLogsGroup,
-} from '../_utils/debug-logs';
+import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 import { NetworkFirstWithTimeout } from './network-first-with-timeout';
 import { NetworkFirstSimple } from './network-first-simple';
 
@@ -21,14 +15,18 @@ export class NetworkFirst implements IRequestCache {
 
   requestCacheKey: string;
 
+  debugCacheLogger: DebugCacheLogger;
+
   constructor({
     timestamp,
     storageCacheName,
     requestCacheKey,
+    debugCacheLogger,
   }: IRequestCacheParamsType) {
     this.timestamp = timestamp;
     this.storageCacheName = storageCacheName;
     this.requestCacheKey = requestCacheKey;
+    this.debugCacheLogger = debugCacheLogger;
   }
 
   cacheRequest = async <ResponseType extends { error: boolean } = IResponse>(
@@ -36,12 +34,12 @@ export class NetworkFirst implements IRequestCache {
   ): Promise<ResponseType> => {
     const debug = params.debug;
 
-    openLogsGroup({
+    this.debugCacheLogger.openLogsGroup({
       debug,
       requestCacheKey: this.requestCacheKey,
     });
 
-    logParams({
+    this.debugCacheLogger.logParams({
       debug,
       params: JSON.stringify({
         strategy: 'NetworkFirst',
@@ -58,8 +56,8 @@ export class NetworkFirst implements IRequestCache {
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (params.disabledCache || !window.caches) {
       const response = await params.request();
-      logDisabledCache({ debug });
-      closeLogsGroup({ debug });
+      this.debugCacheLogger.logDisabledCache({ debug });
+      this.debugCacheLogger.closeLogsGroup({ debug });
 
       return response;
     }
@@ -69,6 +67,7 @@ export class NetworkFirst implements IRequestCache {
       timestamp: this.timestamp,
       storageCacheName: this.storageCacheName,
       requestCacheKey: this.requestCacheKey,
+      debugCacheLogger: this.debugCacheLogger,
     };
 
     const strategyClass = params.timeout
@@ -77,7 +76,7 @@ export class NetworkFirst implements IRequestCache {
 
     const result = await strategyClass.cacheRequest(params);
 
-    closeLogsGroup({ debug });
+    this.debugCacheLogger.closeLogsGroup({ debug });
     return result;
   };
 }

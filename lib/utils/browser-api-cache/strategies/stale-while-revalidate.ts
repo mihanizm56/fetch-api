@@ -5,17 +5,7 @@ import {
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
-import { LOGS_STYLES } from '../_constants';
-import {
-  closeLogsGroup,
-  logCacheIsExpired,
-  logCacheIsMatched,
-  logDisabledCache,
-  logNotUpdatedCache,
-  logParams,
-  logUpdatedCache,
-  openLogsGroup,
-} from '../_utils/debug-logs';
+import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 
 export class StaleWhileRevalidate implements IRequestCache {
   timestamp: number;
@@ -24,14 +14,18 @@ export class StaleWhileRevalidate implements IRequestCache {
 
   requestCacheKey: string;
 
+  debugCacheLogger: DebugCacheLogger;
+
   constructor({
     timestamp,
     storageCacheName,
     requestCacheKey,
+    debugCacheLogger,
   }: IRequestCacheParamsType) {
     this.timestamp = timestamp;
     this.storageCacheName = storageCacheName;
     this.requestCacheKey = requestCacheKey;
+    this.debugCacheLogger = debugCacheLogger;
   }
 
   cacheRequest = <ResponseType extends { error: boolean } = IResponse>({
@@ -45,12 +39,12 @@ export class StaleWhileRevalidate implements IRequestCache {
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     let resolved = false;
 
-    openLogsGroup({
+    this.debugCacheLogger.openLogsGroup({
       debug,
       requestCacheKey: this.requestCacheKey,
     });
 
-    logParams({
+    this.debugCacheLogger.logParams({
       debug,
       params: JSON.stringify({
         strategy: 'StaleWhileRevalidate',
@@ -66,8 +60,8 @@ export class StaleWhileRevalidate implements IRequestCache {
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (disabledCache || !window.caches) {
-      logDisabledCache({ debug });
-      closeLogsGroup({ debug });
+      this.debugCacheLogger.logDisabledCache({ debug });
+      this.debugCacheLogger.closeLogsGroup({ debug });
       return request();
     }
 
@@ -75,7 +69,10 @@ export class StaleWhileRevalidate implements IRequestCache {
       const cache = await caches.open(this.storageCacheName);
 
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
-      logCacheIsMatched({ debug, cacheMatched: Boolean(cacheMatch) });
+      this.debugCacheLogger.logCacheIsMatched({
+        debug,
+        cacheMatched: Boolean(cacheMatch),
+      });
 
       const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
         timestamp: this.timestamp,
@@ -83,7 +80,7 @@ export class StaleWhileRevalidate implements IRequestCache {
       });
 
       if (old) {
-        logCacheIsExpired({ debug });
+        this.debugCacheLogger.logCacheIsExpired({ debug });
       }
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
@@ -102,17 +99,17 @@ export class StaleWhileRevalidate implements IRequestCache {
           );
 
           onUpdateCache?.(networkResponse);
-          logUpdatedCache({ debug, value: updatedValue });
+          this.debugCacheLogger.logUpdatedCache({ debug, value: updatedValue });
         } else {
           onRequestError?.();
-          logNotUpdatedCache({
+          this.debugCacheLogger.logNotUpdatedCache({
             debug,
             response: JSON.stringify(networkResponse),
           });
         }
 
         if (!resolved) {
-          closeLogsGroup({ debug }); // end here because we want all logs
+          this.debugCacheLogger.closeLogsGroup({ debug }); // end here because we want all logs
           resolve(networkResponse);
         }
       });

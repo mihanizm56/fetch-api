@@ -1,3 +1,5 @@
+import { DebugCacheLogger } from './_utils/debug-cache-logger';
+
 export type RequestCacheStrategy =
   | 'NetworkFirst'
   | 'StaleWhileRevalidate'
@@ -26,12 +28,14 @@ export type IRequestCacheParamsType = {
   timestamp: number;
   storageCacheName: string;
   requestCacheKey: string;
+  debugCacheLogger: DebugCacheLogger;
 };
 
 export interface IRequestCache {
   timestamp: number;
   storageCacheName: string;
   requestCacheKey: string;
+  debugCacheLogger: DebugCacheLogger;
 
   cacheRequest: <ResponseType extends { error: boolean }>(
     params: CacheRequestParamsType<ResponseType>,
