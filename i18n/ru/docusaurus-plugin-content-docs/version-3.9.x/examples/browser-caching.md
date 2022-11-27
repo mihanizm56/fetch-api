@@ -4,7 +4,7 @@ title: Браузерное кэширование запросов
 
 import Link from '@docusaurus/Link';
 
-ДЖля каждого запроса можно отдельно описать кэширование. Эта функциональность использует <Link to='https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage'>The Cache Storage Api</Link>
+Для каждого запроса можно отдельно описать кэширование. Эта функциональность использует <Link to='https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage'>The Cache Storage Api</Link>
 
 ## Включение кэширования
 
