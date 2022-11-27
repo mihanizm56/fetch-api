@@ -50,7 +50,16 @@ const features = [
     description: (
       <Translate>
         Just provide translateFunction option that handles the response key and
-        translate it"
+        translate it
+      </Translate>
+    ),
+  },
+  {
+    title: <Translate>Has caching tools</Translate>,
+    imageUrl: "img/like.svg",
+    description: (
+      <Translate>
+        All you need is to select the cache strategy
       </Translate>
     ),
   },

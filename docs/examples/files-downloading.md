@@ -1,21 +1,15 @@
 ---
-title: Загрузка файлов
+title: Files downloading
 ---
 
 import Link from '@docusaurus/Link';
 
-Вы можете использовать запросы для скачивания файлов с каких либо ресурсов кроме текущего домена приложения.
-
-Но вы должны явно указывать это в параметре parseType (json, blob, text),
-и если файл является json - то вы можете использовать как parseType: "json", 
-так и специальный параметр pureJsonFileResponse.
-
+You can use this library to fetch files. To do that, you should set parseType(json, blob, text) or pureJsonFileResponse parameter when fetching json file
 
 #### pureJsonFileResponse 
-  - используется в связке с PureRestRequest (getRequest)
-  - отключает заголовок Content-type
-  - разрешает только 200,304,404 коды ответа
-  - отключает валидации по схемам
+  - removes automatic Content-type header (you can set this manually)
+  - positive codes are 200,304,404
+  - disables schema validation
 
 ```javascript
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";

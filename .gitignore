@@ -8,6 +8,8 @@ dist
 # Generated files
 .docusaurus
 .cache-loader
+.eslintinfo
+
 
 # Misc
 .DS_Store
