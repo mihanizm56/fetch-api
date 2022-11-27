@@ -75,7 +75,7 @@ export class StaleWhileRevalidate implements IRequestCache {
         cacheMatch,
       });
 
-      if (old) {
+      if (old && cacheMatch) {
         this.debugCacheLogger.logCacheIsExpired();
       }
       request().then(async (networkResponse) => {

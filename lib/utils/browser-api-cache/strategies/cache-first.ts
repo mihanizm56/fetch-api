@@ -73,7 +73,7 @@ export class CacheFirst implements IRequestCache {
       cacheMatch,
     });
 
-    if (old) {
+    if (old && cacheMatch) {
       this.debugCacheLogger.logCacheIsExpired();
     }
 

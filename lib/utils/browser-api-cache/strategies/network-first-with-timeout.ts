@@ -50,7 +50,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         cacheMatch,
       });
 
-      if (old) {
+      if (old && cacheMatch) {
         this.debugCacheLogger.logCacheIsExpired();
       }
 
