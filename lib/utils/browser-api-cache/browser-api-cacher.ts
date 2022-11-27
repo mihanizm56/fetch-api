@@ -5,10 +5,14 @@ import { GetRequestCacheParamsType, IApiCacher } from './_types';
 import { DebugCacheLogger } from './_utils/debug-cache-logger';
 
 export class BrowserApiCacher implements IApiCacher {
-  getRequestCache = ({ strategy, ...params }: GetRequestCacheParamsType) => {
+  getRequestCache = ({
+    strategy,
+    debug,
+    ...params
+  }: GetRequestCacheParamsType) => {
     const timestamp = new Date().getTime();
 
-    const debugCacheLogger = new DebugCacheLogger();
+    const debugCacheLogger = new DebugCacheLogger({ debug });
 
     if (strategy === 'StaleWhileRevalidate') {
       return new StaleWhileRevalidate({

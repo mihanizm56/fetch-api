@@ -34,7 +34,6 @@ export class NetworkFirstSimple implements IRequestCache {
     expires = 0,
     expiresToDate,
     onRequestError,
-    debug,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     const cache = await caches.open(this.storageCacheName);
 
@@ -43,13 +42,11 @@ export class NetworkFirstSimple implements IRequestCache {
     if (networkResponse.error) {
       onRequestError?.();
       this.debugCacheLogger.logNotUpdatedCache({
-        debug,
         response: JSON.stringify(networkResponse),
       });
 
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
       this.debugCacheLogger.logCacheIsMatched({
-        debug,
         cacheMatched: Boolean(cacheMatch),
       });
 
@@ -59,7 +56,7 @@ export class NetworkFirstSimple implements IRequestCache {
       });
 
       if (old) {
-        this.debugCacheLogger.logCacheIsExpired({ debug });
+        this.debugCacheLogger.logCacheIsExpired();
       }
 
       return !old && cachedResponse ? cachedResponse : networkResponse;
@@ -80,7 +77,7 @@ export class NetworkFirstSimple implements IRequestCache {
     );
 
     onUpdateCache?.(networkResponse);
-    this.debugCacheLogger.logUpdatedCache({ debug, value: updatedValue });
+    this.debugCacheLogger.logUpdatedCache({ value: updatedValue });
 
     return networkResponse;
   };

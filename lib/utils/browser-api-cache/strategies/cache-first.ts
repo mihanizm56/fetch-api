@@ -34,15 +34,12 @@ export class CacheFirst implements IRequestCache {
     disabledCache,
     expiresToDate,
     onRequestError,
-    debug,
   }: CacheRequestParamsType<ResponseType>) => {
     this.debugCacheLogger.openLogsGroup({
-      debug,
       requestCacheKey: this.requestCacheKey,
     });
 
     this.debugCacheLogger.logParams({
-      debug,
       params: JSON.stringify({
         strategy: 'CacheFirst',
         expiresToDate,
@@ -58,8 +55,8 @@ export class CacheFirst implements IRequestCache {
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (disabledCache || !window.caches) {
       const response = await request();
-      this.debugCacheLogger.logDisabledCache({ debug });
-      this.debugCacheLogger.closeLogsGroup({ debug });
+      this.debugCacheLogger.logDisabledCache();
+      this.debugCacheLogger.closeLogsGroup();
 
       return response;
     }
@@ -68,7 +65,6 @@ export class CacheFirst implements IRequestCache {
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
     this.debugCacheLogger.logCacheIsMatched({
-      debug,
       cacheMatched: Boolean(cacheMatch),
     });
 
@@ -78,11 +74,11 @@ export class CacheFirst implements IRequestCache {
     });
 
     if (old) {
-      this.debugCacheLogger.logCacheIsExpired({ debug });
+      this.debugCacheLogger.logCacheIsExpired();
     }
 
     if (!old && cachedResponse) {
-      this.debugCacheLogger.closeLogsGroup({ debug });
+      this.debugCacheLogger.closeLogsGroup();
       return cachedResponse;
     }
 
@@ -104,16 +100,15 @@ export class CacheFirst implements IRequestCache {
       );
 
       onUpdateCache?.(networkResponse);
-      this.debugCacheLogger.logUpdatedCache({ debug, value: updatedValue });
+      this.debugCacheLogger.logUpdatedCache({ value: updatedValue });
     } else {
       onRequestError?.();
       this.debugCacheLogger.logNotUpdatedCache({
-        debug,
         response: JSON.stringify(networkResponse),
       });
     }
 
-    this.debugCacheLogger.closeLogsGroup({ debug });
+    this.debugCacheLogger.closeLogsGroup();
     return networkResponse;
   };
 }

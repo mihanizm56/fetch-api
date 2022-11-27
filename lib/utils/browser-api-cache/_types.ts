@@ -20,8 +20,6 @@ export type CacheRequestParamsType<ResponseType> = {
   disabledCache?: boolean;
   // request timeout
   timeout?: number;
-  // debug mode
-  debug?: boolean;
 };
 
 export type IRequestCacheParamsType = {
@@ -49,6 +47,8 @@ export type GetRequestCacheParamsType = {
   storageCacheName: string;
   // Request name in storage
   requestCacheKey: string;
+  // debug mode
+  debug?: boolean;
 };
 
 export interface IApiCacher {

@@ -3,7 +3,7 @@ import { LogStylesTypeEnum, LOGS_STYLES } from '../_constants';
 
 type ParamsType = {
   debug?: boolean;
-} & Record<string, any>;
+};
 
 type LogType = {
   log: string;
@@ -17,11 +17,19 @@ export class DebugCacheLogger {
 
   logsArray: Array<LogType> = [];
 
-  openLogsGroup = ({ debug, requestCacheKey }: ParamsType) => {
-    if (debug) {
-      this.opened = true;
-      this.requestCacheKey = requestCacheKey;
+  debug?: boolean = false;
+
+  constructor({ debug }: ParamsType) {
+    this.debug = debug;
+  }
+
+  openLogsGroup = ({ requestCacheKey }: Record<string, any>) => {
+    if (!this.debug) {
+      return;
     }
+
+    this.opened = true;
+    this.requestCacheKey = requestCacheKey;
   };
 
   writeLogs = () => {
@@ -36,64 +44,78 @@ export class DebugCacheLogger {
     console.groupEnd();
   };
 
-  closeLogsGroup = ({ debug }: ParamsType) => {
-    if (debug) {
-      this.writeLogs();
-      this.opened = false;
+  closeLogsGroup = () => {
+    if (!this.debug) {
+      return;
     }
+
+    this.writeLogs();
+    this.opened = false;
   };
 
-  logParams = ({ debug, params }: ParamsType) => {
-    if (debug) {
-      this.logsArray.push({
-        log: `Cache Params: ${params}`,
-        type: 'main',
-      });
+  logParams = ({ params }: Record<string, any>) => {
+    if (!this.debug) {
+      return;
     }
+
+    this.logsArray.push({
+      log: `Cache Params: ${params}`,
+      type: 'main',
+    });
   };
 
-  logCacheIsMatched = ({ debug, cacheMatched }: ParamsType) => {
-    if (debug) {
-      this.logsArray.push({
-        log: `Cache is matched: ${cacheMatched}`,
-        type: 'success',
-      });
+  logCacheIsMatched = ({ cacheMatched }: Record<string, any>) => {
+    if (!this.debug) {
+      return;
     }
+
+    this.logsArray.push({
+      log: `Cache is matched: ${cacheMatched}`,
+      type: 'success',
+    });
   };
 
-  logCacheIsExpired = ({ debug }: ParamsType) => {
-    if (debug) {
-      this.logsArray.push({
-        log: 'Cache is expired',
-        type: 'warning',
-      });
+  logCacheIsExpired = () => {
+    if (!this.debug) {
+      return;
     }
+
+    this.logsArray.push({
+      log: 'Cache is expired',
+      type: 'warning',
+    });
   };
 
-  logUpdatedCache = ({ debug, value }: ParamsType) => {
-    if (debug) {
-      this.logsArray.push({
-        log: `Cache is updated, new value: ${value}`,
-        type: 'success',
-      });
+  logUpdatedCache = ({ value }: Record<string, any>) => {
+    if (!this.debug) {
+      return;
     }
+
+    this.logsArray.push({
+      log: `Cache is updated, new value: ${value}`,
+      type: 'success',
+    });
   };
 
-  logNotUpdatedCache = ({ debug, response }: ParamsType) => {
-    if (debug) {
-      this.logsArray.push({
-        log: `Cache is not updated: response with error: ${response}`,
-        type: 'error',
-      });
+  logNotUpdatedCache = ({ response }: Record<string, any>) => {
+    if (!this.debug) {
+      return;
     }
+
+    this.logsArray.push({
+      log: `Cache is not updated: response with error: ${response}`,
+      type: 'error',
+    });
   };
 
-  logDisabledCache = ({ debug }: ParamsType) => {
-    if (debug) {
-      this.logsArray.push({
-        log: 'Cache is disabled',
-        type: 'warning',
-      });
+  logDisabledCache = () => {
+    if (!this.debug) {
+      return;
     }
+
+    this.logsArray.push({
+      log: 'Cache is disabled',
+      type: 'warning',
+    });
   };
 }

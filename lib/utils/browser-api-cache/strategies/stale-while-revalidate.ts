@@ -35,17 +35,14 @@ export class StaleWhileRevalidate implements IRequestCache {
     disabledCache,
     expiresToDate,
     onRequestError,
-    debug,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     let resolved = false;
 
     this.debugCacheLogger.openLogsGroup({
-      debug,
       requestCacheKey: this.requestCacheKey,
     });
 
     this.debugCacheLogger.logParams({
-      debug,
       params: JSON.stringify({
         strategy: 'StaleWhileRevalidate',
         expiresToDate,
@@ -60,8 +57,8 @@ export class StaleWhileRevalidate implements IRequestCache {
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (disabledCache || !window.caches) {
-      this.debugCacheLogger.logDisabledCache({ debug });
-      this.debugCacheLogger.closeLogsGroup({ debug });
+      this.debugCacheLogger.logDisabledCache();
+      this.debugCacheLogger.closeLogsGroup();
       return request();
     }
 
@@ -70,7 +67,6 @@ export class StaleWhileRevalidate implements IRequestCache {
 
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
       this.debugCacheLogger.logCacheIsMatched({
-        debug,
         cacheMatched: Boolean(cacheMatch),
       });
 
@@ -80,7 +76,7 @@ export class StaleWhileRevalidate implements IRequestCache {
       });
 
       if (old) {
-        this.debugCacheLogger.logCacheIsExpired({ debug });
+        this.debugCacheLogger.logCacheIsExpired();
       }
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
@@ -99,17 +95,16 @@ export class StaleWhileRevalidate implements IRequestCache {
           );
 
           onUpdateCache?.(networkResponse);
-          this.debugCacheLogger.logUpdatedCache({ debug, value: updatedValue });
+          this.debugCacheLogger.logUpdatedCache({ value: updatedValue });
         } else {
           onRequestError?.();
           this.debugCacheLogger.logNotUpdatedCache({
-            debug,
             response: JSON.stringify(networkResponse),
           });
         }
 
         if (!resolved) {
-          this.debugCacheLogger.closeLogsGroup({ debug }); // end here because we want all logs
+          this.debugCacheLogger.closeLogsGroup(); // end here because we want all logs
           resolve(networkResponse);
         }
       });

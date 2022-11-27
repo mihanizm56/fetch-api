@@ -32,15 +32,11 @@ export class NetworkFirst implements IRequestCache {
   cacheRequest = async <ResponseType extends { error: boolean } = IResponse>(
     params: CacheRequestParamsType<ResponseType>,
   ): Promise<ResponseType> => {
-    const debug = params.debug;
-
     this.debugCacheLogger.openLogsGroup({
-      debug,
       requestCacheKey: this.requestCacheKey,
     });
 
     this.debugCacheLogger.logParams({
-      debug,
       params: JSON.stringify({
         strategy: 'NetworkFirst',
         expiresToDate: params.expiresToDate,
@@ -56,8 +52,8 @@ export class NetworkFirst implements IRequestCache {
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (params.disabledCache || !window.caches) {
       const response = await params.request();
-      this.debugCacheLogger.logDisabledCache({ debug });
-      this.debugCacheLogger.closeLogsGroup({ debug });
+      this.debugCacheLogger.logDisabledCache();
+      this.debugCacheLogger.closeLogsGroup();
 
       return response;
     }
@@ -76,7 +72,7 @@ export class NetworkFirst implements IRequestCache {
 
     const result = await strategyClass.cacheRequest(params);
 
-    this.debugCacheLogger.closeLogsGroup({ debug });
+    this.debugCacheLogger.closeLogsGroup();
     return result;
   };
 }

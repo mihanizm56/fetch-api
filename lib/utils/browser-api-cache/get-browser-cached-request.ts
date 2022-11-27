@@ -11,6 +11,7 @@ export const getBrowserCachedRequest = ({
   strategy,
   requestCacheKey,
   storageCacheName,
+  debug,
   request,
   ...cacheRequestParamsType
 }: ParamsType): Promise<IResponse> => {
@@ -18,6 +19,7 @@ export const getBrowserCachedRequest = ({
     strategy,
     requestCacheKey,
     storageCacheName,
+    debug,
   });
 
   return cache.cacheRequest({
