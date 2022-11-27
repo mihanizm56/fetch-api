@@ -203,8 +203,11 @@
   "You can use shemas to validate responses or you can provide your own validate function\"": {
     "message": "Вы можете использовать схемы валидации ответов с сервера либо использовать кастомную функцию для проверки правильности ответа."
   },
-  "Just provide translateFunction option that handles the response key and translate it\"": {
+  "Just provide translateFunction option that handles the response key and translate it": {
     "message": "Вы можете передать параметр translateFunction и перевести текст ответа сервера"
+  },
+  "All you need is to select the cache strategy": {
+    "message": "Все что вам нужно - задать параметры кэширования"
   },
   "Get Started": {
     "message": "Начать использование"
@@ -226,5 +229,8 @@
   },
   "Api client based of native fetch api with a lot of features": {
     "message": "Библиотека запросов с широкими возможностями"
+  },
+  "Has caching tools": {
+    "message": "Встроенный механизм кэширования запросов"
   }
 }

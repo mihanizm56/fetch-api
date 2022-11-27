@@ -1,0 +1,159 @@
+{
+  "version-3.9.x/someSidebar": [
+    {
+      "type": "doc",
+      "id": "version-3.9.x/overview"
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Request Types",
+      "items": [
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "REST request",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/rest-request/get"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/rest-request/post"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/rest-request/put"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/rest-request/patch"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/rest-request/delete"
+            }
+          ]
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Pure REST request",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/pure-rest-request/get"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/pure-rest-request/post"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/pure-rest-request/put"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/pure-rest-request/patch"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/pure-rest-request/delete"
+            }
+          ]
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "JSON-RPC request",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/json-rpc-request/batched"
+            },
+            {
+              "type": "doc",
+              "id": "version-3.9.x/requests/json-rpc-request/regular"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Examples",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/universal-requests"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/validations"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/one-interface"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/error-catching"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/cancel-requests"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/logging"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/query-params"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/response-progress"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/retry-requests"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/translation"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/browser-support"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/request-timeout"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/proxy-maker"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/middlewares"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/files-downloading"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/caching"
+        },
+        {
+          "type": "doc",
+          "id": "version-3.9.x/examples/browser-caching"
+        }
+      ]
+    }
+  ]
+}
