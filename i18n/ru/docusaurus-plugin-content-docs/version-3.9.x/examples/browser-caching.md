@@ -48,13 +48,13 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
 
 | Name             | Type         | Comments                                   |
 | ---------------- | ------------ | ------------------------------------------ |
-| disabledCache            | `boolean`    | disabled cache           |
-| strategy            | `NetworkFirst, StaleWhileRevalidate, CacheFirst`    | strategy for the request       |
-| requestCacheKey        | `string`     | main request cache key |
-| storageCacheName             | `string` | main request storage key                             |
-| expires | `number`        | time in ms for the request cache to be expired         |
-| expiresToDate | `number`        | time in ms for the request cache to be expired to the selected date only         |
-| timeout | `number`        | timeout for request - if it is out - the cached previos result will be given (only NetworkFirst strategy has this feature)         |
-| onUpdateCache | `function`        | callback is called if cache was updated         |
-| onRequestError | `function`        | callback is called if the request has an error      |
-| debug             | `boolean`     | flag for logging in the browser developer tools  |
+| disabledCache            | `boolean`    | флаг выключения кэша           |
+| strategy            | `NetworkFirst, StaleWhileRevalidate, CacheFirst`    | стратегия кэширования запроса      |
+| requestCacheKey        | `string`     | ключ кэширования запроса |
+| storageCacheName             | `string` | имя ячейки хранилища                             |
+| expires | `number`     | время кэширования в ms                   |
+| expiresToDate | `number`     | время кэширования до определенной даты в ms                   |
+| timeout | `number`        | таймаут запроса (только NetworkFirst в стратегии) - если истекает раньше ответа сервера - то возвращается закэшированное ранее значение         |
+| onUpdateCache | `function`        | коллбек, вызывающийся во время обновления кэша         |
+| onRequestError | `function`        | коллбек, вызывающийся во время ошибки ответа сервера      |
+| debug             | `boolean`     | флаг для включения логгирования в консоль  |

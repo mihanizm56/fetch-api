@@ -52,11 +52,11 @@ You can read about strategies <Link to='https://developer.chrome.com/docs/workbo
 | Name             | Type         | Comments                                   |
 | ---------------- | ------------ | ------------------------------------------ |
 | disabledCache            | `boolean`    | disabled cache           |
-| strategy            | `NetworkFirst, StaleWhileRevalidate, CacheFirst`    | strategy for the request       |
+| strategy            | `NetworkFirst, StaleWhileRevalidate, CacheFirst`    | cache strategy for the request       |
 | requestCacheKey        | `string`     | main request cache key |
 | storageCacheName             | `string` | main request storage key                             |
-| expires | `number`        | time in ms for the request cache to be expired         |
-| expiresToDate | `number`        | time in ms for the request cache to be expired to the selected date only         |
+| expires | `number`     | cache time in ms                   |
+| expiresToDate | `number`     | cache time to determined date                    |
 | timeout | `number`        | timeout for request - if it is out - the cached previos result will be given (only NetworkFirst strategy has this feature)         |
 | onUpdateCache | `function`        | callback is called if cache was updated         |
 | onRequestError | `function`        | callback is called if the request has an error      |
