@@ -18,6 +18,8 @@ export type CacheRequestParamsType<ResponseType> = {
   disabledCache?: boolean;
   // request timeout
   timeout?: number;
+  // debug mode
+  debug?: boolean;
 };
 
 export type IRequestCacheParamsType = {

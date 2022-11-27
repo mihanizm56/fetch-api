@@ -4,6 +4,13 @@ import {
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
+import { LOGS_STYLES } from '../_constants';
+import {
+  closeLogsGroup,
+  logDisabledCache,
+  logParams,
+  openLogsGroup,
+} from '../_utils/debug-logs';
 import { NetworkFirstWithTimeout } from './network-first-with-timeout';
 import { NetworkFirstSimple } from './network-first-simple';
 
@@ -27,10 +34,32 @@ export class NetworkFirst implements IRequestCache {
   cacheRequest = async <ResponseType extends { error: boolean } = IResponse>(
     params: CacheRequestParamsType<ResponseType>,
   ): Promise<ResponseType> => {
+    const debug = params.debug;
+
+    openLogsGroup({
+      debug,
+      requestCacheKey: this.requestCacheKey,
+    });
+
+    logParams({
+      debug,
+      params: JSON.stringify({
+        strategy: 'NetworkFirst',
+        expiresToDate: params.expiresToDate,
+        disabledCache: params.disabledCache,
+        expires: this.timestamp + (params.expires || 0),
+        timestamp: this.timestamp,
+        storageCacheName: this.storageCacheName,
+        requestCacheKey: this.requestCacheKey,
+      }),
+    });
+
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
     if (params.disabledCache || !window.caches) {
       const response = await params.request();
+      logDisabledCache({ debug });
+      closeLogsGroup({ debug });
 
       return response;
     }
@@ -48,6 +77,7 @@ export class NetworkFirst implements IRequestCache {
 
     const result = await strategyClass.cacheRequest(params);
 
+    closeLogsGroup({ debug });
     return result;
   };
 }

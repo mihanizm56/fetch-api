@@ -5,6 +5,13 @@ import {
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
+import { LOGS_STYLES } from '../_constants';
+import {
+  logCacheIsExpired,
+  logCacheIsMatched,
+  logNotUpdatedCache,
+  logUpdatedCache,
+} from '../_utils/debug-logs';
 
 export class NetworkFirstWithTimeout implements IRequestCache {
   timestamp: number;
@@ -30,17 +37,23 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     expires = 0,
     expiresToDate,
     onRequestError,
+    debug,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     let resolved = false;
 
     return new Promise(async (resolve) => {
       const cache = await caches.open(this.storageCacheName);
-      const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
 
+      const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
+      logCacheIsMatched({ debug, cacheMatched: Boolean(cacheMatch) });
       const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
         timestamp: this.timestamp,
         cacheMatch,
       });
+
+      if (old) {
+        logCacheIsExpired({ debug });
+      }
 
       if (!old) {
         setTimeout(() => {
@@ -52,9 +65,11 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
+          const updatedValue = JSON.stringify(networkResponse);
+
           await cache.put(
             `/${this.requestCacheKey}`,
-            new Response(JSON.stringify(networkResponse), {
+            new Response(updatedValue, {
               headers: {
                 'content-type': 'application/json',
                 expires: expiresToDate
@@ -65,6 +80,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
           );
 
           onUpdateCache?.(networkResponse);
+          logUpdatedCache({ debug, value: updatedValue });
 
           if (!resolved) {
             resolved = true;
@@ -76,6 +92,10 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         }
 
         onRequestError?.();
+        logNotUpdatedCache({
+          debug,
+          response: JSON.stringify(networkResponse),
+        });
 
         if (!resolved) {
           resolved = true;
