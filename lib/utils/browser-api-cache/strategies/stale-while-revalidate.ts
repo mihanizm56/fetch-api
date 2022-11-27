@@ -78,6 +78,7 @@ export class StaleWhileRevalidate implements IRequestCache {
       if (old && cacheMatch) {
         this.debugCacheLogger.logCacheIsExpired();
       }
+
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
           await cache.put(
@@ -102,9 +103,10 @@ export class StaleWhileRevalidate implements IRequestCache {
         }
 
         if (!resolved) {
-          this.debugCacheLogger.closeLogsGroup(); // end here because we want all logs
           resolve(networkResponse);
         }
+
+        this.debugCacheLogger.closeLogsGroup();
       });
 
       if (cacheMatch && !old && cachedResponse) {
