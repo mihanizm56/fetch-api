@@ -71,7 +71,7 @@ export class DebugCacheLogger {
 
     this.logsArray.push({
       log: `Cache is matched: ${cacheMatched}`,
-      type: 'success',
+      type: cacheMatched ? 'success' : 'warning',
     });
   };
 
