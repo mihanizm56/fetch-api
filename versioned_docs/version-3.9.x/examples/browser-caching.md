@@ -61,3 +61,39 @@ You can read about strategies <Link to='https://developer.chrome.com/docs/workbo
 | onUpdateCache | `function`        | callback is called if cache was updated         |
 | onRequestError | `function`        | callback is called if the request has an error      |
 | debug             | `boolean`     | flag for logging in the browser developer tools  |
+
+#### Example with a native fetch request
+
+```javascript
+import { getBrowserCachedRequest } from "@mihanizm56/fetch-api";
+
+// you can use any library for requests you want
+// this is just an exmaple with fetch
+const someRequest = async (params) => {
+    try {
+        // this lib only works with json responses
+        const result = await fetch(/* your params */).then(data => data.json());
+
+        return { result };
+    } catch (error) {
+        // we need to provide an error field in object and give
+        // to the cache the ability to understand if it was the good response or not
+        return { error: error.message };
+    }
+}
+
+export const getSomeCachedRequest = (
+  someParams,
+) => {
+  return getBrowserCachedRequest({
+    request: () => someRequest(someParams),
+    /* your browserCacheParams params */
+    strategy: 'StaleWhileRevalidate',
+    requestCacheKey: `some request cache key`,
+    storageCacheName: `some storage name`,
+    expires: 1000 * 60 * 60 * 24 * 365, // 1 year,
+    debug: true,
+  })
+};
+
+```
