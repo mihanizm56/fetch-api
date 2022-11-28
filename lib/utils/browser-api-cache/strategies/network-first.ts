@@ -72,6 +72,7 @@ export class NetworkFirst implements IRequestCache {
 
     const result = await strategyClass.cacheRequest(params);
 
+    // todo fix request update cache with timer
     this.debugCacheLogger.closeLogsGroup();
     return result;
   };
