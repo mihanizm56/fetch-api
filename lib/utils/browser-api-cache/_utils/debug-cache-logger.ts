@@ -34,7 +34,7 @@ export class DebugCacheLogger {
 
   writeLogs = () => {
     console.groupCollapsed(
-      `%cRequest Cache Info ${this.requestCacheKey}}`,
+      `%cRequest Cache Info ${this.requestCacheKey}`,
       LOGS_STYLES.main,
     );
     this.logsArray.forEach(({ log, type }) => {
