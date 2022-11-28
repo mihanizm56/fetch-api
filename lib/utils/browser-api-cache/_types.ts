@@ -9,7 +9,14 @@ export type CacheRequestParamsType<ResponseType> = {
   // request
   request: () => Promise<ResponseType>;
   // onUpdateCache callback
-  onUpdateCache?: (params: ResponseType) => void;
+  onUpdateCache?: (
+    params: ResponseType & {
+      prevValue: {
+        response?: ResponseType;
+        old: boolean;
+      };
+    },
+  ) => void;
   // onRequestError callback
   onRequestError?: () => void;
   // cache time in ms
@@ -34,7 +41,6 @@ export interface IRequestCache {
   storageCacheName: string;
   requestCacheKey: string;
   debugCacheLogger: DebugCacheLogger;
-
   cacheRequest: <ResponseType extends { error: boolean }>(
     params: CacheRequestParamsType<ResponseType>,
   ) => Promise<ResponseType>;

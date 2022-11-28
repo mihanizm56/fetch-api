@@ -76,7 +76,13 @@ export class NetworkFirstWithTimeout implements IRequestCache {
             }),
           );
 
-          onUpdateCache?.(networkResponse);
+          onUpdateCache?.({
+            ...networkResponse,
+            prevValue: {
+              response: cachedResponse,
+              old,
+            },
+          });
           this.debugCacheLogger.logUpdatedCache();
 
           if (!resolved) {

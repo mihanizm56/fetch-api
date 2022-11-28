@@ -39,20 +39,20 @@ export class NetworkFirstSimple implements IRequestCache {
 
     const networkResponse = await request();
 
+    const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
+    this.debugCacheLogger.logCacheIsMatched({
+      cacheMatched: Boolean(cacheMatch),
+    });
+
+    const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
+      timestamp: this.timestamp,
+      cacheMatch,
+    });
+
     if (networkResponse.error) {
       onRequestError?.();
       this.debugCacheLogger.logNotUpdatedCache({
         response: JSON.stringify(networkResponse),
-      });
-
-      const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
-      this.debugCacheLogger.logCacheIsMatched({
-        cacheMatched: Boolean(cacheMatch),
-      });
-
-      const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
-        timestamp: this.timestamp,
-        cacheMatch,
       });
 
       if (old && cacheMatch) {
@@ -74,7 +74,13 @@ export class NetworkFirstSimple implements IRequestCache {
       }),
     );
 
-    onUpdateCache?.(networkResponse);
+    onUpdateCache?.({
+      ...networkResponse,
+      prevValue: {
+        response: cachedResponse,
+        old,
+      },
+    });
     this.debugCacheLogger.logUpdatedCache();
 
     return networkResponse;

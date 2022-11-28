@@ -97,7 +97,13 @@ export class CacheFirst implements IRequestCache {
         }),
       );
 
-      onUpdateCache?.(networkResponse);
+      onUpdateCache?.({
+        ...networkResponse,
+        prevValue: {
+          response: cachedResponse,
+          old,
+        },
+      });
       this.debugCacheLogger.logUpdatedCache();
     } else {
       onRequestError?.();

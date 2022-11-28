@@ -93,7 +93,13 @@ export class StaleWhileRevalidate implements IRequestCache {
             }),
           );
 
-          onUpdateCache?.(networkResponse);
+          onUpdateCache?.({
+            ...networkResponse,
+            prevValue: {
+              response: cachedResponse,
+              old,
+            },
+          });
           this.debugCacheLogger.logUpdatedCache();
         } else {
           onRequestError?.();
