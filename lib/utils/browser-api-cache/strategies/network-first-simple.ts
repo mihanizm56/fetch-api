@@ -34,9 +34,10 @@ export class NetworkFirstSimple implements IRequestCache {
     expires = 0,
     expiresToDate,
     onRequestError,
-  }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
-    const cache = await caches.open(this.storageCacheName);
-
+    cache,
+  }: CacheRequestParamsType<ResponseType> & {
+    cache: Cache;
+  }): Promise<ResponseType> => {
     const networkResponse = await request();
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);

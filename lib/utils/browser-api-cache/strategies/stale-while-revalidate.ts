@@ -6,6 +6,7 @@ import {
   IRequestCacheParamsType,
 } from '../_types';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
+import { openCache } from '../_utils/open-cache';
 
 export class StaleWhileRevalidate implements IRequestCache {
   timestamp: number;
@@ -63,7 +64,16 @@ export class StaleWhileRevalidate implements IRequestCache {
     }
 
     return new Promise(async (resolve) => {
-      const cache = await caches.open(this.storageCacheName);
+      const cache = await openCache(this.storageCacheName);
+
+      if (!cache) {
+        resolved = true;
+        const networkResponse = await request();
+
+        resolve(networkResponse);
+
+        return;
+      }
 
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
       this.debugCacheLogger.logCacheIsMatched({

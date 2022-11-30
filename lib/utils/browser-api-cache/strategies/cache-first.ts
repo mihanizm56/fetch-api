@@ -5,6 +5,7 @@ import {
   IRequestCacheParamsType,
 } from '../_types';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
+import { openCache } from '../_utils/open-cache';
 
 export class CacheFirst implements IRequestCache {
   timestamp: number;
@@ -51,17 +52,17 @@ export class CacheFirst implements IRequestCache {
       }),
     });
 
+    const cache = await openCache(this.storageCacheName);
+
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
-    if (disabledCache || !window.caches) {
+    if (disabledCache || !window.caches || !cache) {
       const response = await request();
       this.debugCacheLogger.logDisabledCache();
       this.debugCacheLogger.closeLogsGroup();
 
       return response;
     }
-
-    const cache = await caches.open(this.storageCacheName);
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
     this.debugCacheLogger.logCacheIsMatched({

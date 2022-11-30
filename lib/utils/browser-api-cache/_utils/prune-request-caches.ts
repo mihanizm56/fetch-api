@@ -3,45 +3,49 @@ type ParamsType = {
 };
 
 export const pruneRequestCaches = async ({ force }: ParamsType) => {
-  const currentTimestamp = new Date().getTime();
+  try {
+    const currentTimestamp = new Date().getTime();
 
-  const projectCachesList = await caches.keys();
+    const projectCachesList = await caches.keys();
 
-  Promise.allSettled(
-    projectCachesList.map(async (projectCacheKey) => {
-      const projectCache = await caches.open(projectCacheKey);
+    Promise.allSettled(
+      projectCachesList.map(async (projectCacheKey) => {
+        const projectCache = await caches.open(projectCacheKey);
 
-      const projectCachedRequests = await projectCache.keys();
+        const projectCachedRequests = await projectCache.keys();
 
-      await Promise.allSettled(
-        projectCachedRequests.map(async (projectCachedRequest) => {
-          const response = await projectCache.match(projectCachedRequest.url);
+        await Promise.allSettled(
+          projectCachedRequests.map(async (projectCachedRequest) => {
+            const response = await projectCache.match(projectCachedRequest.url);
 
-          if (!response) {
-            return;
-          }
+            if (!response) {
+              return;
+            }
 
-          const expires = response.headers.get('expires');
+            const expires = response.headers.get('expires');
 
-          if (!expires) {
-            return;
-          }
+            if (!expires) {
+              return;
+            }
 
-          // get string from response -> transform to number
-          const formattedExpires = Number(expires) || 0;
+            // get string from response -> transform to number
+            const formattedExpires = Number(expires) || 0;
 
-          if (currentTimestamp > formattedExpires || force) {
-            projectCache.delete(projectCachedRequest.url);
-          }
-        }),
-      );
+            if (currentTimestamp > formattedExpires || force) {
+              projectCache.delete(projectCachedRequest.url);
+            }
+          }),
+        );
 
-      const updtedProjectCachedRequests = await projectCache.keys();
+        const updtedProjectCachedRequests = await projectCache.keys();
 
-      // delete cache entirely if empty
-      if (!updtedProjectCachedRequests.length) {
-        await caches.delete(projectCacheKey);
-      }
-    }),
-  );
+        // delete cache entirely if empty
+        if (!updtedProjectCachedRequests.length) {
+          await caches.delete(projectCacheKey);
+        }
+      }),
+    );
+  } catch (error) {
+    console.error('Error in pruneRequestCaches', error);
+  }
 };

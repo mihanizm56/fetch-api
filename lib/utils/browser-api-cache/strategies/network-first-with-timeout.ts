@@ -35,12 +35,13 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     expires = 0,
     expiresToDate,
     onRequestError,
-  }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
+    cache,
+  }: CacheRequestParamsType<ResponseType> & {
+    cache: Cache;
+  }): Promise<ResponseType> => {
     let resolved = false;
 
     return new Promise(async (resolve) => {
-      const cache = await caches.open(this.storageCacheName);
-
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
       this.debugCacheLogger.logCacheIsMatched({
         cacheMatched: Boolean(cacheMatch),
