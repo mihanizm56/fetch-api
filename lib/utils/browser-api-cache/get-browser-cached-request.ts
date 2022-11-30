@@ -15,15 +15,21 @@ export const getBrowserCachedRequest = ({
   request,
   ...cacheRequestParamsType
 }: ParamsType): Promise<IResponse> => {
-  const cache = new BrowserApiCacher().getRequestCache({
-    strategy,
-    requestCacheKey,
-    storageCacheName,
-    debug,
-  });
+  try {
+    const cache = new BrowserApiCacher().getRequestCache({
+      strategy,
+      requestCacheKey,
+      storageCacheName,
+      debug,
+    });
 
-  return cache.cacheRequest({
-    request,
-    ...cacheRequestParamsType,
-  });
+    return cache.cacheRequest({
+      request,
+      ...cacheRequestParamsType,
+    });
+  } catch (error) {
+    console.error('Error in getBrowserCachedRequest', error);
+
+    return request();
+  }
 };
