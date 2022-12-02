@@ -11,7 +11,7 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
     const projectCachesList = await caches.keys();
 
     // eslint-disable-next-line no-console
-    console.log('%cpruneRequestCaches start', LOGS_STYLES.main);
+    console.log('%cPruneRequestCaches run', LOGS_STYLES.main);
 
     await Promise.allSettled(
       projectCachesList.map(async (projectCacheKey) => {
