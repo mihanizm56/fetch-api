@@ -1,3 +1,5 @@
+import { LOGS_STYLES } from '../_constants';
+
 type ParamsType = {
   force?: boolean;
 };
@@ -33,6 +35,12 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
 
             if (currentTimestamp > formattedExpires || force) {
               projectCache.delete(projectCachedRequest.url);
+
+              // eslint-disable-next-line no-console
+              console.log(
+                `%cCache is expired and was deleted: ${projectCachedRequest.url}`,
+                LOGS_STYLES.warning,
+              );
             }
           }),
         );
