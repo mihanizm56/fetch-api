@@ -70,7 +70,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
             new Response(JSON.stringify(networkResponse), {
               headers: {
                 'content-type': 'application/json',
-                expires: expiresToDate
+                'api-expires': expiresToDate
                   ? `${expiresToDate}`
                   : `${this.timestamp + expires}`,
               },

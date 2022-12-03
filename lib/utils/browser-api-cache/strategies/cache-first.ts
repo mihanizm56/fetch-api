@@ -45,7 +45,7 @@ export class CacheFirst implements IRequestCache {
         strategy: 'CacheFirst',
         expiresToDate,
         disabledCache,
-        expires: this.timestamp + expires,
+        'api-expires': this.timestamp + expires,
         timestamp: this.timestamp,
         storageCacheName: this.storageCacheName,
         requestCacheKey: this.requestCacheKey,
@@ -91,7 +91,7 @@ export class CacheFirst implements IRequestCache {
         new Response(JSON.stringify(networkResponse), {
           headers: {
             'content-type': 'application/json',
-            expires: expiresToDate
+            'api-expires': expiresToDate
               ? `${expiresToDate}`
               : `${this.timestamp + expires}`,
           },

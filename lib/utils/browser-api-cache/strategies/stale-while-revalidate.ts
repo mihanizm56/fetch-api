@@ -48,7 +48,7 @@ export class StaleWhileRevalidate implements IRequestCache {
         strategy: 'StaleWhileRevalidate',
         expiresToDate,
         disabledCache,
-        expires: this.timestamp + (expires || 0),
+        'api-expires': this.timestamp + (expires || 0),
         timestamp: this.timestamp,
         storageCacheName: this.storageCacheName,
         requestCacheKey: this.requestCacheKey,
@@ -96,7 +96,7 @@ export class StaleWhileRevalidate implements IRequestCache {
             new Response(JSON.stringify(networkResponse), {
               headers: {
                 'content-type': 'application/json',
-                expires: expiresToDate
+                'api-expires': expiresToDate
                   ? `${expiresToDate}`
                   : `${this.timestamp + expires}`,
               },

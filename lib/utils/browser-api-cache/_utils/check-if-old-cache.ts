@@ -18,7 +18,7 @@ export const checkIfOldCache = async <ResponseType>({
     };
   }
 
-  const cachedTimestamp = Number(cacheMatch.headers.get('expires')) || 0;
+  const cachedTimestamp = Number(cacheMatch.headers.get('api-expires')) || 0;
 
   const cachedValue = await cacheMatch.json();
 

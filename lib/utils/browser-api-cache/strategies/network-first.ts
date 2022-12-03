@@ -42,7 +42,7 @@ export class NetworkFirst implements IRequestCache {
         strategy: 'NetworkFirst',
         expiresToDate: params.expiresToDate,
         disabledCache: params.disabledCache,
-        expires: this.timestamp + (params.expires || 0),
+        'api-expires': this.timestamp + (params.expires || 0),
         timestamp: this.timestamp,
         storageCacheName: this.storageCacheName,
         requestCacheKey: this.requestCacheKey,

@@ -27,7 +27,7 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
               return;
             }
 
-            const expires = response.headers.get('expires');
+            const expires = response.headers.get('api-expires');
 
             if (!expires) {
               return;
