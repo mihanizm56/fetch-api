@@ -6,7 +6,10 @@ type ParamsType = {
 
 export const pruneRequestCaches = async ({ force }: ParamsType) => {
   try {
+    const t1 = performance.now();
     const currentTimestamp = new Date().getTime();
+
+    const prunedCaches: Array<string> = [];
 
     const projectCachesList = await caches.keys();
 
@@ -39,6 +42,8 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
             if (currentTimestamp > formattedExpires || force) {
               projectCache.delete(projectCachedRequest.url);
 
+              prunedCaches.push(projectCachedRequest.url);
+
               // eslint-disable-next-line no-console
               console.log(
                 `%cCache is expired and was deleted: ${projectCachedRequest.url}`,
@@ -56,6 +61,21 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
         }
       }),
     );
+
+    const t2 = performance.now();
+
+    // eslint-disable-next-line no-console
+    console.log('%cPruneRequestCaches result', LOGS_STYLES.main, {
+      duration: t2 - t1,
+      prunedCaches,
+      prunedCachesCount: prunedCaches.length,
+    });
+
+    return {
+      duration: t2 - t1,
+      prunedCaches,
+      prunedCachesCount: prunedCaches.length,
+    };
   } catch (error) {
     console.error('Error in pruneRequestCaches', error);
   }

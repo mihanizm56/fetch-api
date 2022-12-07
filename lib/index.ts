@@ -30,5 +30,6 @@ export {
   RequestCacheStrategy,
   BrowserApiCacher,
   pruneRequestCaches,
-  getBrowserCachedRequest
+  getBrowserCachedRequest,
+  CacheHitParamsType
 } from './utils/browser-api-cache';
