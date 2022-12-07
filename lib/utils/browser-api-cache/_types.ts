@@ -12,6 +12,11 @@ export type OnUpdateCacheParamsType<ResponseType> = ResponseType & {
   };
 };
 
+export type CacheHitParamsType = {
+  size: number;
+  expires: number;
+};
+
 export type CacheRequestParamsType<ResponseType> = {
   // request
   request: () => Promise<ResponseType>;
@@ -28,7 +33,7 @@ export type CacheRequestParamsType<ResponseType> = {
   // request timeout
   timeout?: number;
   // callback to observe cache match state
-  onCacheMatch?: () => void;
+  onCacheHit?: (params: CacheHitParamsType) => void;
   // callback to observe cache match state
   onCacheMiss?: () => void;
 };

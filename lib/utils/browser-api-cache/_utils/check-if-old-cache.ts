@@ -6,6 +6,7 @@ type ParamsType = {
 type OutputType<ResponseType> = {
   old: boolean;
   cachedResponse?: ResponseType;
+  size?: number;
 };
 
 export const checkIfOldCache = async <ResponseType>({
@@ -22,6 +23,8 @@ export const checkIfOldCache = async <ResponseType>({
 
   const cachedValue = await cacheMatch.json();
 
+  const size = encodeURI(JSON.stringify(cachedValue)).length - 1;
+
   if (timestamp - cachedTimestamp > 0) {
     return {
       old: true,
@@ -31,5 +34,6 @@ export const checkIfOldCache = async <ResponseType>({
   return {
     old: false,
     cachedResponse: cachedValue,
+    size,
   };
 };

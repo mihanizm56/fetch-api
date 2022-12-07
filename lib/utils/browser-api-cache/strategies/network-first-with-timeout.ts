@@ -36,12 +36,13 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     expiresToDate,
     onRequestError,
     cache,
-    onCacheMatch,
+    onCacheHit,
     onCacheMiss,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
   }): Promise<ResponseType> => {
     let resolved = false;
+    let cacheLogged = false;
 
     return new Promise(async (resolve) => {
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
@@ -50,7 +51,11 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         cacheMatched: Boolean(cacheMatch),
       });
 
-      const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
+      const {
+        old,
+        cachedResponse,
+        size = 0,
+      } = await checkIfOldCache<ResponseType>({
         timestamp: this.timestamp,
         cacheMatch,
       });
@@ -59,17 +64,27 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         this.debugCacheLogger.logCacheIsExpired();
       }
 
-      if (!old) {
-        setTimeout(() => {
-          if (!resolved && cachedResponse) {
-            onCacheMatch?.();
+      setTimeout(() => {
+        if (resolved) {
+          return;
+        }
 
-            resolved = true;
-
-            resolve(cachedResponse);
+        if (!cacheLogged) {
+          if (cachedResponse) {
+            onCacheHit?.({ size, expires });
+          } else {
+            onCacheMiss?.();
           }
-        }, timeout);
-      }
+
+          cacheLogged = true;
+        }
+
+        if (cachedResponse) {
+          resolved = true;
+
+          resolve(cachedResponse);
+        }
+      }, timeout);
 
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
@@ -97,8 +112,6 @@ export class NetworkFirstWithTimeout implements IRequestCache {
           if (!resolved) {
             resolved = true;
 
-            onCacheMiss?.();
-
             resolve(networkResponse);
           }
 
@@ -113,14 +126,17 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         if (!resolved) {
           resolved = true;
 
-          if (!old && cachedResponse) {
-            onCacheMatch?.();
-          } else {
-            onCacheMiss?.();
+          if (!cacheLogged) {
+            if (cachedResponse) {
+              onCacheHit?.({ size, expires });
+            } else {
+              onCacheMiss?.();
+            }
+
+            cacheLogged = true;
           }
 
-          const value =
-            !old && cachedResponse ? cachedResponse : networkResponse;
+          const value = cachedResponse || networkResponse;
 
           resolve(value);
         }

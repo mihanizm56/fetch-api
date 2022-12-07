@@ -35,7 +35,7 @@ export class CacheFirst implements IRequestCache {
     disabledCache,
     expiresToDate,
     onRequestError,
-    onCacheMatch,
+    onCacheHit,
     onCacheMiss,
   }: CacheRequestParamsType<ResponseType>) => {
     this.debugCacheLogger.openLogsGroup({
@@ -68,17 +68,15 @@ export class CacheFirst implements IRequestCache {
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
 
-    if (cacheMatch) {
-      onCacheMatch?.();
-    } else {
-      onCacheMiss?.();
-    }
-
     this.debugCacheLogger.logCacheIsMatched({
       cacheMatched: Boolean(cacheMatch),
     });
 
-    const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
+    const {
+      old,
+      cachedResponse,
+      size = 0,
+    } = await checkIfOldCache<ResponseType>({
       timestamp: this.timestamp,
       cacheMatch,
     });
@@ -87,10 +85,15 @@ export class CacheFirst implements IRequestCache {
       this.debugCacheLogger.logCacheIsExpired();
     }
 
-    if (!old && cachedResponse) {
+    if (cachedResponse) {
       this.debugCacheLogger.closeLogsGroup();
+
+      onCacheHit?.({ size, expires });
+
       return cachedResponse;
     }
+
+    onCacheMiss?.();
 
     const networkResponse = await request();
 
