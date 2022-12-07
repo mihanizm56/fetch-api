@@ -9,7 +9,7 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
     const t1 = performance.now();
     const currentTimestamp = new Date().getTime();
 
-    const prunedCaches: Array<string> = [];
+    const prunedCaches: Array<{ key: string; size: number }> = [];
 
     const projectCachesList = await caches.keys();
 
@@ -32,9 +32,14 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
 
             const expires = response.headers.get('api-expires');
 
+            // if not exist special header in cache item
             if (!expires) {
               return;
             }
+
+            const cachedValue = await response.json();
+
+            const size = encodeURI(JSON.stringify(cachedValue)).length - 1;
 
             // get string from response -> transform to number
             const formattedExpires = Number(expires) || 0;
@@ -42,7 +47,7 @@ export const pruneRequestCaches = async ({ force }: ParamsType) => {
             if (currentTimestamp > formattedExpires || force) {
               projectCache.delete(projectCachedRequest.url);
 
-              prunedCaches.push(projectCachedRequest.url);
+              prunedCaches.push({ key: projectCachedRequest.url, size });
 
               // eslint-disable-next-line no-console
               console.log(
