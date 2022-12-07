@@ -35,6 +35,8 @@ export class CacheFirst implements IRequestCache {
     disabledCache,
     expiresToDate,
     onRequestError,
+    onCacheMatch,
+    onCacheMiss,
   }: CacheRequestParamsType<ResponseType>) => {
     this.debugCacheLogger.openLogsGroup({
       requestCacheKey: this.requestCacheKey,
@@ -65,6 +67,13 @@ export class CacheFirst implements IRequestCache {
     }
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
+
+    if (cacheMatch) {
+      onCacheMatch?.();
+    } else {
+      onCacheMiss?.();
+    }
+
     this.debugCacheLogger.logCacheIsMatched({
       cacheMatched: Boolean(cacheMatch),
     });

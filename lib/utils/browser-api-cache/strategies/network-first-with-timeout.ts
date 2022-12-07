@@ -36,6 +36,8 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     expiresToDate,
     onRequestError,
     cache,
+    onCacheMatch,
+    onCacheMiss,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
   }): Promise<ResponseType> => {
@@ -43,9 +45,11 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
     return new Promise(async (resolve) => {
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
+
       this.debugCacheLogger.logCacheIsMatched({
         cacheMatched: Boolean(cacheMatch),
       });
+
       const { old, cachedResponse } = await checkIfOldCache<ResponseType>({
         timestamp: this.timestamp,
         cacheMatch,
@@ -58,6 +62,10 @@ export class NetworkFirstWithTimeout implements IRequestCache {
       if (!old) {
         setTimeout(() => {
           if (!resolved && cachedResponse) {
+            onCacheMatch?.();
+
+            resolved = true;
+
             resolve(cachedResponse);
           }
         }, timeout);
@@ -89,6 +97,8 @@ export class NetworkFirstWithTimeout implements IRequestCache {
           if (!resolved) {
             resolved = true;
 
+            onCacheMiss?.();
+
             resolve(networkResponse);
           }
 
@@ -102,6 +112,12 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
         if (!resolved) {
           resolved = true;
+
+          if (!old && cachedResponse) {
+            onCacheMatch?.();
+          } else {
+            onCacheMiss?.();
+          }
 
           const value =
             !old && cachedResponse ? cachedResponse : networkResponse;

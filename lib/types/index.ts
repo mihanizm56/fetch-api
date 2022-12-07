@@ -11,16 +11,6 @@ import {
   GetRequestCacheParamsType,
 } from '@/utils/browser-api-cache/_types';
 
-export type ErrorTracingType =
-  | null
-  | typeof TRACING_ERRORS[keyof typeof TRACING_ERRORS];
-
-export type ModeCorsType = 'cors' | 'no-cors';
-
-export type QueryParamsType = {
-  [key: string]: string | number | Array<any> | boolean;
-};
-
 export interface IResponse<
   DataType = any,
   HeadersType = Record<string, string>,
@@ -33,6 +23,16 @@ export interface IResponse<
   code: number;
   headers: HeadersType;
 }
+
+export type ErrorTracingType =
+  | null
+  | typeof TRACING_ERRORS[keyof typeof TRACING_ERRORS];
+
+export type ModeCorsType = 'cors' | 'no-cors';
+
+export type QueryParamsType = {
+  [key: string]: string | number | Array<any> | boolean;
+};
 
 // types for browser cache
 export type BrowserCacheParamsType = Omit<

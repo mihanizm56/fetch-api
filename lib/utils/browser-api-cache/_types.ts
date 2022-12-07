@@ -5,18 +5,18 @@ export type RequestCacheStrategy =
   | 'StaleWhileRevalidate'
   | 'CacheFirst';
 
+export type OnUpdateCacheParamsType<ResponseType> = ResponseType & {
+  prevValue: {
+    response?: ResponseType;
+    old: boolean;
+  };
+};
+
 export type CacheRequestParamsType<ResponseType> = {
   // request
   request: () => Promise<ResponseType>;
   // onUpdateCache callback
-  onUpdateCache?: (
-    params: ResponseType & {
-      prevValue: {
-        response?: ResponseType;
-        old: boolean;
-      };
-    },
-  ) => void;
+  onUpdateCache?: (params: OnUpdateCacheParamsType<ResponseType>) => void;
   // onRequestError callback
   onRequestError?: () => void;
   // cache time in ms
@@ -27,6 +27,10 @@ export type CacheRequestParamsType<ResponseType> = {
   disabledCache?: boolean;
   // request timeout
   timeout?: number;
+  // callback to observe cache match state
+  onCacheMatch?: () => void;
+  // callback to observe cache match state
+  onCacheMiss?: () => void;
 };
 
 export type IRequestCacheParamsType = {

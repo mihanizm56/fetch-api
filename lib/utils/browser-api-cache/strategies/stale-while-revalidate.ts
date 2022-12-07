@@ -36,6 +36,8 @@ export class StaleWhileRevalidate implements IRequestCache {
     disabledCache,
     expiresToDate,
     onRequestError,
+    onCacheMatch,
+    onCacheMiss,
   }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
     let resolved = false;
 
@@ -76,6 +78,13 @@ export class StaleWhileRevalidate implements IRequestCache {
       }
 
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
+
+      if (cacheMatch) {
+        onCacheMatch?.();
+      } else {
+        onCacheMiss?.();
+      }
+
       this.debugCacheLogger.logCacheIsMatched({
         cacheMatched: Boolean(cacheMatch),
       });

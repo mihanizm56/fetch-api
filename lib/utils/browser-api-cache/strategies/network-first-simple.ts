@@ -35,12 +35,15 @@ export class NetworkFirstSimple implements IRequestCache {
     expiresToDate,
     onRequestError,
     cache,
+    onCacheMatch,
+    onCacheMiss,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
   }): Promise<ResponseType> => {
     const networkResponse = await request();
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
+
     this.debugCacheLogger.logCacheIsMatched({
       cacheMatched: Boolean(cacheMatch),
     });
@@ -60,8 +63,16 @@ export class NetworkFirstSimple implements IRequestCache {
         this.debugCacheLogger.logCacheIsExpired();
       }
 
+      if (!old && cachedResponse) {
+        onCacheMatch?.();
+      } else {
+        onCacheMiss?.();
+      }
+
       return !old && cachedResponse ? cachedResponse : networkResponse;
     }
+
+    onCacheMiss?.();
 
     await cache.put(
       `/${this.requestCacheKey}`,
