@@ -88,12 +88,12 @@ export class CacheFirst implements IRequestCache {
     if (cachedResponse) {
       this.debugCacheLogger.closeLogsGroup();
 
-      onCacheHit?.({ size, expires });
+      onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
 
       return cachedResponse;
     }
 
-    onCacheMiss?.();
+    onCacheMiss?.({ cacheKey: this.requestCacheKey });
 
     const networkResponse = await request();
 

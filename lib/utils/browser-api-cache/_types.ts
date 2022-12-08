@@ -15,6 +15,11 @@ export type OnUpdateCacheParamsType<ResponseType> = ResponseType & {
 export type CacheHitParamsType = {
   size: number;
   expires: number;
+  cacheKey: string;
+};
+
+export type CacheMissParamsType = {
+  cacheKey: string;
 };
 
 export type CacheRequestParamsType<ResponseType> = {
@@ -35,7 +40,7 @@ export type CacheRequestParamsType<ResponseType> = {
   // callback to observe cache match state
   onCacheHit?: (params: CacheHitParamsType) => void;
   // callback to observe cache match state
-  onCacheMiss?: () => void;
+  onCacheMiss?: (params: CacheMissParamsType) => void;
 };
 
 export type IRequestCacheParamsType = {

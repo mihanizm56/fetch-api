@@ -71,9 +71,9 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
         if (!cacheLogged) {
           if (cachedResponse) {
-            onCacheHit?.({ size, expires });
+            onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
           } else {
-            onCacheMiss?.();
+            onCacheMiss?.({ cacheKey: this.requestCacheKey });
           }
 
           cacheLogged = true;
@@ -128,9 +128,9 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
           if (!cacheLogged) {
             if (cachedResponse) {
-              onCacheHit?.({ size, expires });
+              onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
             } else {
-              onCacheMiss?.();
+              onCacheMiss?.({ cacheKey: this.requestCacheKey });
             }
 
             cacheLogged = true;

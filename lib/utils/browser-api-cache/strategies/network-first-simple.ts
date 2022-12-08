@@ -68,9 +68,9 @@ export class NetworkFirstSimple implements IRequestCache {
       }
 
       if (cachedResponse) {
-        onCacheHit?.({ size, expires });
+        onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
       } else {
-        onCacheMiss?.();
+        onCacheMiss?.({ cacheKey: this.requestCacheKey });
       }
 
       return !old && cachedResponse ? cachedResponse : networkResponse;

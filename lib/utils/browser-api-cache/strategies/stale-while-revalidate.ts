@@ -72,7 +72,7 @@ export class StaleWhileRevalidate implements IRequestCache {
         resolved = true;
         const networkResponse = await request();
 
-        onCacheMiss?.();
+        onCacheMiss?.({ cacheKey: this.requestCacheKey });
 
         resolve(networkResponse);
 
@@ -137,11 +137,11 @@ export class StaleWhileRevalidate implements IRequestCache {
       if (cachedResponse) {
         resolved = true;
 
-        onCacheHit?.({ size, expires });
+        onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
 
         resolve(cachedResponse);
       } else {
-        onCacheMiss?.();
+        onCacheMiss?.({ cacheKey: this.requestCacheKey });
       }
     });
   };
