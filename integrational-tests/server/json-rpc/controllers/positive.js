@@ -53,6 +53,7 @@ module.exports.positiveRPCController = (req, res) => {
     randomIds,
     notCorrectIds,
     batchLengthError,
+    batchErrorStructureError,
   } = req.query;
 
   const areQueryParamsForCheckExist =
@@ -168,6 +169,23 @@ module.exports.positiveRPCController = (req, res) => {
 
       // send one response object not full
       return res.status(200).json([enrichedData[0]]);
+    }
+
+    if (batchErrorStructureError) {
+      const enrichedData = mockPositiveBatchOneItemData.map(
+        (responseItem, index) => ({
+          error: {
+            code: -32603,
+            message: 'redis: nil',
+            data: 'redis: nil',
+          },
+          jsonrpc: '2.0',
+          id: req.body[index].id,
+        }),
+      );
+
+      // send one response object not full
+      return res.status(200).json(enrichedData);
     }
   }
 

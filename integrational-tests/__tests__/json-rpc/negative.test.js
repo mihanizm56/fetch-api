@@ -628,5 +628,51 @@ describe('JSON-PRC request (negative)', () => {
         },
       });
     });
+
+    test('test get backend in batch request if the response contains items that are not in json-rpc schema', async () => {
+      const responseSchemaObjectOne = Joi.object({
+        foo: Joi.string().required(),
+      });
+
+      const data = await new JSONRPCRequest().makeRequest({
+        endpoint:
+          'http://localhost:8080/json-rpc/positive?batch=true&batchErrorStructureError=true',
+        body: [{ method: 'listCountries1', params: {} }],
+        isBatchRequest: true,
+        responseSchema: [responseSchemaObjectOne],
+      });
+
+      expect(data).toEqual({
+        additionalErrors: null,
+        code: 200,
+        data: [
+          {
+            error: true,
+            errorText: 'network-error',
+            data: {},
+            additionalErrors: null,
+            code: 500,
+            headers: {
+              connection: 'close',
+              'content-length': '105',
+              'content-type': 'application/json; charset=utf-8',
+              date: 'mock-date',
+              etag: 'mock-etag',
+              'x-powered-by': 'Express',
+            },
+          },
+        ],
+        error: false,
+        errorText: '',
+        headers: {
+          connection: 'close',
+          date: 'mock-date',
+          etag: 'mock-etag',
+          'x-powered-by': 'Express',
+          'content-length': '105',
+          'content-type': 'application/json; charset=utf-8',
+        },
+      });
+    });
   });
 });

@@ -52,17 +52,22 @@ export class FormatDataTypeValidator implements IResponseFormatValidator {
 
   public getIsJSONRPCFormatResponseValid = (
     response: IJSONRPCPureResponse,
-  ): boolean =>
-    Boolean(
-      ('result' in response ||
-        (response.error &&
-          'code' in response.error &&
-          'data' in response.error &&
-          'trKey' in response.error.data &&
-          'message' in response.error)) &&
-        'jsonrpc' in response &&
-        'id' in response,
-    );
+  ): boolean => {
+    try {
+      return Boolean(
+        ('result' in response ||
+          (response.error &&
+            'code' in response.error &&
+            'data' in response.error &&
+            'trKey' in response.error.data &&
+            'message' in response.error)) &&
+          'jsonrpc' in response &&
+          'id' in response,
+      );
+    } catch {
+      return false;
+    }
+  };
 
   public getIsSchemaResponseValid = ({
     data,

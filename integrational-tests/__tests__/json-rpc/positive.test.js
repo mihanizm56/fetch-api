@@ -453,8 +453,6 @@ describe('JSON-PRC request (negative)', () => {
         ignoreResponseIdCompare: true,
       });
 
-      // console.log(JSON.stringify(data, null, 2));
-
       expect(data).toEqual({
         errorText: '',
         error: false,
