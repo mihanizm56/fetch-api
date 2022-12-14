@@ -711,9 +711,6 @@ export class BaseRequest implements IBaseRequest {
             requestBody: body,
           });
 
-          console.log('isFormatValid',isFormatValid);
-          
-
           if (isFormatValid) {
             // get the formatter func
             const responseFormatter = new FormatResponseFactory().createFormatter(
@@ -737,10 +734,6 @@ export class BaseRequest implements IBaseRequest {
             // format data
             const formattedResponseData = responseFormatter.getFormattedResponse();
 
-
-            console.log('formattedResponseData',formattedResponseData);
-            
-
             // check if needs to retry request     
             const needsToRetry = checkToDoRetry({
               formattedResponseData,
@@ -749,9 +742,6 @@ export class BaseRequest implements IBaseRequest {
               extraVerifyRetry,
               notRetryWhenOffline
             });
-
-            console.log('needsToRetry',needsToRetry);
-            
 
             if(needsToRetry && typeof retryCounter !== 'undefined'){
               await sleep(sleepTime);
@@ -767,9 +757,6 @@ export class BaseRequest implements IBaseRequest {
             const selectedResponseData = (selectData || customSelectorData) && !isPureFileRequest 
               ? getDataFromSelector({ selectData, responseData: formattedResponseData, customSelectorData }) 
               : formattedResponseData;
-
-              console.log('selectedResponseData',selectedResponseData);
-              
 
             const proxyBaseParams = {
               response,
