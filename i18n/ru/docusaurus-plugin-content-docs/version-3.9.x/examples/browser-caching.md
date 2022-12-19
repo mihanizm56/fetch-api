@@ -58,6 +58,8 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
 | onUpdateCache | `function`        | коллбек, вызывающийся во время обновления кэша         |
 | onRequestError | `function`        | коллбек, вызывающийся во время ошибки ответа сервера      |
 | debug             | `boolean`     | флаг для включения логгирования в консоль  |
+| onCacheHit             | `function`     | коллбек, вызывающийся во время (попадания) получения ответа из кэша         |
+| onCacheMiss             | `function`     | коллбек, вызывающийся во время (непопадания) неполучения ответа из кэша         |
 
 
 
