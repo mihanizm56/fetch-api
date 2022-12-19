@@ -60,8 +60,21 @@ export type ResponseValidateType = {
   prevId?: string;
 };
 
+export type FormatValidateParams = {
+  response: any;
+  schema: any;
+  prevId?: string;
+  isResponseStatusSuccess?: boolean;
+  isStatusEmpty?: boolean;
+  isBatchRequest?: boolean;
+  isPureFileRequest?: boolean;
+  ignoreResponseIdCompare?: boolean;
+  requestBody: Pick<RequestInit, 'body'>;
+  statusCode: number;
+};
+
 export type ExtraValidationCallbackType = (
-  options: ResponseValidateType,
+  options: FormatValidateParams,
 ) => boolean;
 
 export type TranslateFunctionType = (
@@ -479,18 +492,6 @@ export type GetFormattedErrorTextResponseParams = {
   statusCode: number;
   responseHeaders: Record<string, string>;
   userAbortedRequest?: boolean;
-};
-
-export type FormatValidateParams = {
-  response: any;
-  schema: any;
-  prevId?: string;
-  isResponseStatusSuccess?: boolean;
-  isStatusEmpty?: boolean;
-  isBatchRequest?: boolean;
-  isPureFileRequest?: boolean;
-  ignoreResponseIdCompare?: boolean;
-  requestBody: Pick<RequestInit, 'body'>;
 };
 
 export type FormatValidateParamsMethod = (

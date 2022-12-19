@@ -709,6 +709,7 @@ export class BaseRequest implements IBaseRequest {
             isPureFileRequest,
             ignoreResponseIdCompare,
             requestBody: body,
+            statusCode: this.statusCode
           });
 
           if (isFormatValid) {
