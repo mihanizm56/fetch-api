@@ -7,7 +7,7 @@ type ParamsType = CacheRequestParamsType<IResponse> &
     request: (params: any) => Promise<IResponse>;
   };
 
-export const getBrowserCachedRequest = ({
+export const getBrowserCachedRequest = async ({
   strategy,
   requestCacheKey,
   storageCacheName,
@@ -23,10 +23,12 @@ export const getBrowserCachedRequest = ({
       debug,
     });
 
-    return cache.cacheRequest({
+    const result = await cache.cacheRequest({
       request,
       ...cacheRequestParamsType,
     });
+
+    return result;
   } catch (error) {
     console.error('Error in getBrowserCachedRequest', error);
 
