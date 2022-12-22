@@ -118,4 +118,15 @@ export class DebugCacheLogger {
       type: 'warning',
     });
   };
+
+  logSwitchToStrategy = (strategy: string) => {
+    if (!this.debug) {
+      return;
+    }
+
+    this.logsArray.push({
+      log: `Switch to strategy ${strategy}`,
+      type: 'warning',
+    });
+  };
 }

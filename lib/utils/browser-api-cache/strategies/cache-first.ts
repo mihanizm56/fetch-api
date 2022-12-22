@@ -6,6 +6,8 @@ import {
 } from '../_types';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 import { openCache } from '../_utils/open-cache';
+import { writeToCache } from '../_utils/write-to-cache';
+import { checkQuotaExceed } from '../_utils/check-quota-exceed';
 
 export class CacheFirst implements IRequestCache {
   timestamp: number;
@@ -55,6 +57,7 @@ export class CacheFirst implements IRequestCache {
     });
 
     const cache = await openCache(this.storageCacheName);
+    const quotaExceed = await checkQuotaExceed();
 
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
@@ -98,26 +101,22 @@ export class CacheFirst implements IRequestCache {
     const networkResponse = await request();
 
     if (!networkResponse.error) {
-      await cache.put(
-        `/${this.requestCacheKey}`,
-        new Response(JSON.stringify(networkResponse), {
-          headers: {
-            'content-type': 'application/json',
-            'api-expires': expiresToDate
-              ? `${expiresToDate}`
-              : `${this.timestamp + expires}`,
-          },
-        }),
-      );
-
-      onUpdateCache?.({
-        ...networkResponse,
-        prevValue: {
-          response: cachedResponse,
+      if (!quotaExceed) {
+        await writeToCache({
+          cache,
+          requestCacheKey: this.requestCacheKey,
+          response: networkResponse,
+          apiExpires: expiresToDate
+            ? `${expiresToDate}`
+            : `${this.timestamp + expires}`,
+          apiTimestamp: `${this.timestamp}`,
+          cachedResponse,
           old,
-        },
-      });
-      this.debugCacheLogger.logUpdatedCache();
+          onUpdateCache,
+          debugCacheLogger: this.debugCacheLogger,
+          strategy: 'CacheFirst',
+        });
+      }
     } else {
       onRequestError?.();
       this.debugCacheLogger.logNotUpdatedCache({

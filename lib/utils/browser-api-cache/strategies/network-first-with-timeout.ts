@@ -6,6 +6,8 @@ import {
   IRequestCacheParamsType,
 } from '../_types';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
+import { writeToCache } from '../_utils/write-to-cache';
+import { checkQuotaExceed } from '../_utils/check-quota-exceed';
 
 export class NetworkFirstWithTimeout implements IRequestCache {
   timestamp: number;
@@ -45,6 +47,8 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     let cacheLogged = false;
 
     return new Promise(async (resolve) => {
+      const quotaExceed = await checkQuotaExceed();
+
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
 
       this.debugCacheLogger.logCacheIsMatched({
@@ -88,26 +92,22 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
-          await cache.put(
-            `/${this.requestCacheKey}`,
-            new Response(JSON.stringify(networkResponse), {
-              headers: {
-                'content-type': 'application/json',
-                'api-expires': expiresToDate
-                  ? `${expiresToDate}`
-                  : `${this.timestamp + expires}`,
-              },
-            }),
-          );
-
-          onUpdateCache?.({
-            ...networkResponse,
-            prevValue: {
-              response: cachedResponse,
+          if (!quotaExceed) {
+            await writeToCache({
+              cache,
+              requestCacheKey: this.requestCacheKey,
+              response: networkResponse,
+              apiExpires: expiresToDate
+                ? `${expiresToDate}`
+                : `${this.timestamp + expires}`,
+              apiTimestamp: `${this.timestamp}`,
+              cachedResponse,
               old,
-            },
-          });
-          this.debugCacheLogger.logUpdatedCache();
+              onUpdateCache,
+              debugCacheLogger: this.debugCacheLogger,
+              strategy: 'NetworkFirst',
+            });
+          }
 
           if (!resolved) {
             resolved = true;

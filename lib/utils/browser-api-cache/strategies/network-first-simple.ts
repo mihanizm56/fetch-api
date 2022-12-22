@@ -5,7 +5,9 @@ import {
   IRequestCacheParamsType,
 } from '../_types';
 import { checkIfOldCache } from '../_utils/check-if-old-cache';
+import { checkQuotaExceed } from '../_utils/check-quota-exceed';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
+import { writeToCache } from '../_utils/write-to-cache';
 
 export class NetworkFirstSimple implements IRequestCache {
   timestamp: number;
@@ -40,6 +42,8 @@ export class NetworkFirstSimple implements IRequestCache {
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
   }): Promise<ResponseType> => {
+    const quotaExceed = await checkQuotaExceed();
+
     const networkResponse = await request();
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
@@ -59,6 +63,7 @@ export class NetworkFirstSimple implements IRequestCache {
 
     if (networkResponse.error) {
       onRequestError?.();
+
       this.debugCacheLogger.logNotUpdatedCache({
         response: JSON.stringify(networkResponse),
       });
@@ -76,26 +81,22 @@ export class NetworkFirstSimple implements IRequestCache {
       return !old && cachedResponse ? cachedResponse : networkResponse;
     }
 
-    await cache.put(
-      `/${this.requestCacheKey}`,
-      new Response(JSON.stringify(networkResponse), {
-        headers: {
-          'content-type': 'application/json',
-          'api-expires': expiresToDate
-            ? `${expiresToDate}`
-            : `${this.timestamp + expires}`,
-        },
-      }),
-    );
-
-    onUpdateCache?.({
-      ...networkResponse,
-      prevValue: {
-        response: cachedResponse,
+    if (!quotaExceed) {
+      await writeToCache({
+        cache,
+        requestCacheKey: this.requestCacheKey,
+        response: networkResponse,
+        apiExpires: expiresToDate
+          ? `${expiresToDate}`
+          : `${this.timestamp + expires}`,
+        apiTimestamp: `${this.timestamp}`,
+        cachedResponse,
         old,
-      },
-    });
-    this.debugCacheLogger.logUpdatedCache();
+        onUpdateCache,
+        debugCacheLogger: this.debugCacheLogger,
+        strategy: 'NetworkFirst',
+      });
+    }
 
     return networkResponse;
   };

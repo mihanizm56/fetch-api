@@ -6,7 +6,7 @@ export const openCache = async (
 
     return cache;
   } catch (error) {
-    console.error('Can not open cache');
+    console.error('Can not open cache', error);
 
     return null;
   }

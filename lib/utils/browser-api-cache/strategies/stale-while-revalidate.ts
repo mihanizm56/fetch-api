@@ -7,6 +7,9 @@ import {
 } from '../_types';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 import { openCache } from '../_utils/open-cache';
+import { checkQuotaExceed } from '../_utils/check-quota-exceed';
+import { writeToCache } from '../_utils/write-to-cache';
+import { NetworkFirst } from './network-first';
 
 export class StaleWhileRevalidate implements IRequestCache {
   timestamp: number;
@@ -29,16 +32,20 @@ export class StaleWhileRevalidate implements IRequestCache {
     this.debugCacheLogger = debugCacheLogger;
   }
 
-  cacheRequest = <ResponseType extends { error: boolean } = IResponse>({
-    request,
-    onUpdateCache,
-    expires = 0,
-    disabledCache,
-    expiresToDate,
-    onRequestError,
-    onCacheHit,
-    onCacheMiss,
-  }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
+  cacheRequest = <ResponseType extends { error: boolean } = IResponse>(
+    params: CacheRequestParamsType<ResponseType>,
+  ): Promise<ResponseType> => {
+    const {
+      request,
+      onUpdateCache,
+      expires = 0,
+      disabledCache,
+      expiresToDate,
+      onRequestError,
+      onCacheHit,
+      onCacheMiss,
+    } = params;
+
     let resolved = false;
 
     this.debugCacheLogger.openLogsGroup({
@@ -67,12 +74,35 @@ export class StaleWhileRevalidate implements IRequestCache {
 
     return new Promise(async (resolve) => {
       const cache = await openCache(this.storageCacheName);
+      const quotaExceed = await checkQuotaExceed();
+
+      if (quotaExceed) {
+        resolved = true;
+
+        // switch to NetworkFirst strategy
+        const networkFirstResponse = await new NetworkFirst({
+          timestamp: this.timestamp,
+          storageCacheName: this.storageCacheName,
+          requestCacheKey: this.requestCacheKey,
+          debugCacheLogger: this.debugCacheLogger,
+        }).cacheRequest(params);
+
+        this.debugCacheLogger.logDisabledCache();
+        this.debugCacheLogger.logSwitchToStrategy('NetworkFirst');
+        this.debugCacheLogger.closeLogsGroup();
+
+        resolve(networkFirstResponse);
+
+        return;
+      }
 
       if (!cache) {
         resolved = true;
         const networkResponse = await request();
 
         onCacheMiss?.({ cacheKey: this.requestCacheKey });
+        this.debugCacheLogger.logDisabledCache();
+        this.debugCacheLogger.closeLogsGroup();
 
         resolve(networkResponse);
 
@@ -100,26 +130,20 @@ export class StaleWhileRevalidate implements IRequestCache {
 
       request().then(async (networkResponse) => {
         if (!networkResponse.error) {
-          await cache.put(
-            `/${this.requestCacheKey}`,
-            new Response(JSON.stringify(networkResponse), {
-              headers: {
-                'content-type': 'application/json',
-                'api-expires': expiresToDate
-                  ? `${expiresToDate}`
-                  : `${this.timestamp + expires}`,
-              },
-            }),
-          );
-
-          onUpdateCache?.({
-            ...networkResponse,
-            prevValue: {
-              response: cachedResponse,
-              old,
-            },
+          await writeToCache({
+            cache,
+            requestCacheKey: this.requestCacheKey,
+            response: networkResponse,
+            apiExpires: expiresToDate
+              ? `${expiresToDate}`
+              : `${this.timestamp + expires}`,
+            apiTimestamp: `${this.timestamp}`,
+            cachedResponse,
+            old,
+            onUpdateCache,
+            debugCacheLogger: this.debugCacheLogger,
+            strategy: 'StaleWhileRevalidate',
           });
-          this.debugCacheLogger.logUpdatedCache();
         } else {
           onRequestError?.();
           this.debugCacheLogger.logNotUpdatedCache({
