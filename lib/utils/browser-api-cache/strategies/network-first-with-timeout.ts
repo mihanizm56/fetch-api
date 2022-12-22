@@ -91,54 +91,64 @@ export class NetworkFirstWithTimeout implements IRequestCache {
       }, timeout);
 
       request().then(async (networkResponse) => {
-        if (!networkResponse.error) {
-          if (!quotaExceed) {
-            await writeToCache({
-              cache,
-              requestCacheKey: this.requestCacheKey,
-              response: networkResponse,
-              apiExpires: expiresToDate
-                ? `${expiresToDate}`
-                : `${this.timestamp + expires}`,
-              apiTimestamp: `${this.timestamp}`,
-              cachedResponse,
-              old,
-              onUpdateCache,
-              debugCacheLogger: this.debugCacheLogger,
-              strategy: 'NetworkFirst',
-            });
+        try {
+          if (!networkResponse.error) {
+            if (!quotaExceed) {
+              await writeToCache({
+                cache,
+                requestCacheKey: this.requestCacheKey,
+                response: networkResponse,
+                apiExpires: expiresToDate
+                  ? `${expiresToDate}`
+                  : `${this.timestamp + expires}`,
+                apiTimestamp: `${this.timestamp}`,
+                cachedResponse,
+                old,
+                onUpdateCache,
+                debugCacheLogger: this.debugCacheLogger,
+                strategy: 'NetworkFirst',
+              });
+            }
+
+            if (!resolved) {
+              resolved = true;
+
+              resolve(networkResponse);
+            }
+
+            return;
           }
+
+          onRequestError?.();
+          this.debugCacheLogger.logNotUpdatedCache({
+            response: JSON.stringify(networkResponse),
+          });
+
+          if (!resolved) {
+            resolved = true;
+
+            if (!cacheLogged) {
+              if (cachedResponse) {
+                onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
+              } else {
+                onCacheMiss?.({ cacheKey: this.requestCacheKey });
+              }
+
+              cacheLogged = true;
+            }
+
+            const value = cachedResponse || networkResponse;
+
+            resolve(value);
+          }
+        } catch (error) {
+          console.error('Error in update cache', error);
 
           if (!resolved) {
             resolved = true;
 
             resolve(networkResponse);
           }
-
-          return;
-        }
-
-        onRequestError?.();
-        this.debugCacheLogger.logNotUpdatedCache({
-          response: JSON.stringify(networkResponse),
-        });
-
-        if (!resolved) {
-          resolved = true;
-
-          if (!cacheLogged) {
-            if (cachedResponse) {
-              onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
-            } else {
-              onCacheMiss?.({ cacheKey: this.requestCacheKey });
-            }
-
-            cacheLogged = true;
-          }
-
-          const value = cachedResponse || networkResponse;
-
-          resolve(value);
         }
       });
     });

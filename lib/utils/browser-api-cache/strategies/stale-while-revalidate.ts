@@ -129,33 +129,42 @@ export class StaleWhileRevalidate implements IRequestCache {
       }
 
       request().then(async (networkResponse) => {
-        if (!networkResponse.error) {
-          await writeToCache({
-            cache,
-            requestCacheKey: this.requestCacheKey,
-            response: networkResponse,
-            apiExpires: expiresToDate
-              ? `${expiresToDate}`
-              : `${this.timestamp + expires}`,
-            apiTimestamp: `${this.timestamp}`,
-            cachedResponse,
-            old,
-            onUpdateCache,
-            debugCacheLogger: this.debugCacheLogger,
-            strategy: 'StaleWhileRevalidate',
-          });
-        } else {
-          onRequestError?.();
-          this.debugCacheLogger.logNotUpdatedCache({
-            response: JSON.stringify(networkResponse),
-          });
-        }
+        try {
+          if (!networkResponse.error) {
+            await writeToCache({
+              cache,
+              requestCacheKey: this.requestCacheKey,
+              response: networkResponse,
+              apiExpires: expiresToDate
+                ? `${expiresToDate}`
+                : `${this.timestamp + expires}`,
+              apiTimestamp: `${this.timestamp}`,
+              cachedResponse,
+              old,
+              onUpdateCache,
+              debugCacheLogger: this.debugCacheLogger,
+              strategy: 'StaleWhileRevalidate',
+            });
+          } else {
+            onRequestError?.();
+            this.debugCacheLogger.logNotUpdatedCache({
+              response: JSON.stringify(networkResponse),
+            });
+          }
 
-        if (!resolved) {
-          resolve(networkResponse);
-        }
+          if (!resolved) {
+            resolve(networkResponse);
+          }
 
-        this.debugCacheLogger.closeLogsGroup();
+          this.debugCacheLogger.closeLogsGroup();
+        } catch (error) {
+          console.error('Error in update cache', error);
+
+          if (!resolved) {
+            resolved = true;
+            resolve(networkResponse);
+          }
+        }
       });
 
       if (cachedResponse) {
