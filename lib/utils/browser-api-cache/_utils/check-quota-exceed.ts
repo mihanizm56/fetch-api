@@ -1,6 +1,6 @@
 import { CacheStateType } from '../_types';
 
-const DEFAULT_MIN_ALLOWED_QUOTA = 104857600; //  100mb
+const DEFAULT_MIN_ALLOWED_QUOTA = 10485760; //  10mb
 
 type ParamsType = {
   minAllowedQuota?: number;
