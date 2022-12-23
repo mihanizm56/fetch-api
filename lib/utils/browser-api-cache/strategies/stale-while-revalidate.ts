@@ -2,6 +2,7 @@ import { IResponse } from '@/types';
 import { checkIfOldCache } from '../_utils/check-if-old-cache';
 import {
   CacheRequestParamsType,
+  CacheStateType,
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
@@ -39,7 +40,10 @@ export class StaleWhileRevalidate implements IRequestCache {
     onRequestError,
     onCacheHit,
     onCacheMiss,
-  }: CacheRequestParamsType<ResponseType>): Promise<ResponseType> => {
+    cacheState,
+  }: CacheRequestParamsType<ResponseType> & {
+    cacheState: CacheStateType;
+  }): Promise<ResponseType> => {
     let resolved = false;
 
     this.debugCacheLogger.openLogsGroup({
@@ -73,7 +77,7 @@ export class StaleWhileRevalidate implements IRequestCache {
         resolved = true;
         const networkResponse = await request();
 
-        onCacheMiss?.({ cacheKey: this.requestCacheKey });
+        onCacheMiss?.({ cacheKey: this.requestCacheKey, cacheState });
         this.debugCacheLogger.logDisabledCache();
         this.debugCacheLogger.closeLogsGroup();
 
@@ -144,11 +148,16 @@ export class StaleWhileRevalidate implements IRequestCache {
       if (cachedResponse) {
         resolved = true;
 
-        onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
+        onCacheHit?.({
+          size,
+          expires,
+          cacheKey: this.requestCacheKey,
+          cacheState,
+        });
 
         resolve(cachedResponse);
       } else {
-        onCacheMiss?.({ cacheKey: this.requestCacheKey });
+        onCacheMiss?.({ cacheKey: this.requestCacheKey, cacheState });
       }
     });
   };

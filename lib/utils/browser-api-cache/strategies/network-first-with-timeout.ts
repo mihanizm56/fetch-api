@@ -2,6 +2,7 @@ import { IResponse } from '@/types';
 import { checkIfOldCache } from '../_utils/check-if-old-cache';
 import {
   CacheRequestParamsType,
+  CacheStateType,
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
@@ -40,9 +41,11 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     onCacheHit,
     onCacheMiss,
     quotaExceed,
+    cacheState,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
     quotaExceed: boolean;
+    cacheState: CacheStateType;
   }): Promise<ResponseType> => {
     let resolved = false;
     let cacheLogged = false;
@@ -74,9 +77,14 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
         if (!cacheLogged) {
           if (cachedResponse) {
-            onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
+            onCacheHit?.({
+              size,
+              expires,
+              cacheKey: this.requestCacheKey,
+              cacheState,
+            });
           } else {
-            onCacheMiss?.({ cacheKey: this.requestCacheKey });
+            onCacheMiss?.({ cacheKey: this.requestCacheKey, cacheState });
           }
 
           cacheLogged = true;
@@ -127,9 +135,14 @@ export class NetworkFirstWithTimeout implements IRequestCache {
 
             if (!cacheLogged) {
               if (cachedResponse) {
-                onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
+                onCacheHit?.({
+                  size,
+                  expires,
+                  cacheKey: this.requestCacheKey,
+                  cacheState,
+                });
               } else {
-                onCacheMiss?.({ cacheKey: this.requestCacheKey });
+                onCacheMiss?.({ cacheKey: this.requestCacheKey, cacheState });
               }
 
               cacheLogged = true;

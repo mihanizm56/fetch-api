@@ -1,6 +1,7 @@
 import { IResponse } from '@/types';
 import {
   CacheRequestParamsType,
+  CacheStateType,
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
@@ -31,7 +32,10 @@ export class NetworkFirst implements IRequestCache {
   }
 
   cacheRequest = async <ResponseType extends { error: boolean } = IResponse>(
-    params: CacheRequestParamsType<ResponseType> & { quotaExceed: boolean },
+    params: CacheRequestParamsType<ResponseType> & {
+      quotaExceed: boolean;
+      cacheState: CacheStateType;
+    },
   ): Promise<ResponseType> => {
     this.debugCacheLogger.openLogsGroup({
       requestCacheKey: this.requestCacheKey,

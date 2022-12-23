@@ -1,6 +1,7 @@
 import { checkIfOldCache } from '../_utils/check-if-old-cache';
 import {
   CacheRequestParamsType,
+  CacheStateType,
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
@@ -39,7 +40,11 @@ export class CacheFirst implements IRequestCache {
     onCacheHit,
     onCacheMiss,
     quotaExceed,
-  }: CacheRequestParamsType<ResponseType> & { quotaExceed: boolean }) => {
+    cacheState,
+  }: CacheRequestParamsType<ResponseType> & {
+    quotaExceed: boolean;
+    cacheState: CacheStateType;
+  }) => {
     this.debugCacheLogger.openLogsGroup({
       requestCacheKey: this.requestCacheKey,
     });
@@ -90,12 +95,17 @@ export class CacheFirst implements IRequestCache {
     if (cachedResponse) {
       this.debugCacheLogger.closeLogsGroup();
 
-      onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
+      onCacheHit?.({
+        size,
+        expires,
+        cacheKey: this.requestCacheKey,
+        cacheState,
+      });
 
       return cachedResponse;
     }
 
-    onCacheMiss?.({ cacheKey: this.requestCacheKey });
+    onCacheMiss?.({ cacheKey: this.requestCacheKey, cacheState });
 
     const networkResponse = await request();
 

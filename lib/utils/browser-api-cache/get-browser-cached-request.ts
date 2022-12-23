@@ -14,11 +14,13 @@ export const getBrowserCachedRequest = async ({
   storageCacheName,
   debug,
   request,
-  quotaExceedLimit,
+  minAllowedQuota,
   ...cacheRequestParamsType
 }: ParamsType): Promise<IResponse> => {
   try {
-    const quotaExceed = await checkQuotaExceed({ quotaExceedLimit });
+    const { quotaExceed, cacheState } = await checkQuotaExceed({
+      minAllowedQuota,
+    });
 
     const cache = await new BrowserApiCacher().getRequestCache({
       strategy,
@@ -31,6 +33,7 @@ export const getBrowserCachedRequest = async ({
     const result = await cache.cacheRequest({
       request,
       quotaExceed,
+      cacheState,
       ...cacheRequestParamsType,
     });
 

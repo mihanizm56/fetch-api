@@ -12,14 +12,22 @@ export type OnUpdateCacheParamsType<ResponseType> = ResponseType & {
   };
 };
 
+export type CacheStateType = {
+  quota?: number;
+  usage?: number;
+  minAllowedQuota: number;
+};
+
 export type CacheHitParamsType = {
   size: number;
   expires: number;
   cacheKey: string;
+  cacheState: CacheStateType;
 };
 
 export type CacheMissParamsType = {
   cacheKey: string;
+  cacheState: CacheStateType;
 };
 
 export type CacheRequestParamsType<ResponseType> = {
@@ -70,7 +78,7 @@ export type GetRequestCacheParamsType = {
   // debug mode
   debug?: boolean;
   // quota custom limit
-  quotaExceedLimit?: number;
+  minAllowedQuota?: number;
 };
 
 export interface IApiCacher {

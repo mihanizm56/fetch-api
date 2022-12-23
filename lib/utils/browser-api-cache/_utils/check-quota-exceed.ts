@@ -1,14 +1,27 @@
-const MIN_STORAGE_LIMIT = 104857600; //  100mb
+import { CacheStateType } from '../_types';
+
+const DEFAULT_MIN_ALLOWED_QUOTA = 104857600; //  100mb
 
 type ParamsType = {
-  quotaExceedLimit?: number;
+  minAllowedQuota?: number;
+};
+
+type OutputType = {
+  quotaExceed: boolean;
+  cacheState: CacheStateType;
 };
 
 export const checkQuotaExceed = async ({
-  quotaExceedLimit = MIN_STORAGE_LIMIT,
-}: ParamsType): Promise<boolean> => {
+  minAllowedQuota = DEFAULT_MIN_ALLOWED_QUOTA,
+}: ParamsType): Promise<OutputType> => {
   try {
     const { quota, usage } = await navigator.storage.estimate();
+
+    const cacheState = {
+      quota,
+      usage,
+      minAllowedQuota,
+    };
 
     if (typeof quota === 'undefined' || typeof usage === 'undefined') {
       console.error('No quota params', {
@@ -16,17 +29,33 @@ export const checkQuotaExceed = async ({
         usage,
       });
 
-      return true;
+      return {
+        quotaExceed: true,
+        cacheState,
+      };
     }
 
-    if (quota - usage <= quotaExceedLimit) {
-      return true;
+    if (quota - usage <= minAllowedQuota) {
+      return {
+        quotaExceed: true,
+        cacheState,
+      };
     }
 
-    return false;
+    return {
+      quotaExceed: false,
+      cacheState,
+    };
   } catch (error) {
     console.error('Error in checkQuotaExceed', error);
 
-    return true;
+    return {
+      quotaExceed: true,
+      cacheState: {
+        quota: 0,
+        usage: 0,
+        minAllowedQuota: 0,
+      },
+    };
   }
 };

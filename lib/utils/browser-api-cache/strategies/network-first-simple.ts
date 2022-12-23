@@ -1,6 +1,7 @@
 import { IResponse } from '@/types';
 import {
   CacheRequestParamsType,
+  CacheStateType,
   IRequestCache,
   IRequestCacheParamsType,
 } from '../_types';
@@ -39,9 +40,11 @@ export class NetworkFirstSimple implements IRequestCache {
     onCacheHit,
     onCacheMiss,
     quotaExceed,
+    cacheState,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
     quotaExceed: boolean;
+    cacheState: CacheStateType;
   }): Promise<ResponseType> => {
     const networkResponse = await request();
 
@@ -72,9 +75,14 @@ export class NetworkFirstSimple implements IRequestCache {
       }
 
       if (cachedResponse) {
-        onCacheHit?.({ size, expires, cacheKey: this.requestCacheKey });
+        onCacheHit?.({
+          size,
+          expires,
+          cacheKey: this.requestCacheKey,
+          cacheState,
+        });
       } else {
-        onCacheMiss?.({ cacheKey: this.requestCacheKey });
+        onCacheMiss?.({ cacheKey: this.requestCacheKey, cacheState });
       }
 
       return !old && cachedResponse ? cachedResponse : networkResponse;
