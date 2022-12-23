@@ -12,6 +12,7 @@ type ParamsType = {
   onUpdateCache?: (params: OnUpdateCacheParamsType<any>) => void;
   debugCacheLogger: DebugCacheLogger;
   strategy: RequestCacheStrategy;
+  quotaExceed: boolean;
 };
 
 export const writeToCache = async ({
@@ -25,8 +26,15 @@ export const writeToCache = async ({
   onUpdateCache,
   debugCacheLogger,
   strategy,
+  quotaExceed,
 }: ParamsType): Promise<void> => {
   try {
+    if (quotaExceed) {
+      console.error('Quota is unsafe, can not write to cache');
+
+      return;
+    }
+
     await cache.put(
       `/${requestCacheKey}`,
       new Response(JSON.stringify(response), {

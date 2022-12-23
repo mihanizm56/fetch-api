@@ -5,7 +5,6 @@ import {
   IRequestCacheParamsType,
 } from '../_types';
 import { checkIfOldCache } from '../_utils/check-if-old-cache';
-import { checkQuotaExceed } from '../_utils/check-quota-exceed';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 import { writeToCache } from '../_utils/write-to-cache';
 
@@ -39,11 +38,11 @@ export class NetworkFirstSimple implements IRequestCache {
     cache,
     onCacheHit,
     onCacheMiss,
+    quotaExceed,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
+    quotaExceed: boolean;
   }): Promise<ResponseType> => {
-    const quotaExceed = await checkQuotaExceed();
-
     const networkResponse = await request();
 
     const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
@@ -81,22 +80,21 @@ export class NetworkFirstSimple implements IRequestCache {
       return !old && cachedResponse ? cachedResponse : networkResponse;
     }
 
-    if (!quotaExceed) {
-      await writeToCache({
-        cache,
-        requestCacheKey: this.requestCacheKey,
-        response: networkResponse,
-        apiExpires: expiresToDate
-          ? `${expiresToDate}`
-          : `${this.timestamp + expires}`,
-        apiTimestamp: `${this.timestamp}`,
-        cachedResponse,
-        old,
-        onUpdateCache,
-        debugCacheLogger: this.debugCacheLogger,
-        strategy: 'NetworkFirst',
-      });
-    }
+    await writeToCache({
+      cache,
+      requestCacheKey: this.requestCacheKey,
+      response: networkResponse,
+      apiExpires: expiresToDate
+        ? `${expiresToDate}`
+        : `${this.timestamp + expires}`,
+      apiTimestamp: `${this.timestamp}`,
+      cachedResponse,
+      old,
+      onUpdateCache,
+      debugCacheLogger: this.debugCacheLogger,
+      strategy: 'NetworkFirst',
+      quotaExceed,
+    });
 
     return networkResponse;
   };

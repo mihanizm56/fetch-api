@@ -31,7 +31,7 @@ export class NetworkFirst implements IRequestCache {
   }
 
   cacheRequest = async <ResponseType extends { error: boolean } = IResponse>(
-    params: CacheRequestParamsType<ResponseType>,
+    params: CacheRequestParamsType<ResponseType> & { quotaExceed: boolean },
   ): Promise<ResponseType> => {
     this.debugCacheLogger.openLogsGroup({
       requestCacheKey: this.requestCacheKey,

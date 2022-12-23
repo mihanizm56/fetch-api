@@ -7,7 +7,6 @@ import {
 } from '../_types';
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 import { writeToCache } from '../_utils/write-to-cache';
-import { checkQuotaExceed } from '../_utils/check-quota-exceed';
 
 export class NetworkFirstWithTimeout implements IRequestCache {
   timestamp: number;
@@ -40,15 +39,15 @@ export class NetworkFirstWithTimeout implements IRequestCache {
     cache,
     onCacheHit,
     onCacheMiss,
+    quotaExceed,
   }: CacheRequestParamsType<ResponseType> & {
     cache: Cache;
+    quotaExceed: boolean;
   }): Promise<ResponseType> => {
     let resolved = false;
     let cacheLogged = false;
 
     return new Promise(async (resolve) => {
-      const quotaExceed = await checkQuotaExceed();
-
       const cacheMatch = await cache.match(`/${this.requestCacheKey}`);
 
       this.debugCacheLogger.logCacheIsMatched({
@@ -93,22 +92,21 @@ export class NetworkFirstWithTimeout implements IRequestCache {
       request().then(async (networkResponse) => {
         try {
           if (!networkResponse.error) {
-            if (!quotaExceed) {
-              await writeToCache({
-                cache,
-                requestCacheKey: this.requestCacheKey,
-                response: networkResponse,
-                apiExpires: expiresToDate
-                  ? `${expiresToDate}`
-                  : `${this.timestamp + expires}`,
-                apiTimestamp: `${this.timestamp}`,
-                cachedResponse,
-                old,
-                onUpdateCache,
-                debugCacheLogger: this.debugCacheLogger,
-                strategy: 'NetworkFirst',
-              });
-            }
+            await writeToCache({
+              cache,
+              requestCacheKey: this.requestCacheKey,
+              response: networkResponse,
+              apiExpires: expiresToDate
+                ? `${expiresToDate}`
+                : `${this.timestamp + expires}`,
+              apiTimestamp: `${this.timestamp}`,
+              cachedResponse,
+              old,
+              onUpdateCache,
+              debugCacheLogger: this.debugCacheLogger,
+              strategy: 'NetworkFirst',
+              quotaExceed,
+            });
 
             if (!resolved) {
               resolved = true;

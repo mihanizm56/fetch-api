@@ -1,6 +1,12 @@
 const MIN_STORAGE_LIMIT = 104857600; //  100mb
 
-export const checkQuotaExceed = async (): Promise<boolean> => {
+type ParamsType = {
+  quotaExceedLimit?: number;
+};
+
+export const checkQuotaExceed = async ({
+  quotaExceedLimit = MIN_STORAGE_LIMIT,
+}: ParamsType): Promise<boolean> => {
   try {
     const { quota, usage } = await navigator.storage.estimate();
 
@@ -13,9 +19,7 @@ export const checkQuotaExceed = async (): Promise<boolean> => {
       return true;
     }
 
-    if (quota - usage <= MIN_STORAGE_LIMIT) {
-      console.error('Quota is unsafe, can not write to cache');
-
+    if (quota - usage <= quotaExceedLimit) {
       return true;
     }
 

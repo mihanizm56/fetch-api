@@ -69,8 +69,12 @@ export type GetRequestCacheParamsType = {
   requestCacheKey: string;
   // debug mode
   debug?: boolean;
+  // quota custom limit
+  quotaExceedLimit?: number;
 };
 
 export interface IApiCacher {
-  getRequestCache: (params: GetRequestCacheParamsType) => IRequestCache;
+  getRequestCache: (
+    params: GetRequestCacheParamsType,
+  ) => Promise<IRequestCache>;
 }

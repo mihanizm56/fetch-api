@@ -7,7 +7,6 @@ import {
 import { DebugCacheLogger } from '../_utils/debug-cache-logger';
 import { openCache } from '../_utils/open-cache';
 import { writeToCache } from '../_utils/write-to-cache';
-import { checkQuotaExceed } from '../_utils/check-quota-exceed';
 
 export class CacheFirst implements IRequestCache {
   timestamp: number;
@@ -39,7 +38,8 @@ export class CacheFirst implements IRequestCache {
     onRequestError,
     onCacheHit,
     onCacheMiss,
-  }: CacheRequestParamsType<ResponseType>) => {
+    quotaExceed,
+  }: CacheRequestParamsType<ResponseType> & { quotaExceed: boolean }) => {
     this.debugCacheLogger.openLogsGroup({
       requestCacheKey: this.requestCacheKey,
     });
@@ -57,7 +57,6 @@ export class CacheFirst implements IRequestCache {
     });
 
     const cache = await openCache(this.storageCacheName);
-    const quotaExceed = await checkQuotaExceed();
 
     // cache storage may be unable in untrusted origins (http) in mobile devices
     // https://stackoverflow.com/questions/53094298/window-caches-is-undefined-in-android-chrome-but-is-available-at-desktop-chrome
@@ -101,22 +100,21 @@ export class CacheFirst implements IRequestCache {
     const networkResponse = await request();
 
     if (!networkResponse.error) {
-      if (!quotaExceed) {
-        await writeToCache({
-          cache,
-          requestCacheKey: this.requestCacheKey,
-          response: networkResponse,
-          apiExpires: expiresToDate
-            ? `${expiresToDate}`
-            : `${this.timestamp + expires}`,
-          apiTimestamp: `${this.timestamp}`,
-          cachedResponse,
-          old,
-          onUpdateCache,
-          debugCacheLogger: this.debugCacheLogger,
-          strategy: 'CacheFirst',
-        });
-      }
+      await writeToCache({
+        cache,
+        requestCacheKey: this.requestCacheKey,
+        response: networkResponse,
+        apiExpires: expiresToDate
+          ? `${expiresToDate}`
+          : `${this.timestamp + expires}`,
+        apiTimestamp: `${this.timestamp}`,
+        cachedResponse,
+        old,
+        onUpdateCache,
+        debugCacheLogger: this.debugCacheLogger,
+        strategy: 'CacheFirst',
+        quotaExceed,
+      });
     } else {
       onRequestError?.();
       this.debugCacheLogger.logNotUpdatedCache({
