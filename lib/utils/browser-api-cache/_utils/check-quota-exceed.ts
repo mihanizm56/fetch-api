@@ -15,6 +15,17 @@ export const checkQuotaExceed = async ({
   minAllowedQuota = DEFAULT_MIN_ALLOWED_QUOTA,
 }: ParamsType): Promise<OutputType> => {
   try {
+    if (!navigator?.storage?.estimate) {
+      return {
+        quotaExceed: false,
+        cacheState: {
+          quota: 0,
+          usage: 0,
+          minAllowedQuota: 0,
+        },
+      };
+    }
+
     const { quota, usage } = await navigator.storage.estimate();
 
     const cacheState = {
