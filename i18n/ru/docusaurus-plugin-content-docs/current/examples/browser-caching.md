@@ -61,3 +61,4 @@ You can read about strategies <Link to='https://developer.chrome.com/docs/workbo
 | onUpdateCache | `function`        | коллбек, вызывающийся во время обновления кэша         |
 | onRequestError | `function`        | коллбек, вызывающийся во время ошибки ответа сервера      |
 | debug             | `boolean`     | флаг для включения логгирования в консоль  |
+| minAllowedQuota        | `number`     | main request cache allowed quota in cache-storage |

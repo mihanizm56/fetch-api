@@ -61,3 +61,4 @@ You can read about strategies <Link to='https://developer.chrome.com/docs/workbo
 | onUpdateCache | `function`        | callback is called if cache was updated         |
 | onRequestError | `function`        | callback is called if the request has an error      |
 | debug             | `boolean`     | flag for logging in the browser developer tools  |
+| minAllowedQuota        | `number`     | main request cache allowed quota in cache-storage |
