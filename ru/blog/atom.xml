@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://mihanizm56.github.io/blog</id>
+    <title>Fetch-API Blog</title>
+    <updated>2022-11-27T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://mihanizm56.github.io/blog"/>
+    <subtitle>Fetch-API Blog</subtitle>
+    <icon>https://mihanizm56.github.io/img/like.svg</icon>
+    <entry>
+        <title type="html"><![CDATA[3.9.1]]></title>
+        <id>3.9.1</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2022/11/27/release"/>
+        <updated>2022-11-27T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api release notes]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[3.8.8]]></title>
+        <id>3.8.8</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2021/11/09/release"/>
+        <updated>2021-11-09T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api release notes]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[3.8.3]]></title>
+        <id>3.8.3</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2021/08/16/release"/>
+        <updated>2021-08-16T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api release notes]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[3.8.0]]></title>
+        <id>3.8.0</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2021/07/07/release"/>
+        <updated>2021-07-07T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api release notes]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[3.7.4]]></title>
+        <id>3.7.4</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2021/06/01/release"/>
+        <updated>2021-06-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api release notes]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[3.7.2]]></title>
+        <id>3.7.2</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2021/04/16/release"/>
+        <updated>2021-04-16T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api release notes]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Начало публикации изменений]]></title>
+        <id>Начало публикации изменений</id>
+        <link href="https://mihanizm56.github.io/fetch-api/ru/blog/2021/04/10/release-notes-start"/>
+        <updated>2021-04-10T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[@mihanizm56/fetch-api начало публикации изменений]]></summary>
+    </entry>
+</feed>

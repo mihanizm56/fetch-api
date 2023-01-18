@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Fetch-API Blog</title>
+        <link>https://mihanizm56.github.io/blog</link>
+        <description>Fetch-API Blog</description>
+        <lastBuildDate>Sun, 27 Nov 2022 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[3.9.1]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2022/11/27/release</link>
+            <guid>3.9.1</guid>
+            <pubDate>Sun, 27 Nov 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes]]></description>
+        </item>
+        <item>
+            <title><![CDATA[3.8.8]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2021/11/09/release</link>
+            <guid>3.8.8</guid>
+            <pubDate>Tue, 09 Nov 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes]]></description>
+        </item>
+        <item>
+            <title><![CDATA[3.8.3]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2021/08/16/release</link>
+            <guid>3.8.3</guid>
+            <pubDate>Mon, 16 Aug 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes]]></description>
+        </item>
+        <item>
+            <title><![CDATA[3.8.0]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2021/07/07/release</link>
+            <guid>3.8.0</guid>
+            <pubDate>Wed, 07 Jul 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes]]></description>
+        </item>
+        <item>
+            <title><![CDATA[3.7.4]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2021/06/01/release</link>
+            <guid>3.7.4</guid>
+            <pubDate>Tue, 01 Jun 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes]]></description>
+        </item>
+        <item>
+            <title><![CDATA[3.7.2]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2021/04/16/release</link>
+            <guid>3.7.2</guid>
+            <pubDate>Fri, 16 Apr 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Release notes start]]></title>
+            <link>https://mihanizm56.github.io/fetch-api/blog/2021/04/10/release-notes-start</link>
+            <guid>Release notes start</guid>
+            <pubDate>Sat, 10 Apr 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[@mihanizm56/fetch-api release notes start]]></description>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[124],{198:function(a){a.exports=JSON.parse('{"allTagsPath":"/fetch-api/blog/tags","slug":"mihanizm-56","name":"@mihanizm56","count":7,"permalink":"/fetch-api/blog/tags/mihanizm-56"}')}}]);
