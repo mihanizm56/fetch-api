@@ -60,7 +60,7 @@ export const getWhateverRequest = (someData): Promise<IResponse> =>
 | debug             | `boolean`     | флаг для включения логгирования в консоль  |
 | onCacheHit             | `function`     | коллбек, вызывающийся во время (попадания) получения ответа из кэша         |
 | onCacheMiss             | `function`     | коллбек, вызывающийся во время (непопадания) неполучения ответа из кэша         |
-| minAllowedQuota        | `number`     | main request cache allowed quota in cache-storage |
+| minAllowedQuota        | `number`     | минимальная квота хранилища для cache-storage |
 
 
 #### Пример использования с обычным нативным fetch запросом

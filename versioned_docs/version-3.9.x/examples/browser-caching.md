@@ -63,7 +63,7 @@ You can read about strategies <Link to='https://developer.chrome.com/docs/workbo
 | debug             | `boolean`     | flag for logging in the browser developer tools  |
 | onCacheHit             | `function`     | callback is called when cache hit         |
 | onCacheMiss             | `function`     | callback is called when cache miss         |
-| minAllowedQuota        | `number`     | main request cache allowed quota in cache-storage |
+| minAllowedQuota        | `number`     | min request cache allowed quota in cache-storage |
 
 #### Example with a native fetch request
 
