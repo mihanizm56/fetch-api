@@ -1,5 +1,5 @@
 import { CacheFirst } from './strategies/cache-first';
-import { CacheFirstWithRevalidate } from './strategies/cache-first-while-revalidate';
+import { CacheFirstWithRevalidate } from './strategies/cache-first-with-revalidate';
 import { NetworkFirst } from './strategies/network-first';
 import { StaleWhileRevalidate } from './strategies/stale-while-revalidate';
 import { GetRequestCacheParamsType, IApiCacher } from './_types';
