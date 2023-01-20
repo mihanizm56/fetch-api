@@ -145,7 +145,7 @@ export class StaleWhileRevalidate implements IRequestCache {
         }
       });
 
-      if (cachedResponse) {
+      if (!old && cachedResponse) {
         resolved = true;
 
         onCacheHit?.({

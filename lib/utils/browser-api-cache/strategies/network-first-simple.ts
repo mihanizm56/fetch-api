@@ -74,7 +74,7 @@ export class NetworkFirstSimple implements IRequestCache {
         this.debugCacheLogger.logCacheIsExpired();
       }
 
-      if (cachedResponse) {
+      if (!old && cachedResponse) {
         onCacheHit?.({
           size,
           expires,

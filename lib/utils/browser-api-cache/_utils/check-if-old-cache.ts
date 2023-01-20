@@ -29,6 +29,7 @@ export const checkIfOldCache = async <ResponseType>({
     if (timestamp - cachedTimestamp > 0) {
       return {
         old: true,
+        cachedResponse: cachedValue,
       };
     }
 

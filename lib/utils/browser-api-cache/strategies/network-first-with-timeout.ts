@@ -76,7 +76,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
         }
 
         if (!cacheLogged) {
-          if (cachedResponse) {
+          if (!old && cachedResponse) {
             onCacheHit?.({
               size,
               expires,
@@ -90,7 +90,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
           cacheLogged = true;
         }
 
-        if (cachedResponse) {
+        if (!old && cachedResponse) {
           resolved = true;
 
           resolve(cachedResponse);
@@ -134,7 +134,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
             resolved = true;
 
             if (!cacheLogged) {
-              if (cachedResponse) {
+              if (!old && cachedResponse) {
                 onCacheHit?.({
                   size,
                   expires,
@@ -148,7 +148,7 @@ export class NetworkFirstWithTimeout implements IRequestCache {
               cacheLogged = true;
             }
 
-            const value = cachedResponse || networkResponse;
+            const value = (!old && cachedResponse) || networkResponse;
 
             resolve(value);
           }

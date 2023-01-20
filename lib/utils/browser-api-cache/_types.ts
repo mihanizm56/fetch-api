@@ -3,7 +3,8 @@ import { DebugCacheLogger } from './_utils/debug-cache-logger';
 export type RequestCacheStrategy =
   | 'NetworkFirst'
   | 'StaleWhileRevalidate'
-  | 'CacheFirst';
+  | 'CacheFirst'
+  | 'CacheFirstWithRevalidate';
 
 export type OnUpdateCacheParamsType<ResponseType> = ResponseType & {
   prevValue: {
