@@ -18,19 +18,11 @@ const features = [
     ),
   },
   {
-    title: <Translate>Fetch on steroids</Translate>,
-    imageUrl: "img/like.svg",
-    description: (
-      <Translate>All native window.fetch features are supported.</Translate>
-    ),
-  },
-  {
     title: <Translate>Universal library</Translate>,
     imageUrl: "img/like.svg",
     description: (
       <Translate>
-        For browser this is usual window.fetch and for Node.js node-fetch is
-        used."
+        For browser and for Node.js - just native fetch inside
       </Translate>
     ),
   },

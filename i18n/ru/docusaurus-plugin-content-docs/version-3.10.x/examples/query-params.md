@@ -1,14 +1,13 @@
 ---
-title: Query params
+title: Query параметры
 ---
 
 import Link from '@docusaurus/Link';
 
-By default fetch can't serialize query params.
-But this library can do it for all types of requests!
+По умолчанию, window.fetch не умеет в сериализацию query параметров.
+Но данная библиотека имеет такую функциональность для всех типов запросов!
 
 ```javascript
-import Joi from "joi";
 import { RestRequest, IResponse } from "@mihanizm56/fetch-api";
 
 export const getWhateverRequest = (someData): Promise<IResponse> =>

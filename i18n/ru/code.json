@@ -194,11 +194,8 @@
   "Fetch-API provides the same interface for all types of requests.": {
     "message": "Fetch-API предоставляет один интерфейс для всех типов запросов"
   },
-  "All native window.fetch features are supported.": {
-    "message": "Поддерживаются все нативные возможности window.fetch"
-  },
   "For browser this is usual window.fetch and for Node.js node-fetch is used.\"": {
-    "message": "Для браузерного окружения используется window.fetch и для окружения Node.js используется node-fetch"
+    "message": "Для браузерного и Node.js окружений используется стандартный fetch"
   },
   "You can use shemas to validate responses or you can provide your own validate function\"": {
     "message": "Вы можете использовать схемы валидации ответов с сервера либо использовать кастомную функцию для проверки правильности ответа."
