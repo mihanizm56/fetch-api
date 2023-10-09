@@ -209,10 +209,12 @@ export class BaseRequest implements IBaseRequest {
       proxyPersistentOptionsAreDisabled
     });
 
-    if (isNode || typeof fetch === 'undefined') {
+    if (isNode) {
+      const nodeFetch =  typeof fetch === 'undefined'  ? require('node-fetch') : fetch
+
       const requestFetch = (
         // TODO fix any type
-        () => require('node-fetch')(endpoint, requestParams as any) as unknown
+        () => nodeFetch(endpoint, requestParams as any) as unknown
       ) as () => Promise<Response>
 
       return { requestFetch };
