@@ -1,4 +1,3 @@
-import nodeFetch from "node-fetch";
 import queryString from "query-string";
 import {
   RequestRacerParams,
@@ -210,10 +209,10 @@ export class BaseRequest implements IBaseRequest {
       proxyPersistentOptionsAreDisabled
     });
 
-    if (isNode) {
+    if (isNode || typeof fetch === 'undefined') {
       const requestFetch = (
         // TODO fix any type
-        () => nodeFetch(endpoint, requestParams as any) as unknown
+        () => require('node-fetch')(endpoint, requestParams as any) as unknown
       ) as () => Promise<Response>
 
       return { requestFetch };
