@@ -1,9 +1,12 @@
 {
   "name": "@mihanizm56/fetch-api",
-  "version": "3.10.1",
+  "version": "4.0.0-beta.1",
   "description": "api servise",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "server": "node integrational-tests/setup/runner.js",
     "test:watch": "jest --watch",
@@ -37,8 +40,6 @@
     "@commitlint/cli": "11.0.0",
     "@types/jest": "25.1.0",
     "@types/joi": "14.3.4",
-    "node-fetch": "2.6.1",
-    "@types/node-fetch": "2.5.7",
     "@typescript-eslint/eslint-plugin": "5.3.0",
     "@typescript-eslint/parser": "5.3.0",
     "babel-jest": "25.2.6",

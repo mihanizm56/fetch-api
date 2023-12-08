@@ -203,34 +203,23 @@ export class BaseRequest implements IBaseRequest {
     proxyPersistentOptionsAreDisabled
   }: GetIsomorphicFetchParamsType): GetIsomorphicFetchReturnsType => {
     const isNode = getIsNode();
-
+    
     const requestParams = this.getFetchParams({
       params:fetchParams,
       proxyPersistentOptionsAreDisabled
     });
 
-    if (isNode) {
-      const nodeFetch =  typeof fetch === 'undefined'  ? require('node-fetch') : fetch
-
-      const requestFetch = (
-        // TODO fix any type
-        () => nodeFetch(endpoint, requestParams as any) as unknown
-      ) as () => Promise<Response>
-
-      return { requestFetch };
-    }
-
     const fetchController = new AbortController();
 
-    // set the cancel request listener
-    if (abortRequestId) {
+    // set the cancel request listener only for browser
+    if (abortRequestId && !isNode) {
       this.addAbortListenerToRequest({
         abortRequestId,
         fetchController,
       })
     }
 
-    const requestFetch = window.fetch.bind(null, endpoint, {
+    const requestFetch = ()=>fetch(endpoint, {
       ...requestParams,
       signal: fetchController.signal,
     })
@@ -910,10 +899,7 @@ export class BaseRequest implements IBaseRequest {
     isErrorTextStraightToOutput,
     fetchController,
     customTimeout,
-  }: GetTimeoutExceptionParamsType): Promise<IResponse> => {
-    const isNode = getIsNode();
-
-    return new Promise((resolve) => {
+  }: GetTimeoutExceptionParamsType): Promise<IResponse> => new Promise((resolve) => {
       return setTimeout(() => {
         const requestTimeoutError: IResponse = new ErrorResponseFormatter().getFormattedErrorResponse(
           {
@@ -928,15 +914,11 @@ export class BaseRequest implements IBaseRequest {
           }
         );
 
-        // if the window fetch
-        if (!isNode) {
-          fetchController.abort();
-        }
+        fetchController.abort();
 
         resolve(requestTimeoutError);
       }, customTimeout || TIMEOUT_VALUE)
-    });
-  }
+    })
 
   requestRacer = ({
     request,
