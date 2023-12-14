@@ -219,7 +219,7 @@ export class BaseRequest implements IBaseRequest {
       })
     }
 
-    const requestFetch = window.fetch.bind(null, endpoint, {
+    const requestFetch = fetch.bind(null, endpoint, {
       ...requestParams,
       signal: fetchController.signal,
     })
